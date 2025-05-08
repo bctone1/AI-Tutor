@@ -1,103 +1,163 @@
-import Image from "next/image";
+"use client";
+import axios from 'axios';
 
-export default function Home() {
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+
+import { useState } from "react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from 'next/navigation';
+
+export default function LoginPage({ className }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+
+
+
+  const handleLogin = async () => {
+    const result = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
+    // console.log(result);
+    if (result?.error) {
+      alert("회원정보가 없습니다.");
+    } else {
+      // 로그인 성공 후 세션 정보 가져오기
+      const res = await fetch("/api/auth/session");
+      const session = await res.json();
+      if (session?.user?.role === "admin") {
+        router.push("/home/admin");
+      } else if (session?.user?.role === "user") {
+        router.push("/home/user");
+      }
+    }
+  };
+
+  const handleGoogleLogin = () => {
+    signIn("google", {
+      callbackUrl: "/home/user",
+    });
+  };
+
+  const handleKakaoLogin = () => {
+    signIn("kakao", {
+      callbackUrl: "/home/user",
+    });
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
+      <div className="flex w-full max-w-sm flex-col gap-6">
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+        <div className={cn("flex flex-col gap-6", className)}>
+          <Card>
+            <CardHeader className="text-center mt-10">
+              <CardTitle className="text-3xl text-blue-500">AI Tutor</CardTitle>
+              <CardDescription className="text-black"> AI 기반 학습 플랫폼</CardDescription>
+            </CardHeader>
+
+            <CardContent>
+              <div className="grid gap-6">
+
+
+                <div className="grid gap-6">
+                  <div className="grid gap-2">
+                    <div className="flex items-center">
+                      <Label htmlFor="email">이메일</Label>
+                    </div>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="이메일 주소를 입력하세요"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleLogin();
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <div className="flex items-center">
+                      <Label htmlFor="password">비밀번호</Label>
+                    </div>
+                    <Input
+                      type="password"
+                      placeholder="비밀번호를 입력하세요"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleLogin();
+                        }
+                      }}
+                    />
+
+                  </div>
+
+                  <div className="flex justify-between">
+                    <div className="flex items-center gap-1">
+                      <input type="checkbox" id="auto-login" />
+                      <label htmlFor="auto-login" className="text-sm">자동 로그인</label>
+                    </div>
+                    <span className="text-sm text-blue-500 cursor-pointer">비밀번호 찾기</span>
+                  </div>
+
+
+                  <Button type="submit" className="w-full bg-blue-500" onClick={handleLogin}>
+                    로그인
+                  </Button>
+                </div>
+
+                <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:border-t after:border-gray-300">
+                  <span className="relative z-10 bg-white px-2 text-gray-500">또는</span>
+                </div>
+
+                <div className="flex flex-col gap-4">
+
+                  <Button variant="outline" className="bg-[#ffca28] text-white" onClick={handleKakaoLogin}>
+                    카카오 계정으로 로그인
+                  </Button>
+
+
+                  <Button variant="outline" className="bg-gray-300 text-white" onClick={handleGoogleLogin}>
+                    구글 계정으로 로그인
+                  </Button>
+                </div>
+
+                <div className="text-center text-sm mb-10">
+                  계정이 없으신가요?{" "}
+                  <a
+                    className="text-sm text-blue-500 cursor-pointer"
+                    onClick={() => window.location = "/register"}
+                  >
+                    회원가입
+                  </a>
+
+                </div>
+              </div>
+
+            </CardContent>
+          </Card>
+
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+      </div>
     </div>
   );
 }
