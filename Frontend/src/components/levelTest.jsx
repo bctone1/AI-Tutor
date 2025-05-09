@@ -1,7 +1,8 @@
-import React from 'react';
+"use client"
+
+import React, { useState, useEffect } from 'react';
 
 const levelTest = () => {
-
 
     return (
         <main className="max-w-5xl mx-auto mt-6 px-5">

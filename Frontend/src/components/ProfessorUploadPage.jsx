@@ -11,19 +11,19 @@ const UploadPage = () => {
     const files = [
         {
             name: '해부학_문제_01.docx',
-            type: 'Word 문서',
+            type: '작업치료학과',
             size: '2.4MB',
             status: '완료',
         },
         {
             name: '해부학_시험문제_1학기.xlsx',
-            type: 'Excel 스프레드시트',
+            type: '작업치료학과',
             size: '1.8MB',
             status: '완료',
         },
         {
             name: '2학기_중간고사_문제_데이터.csv',
-            type: 'CSV 파일',
+            type: '물리치료학과',
             size: '756KB',
             status: '처리중',
         },
@@ -55,7 +55,7 @@ const UploadPage = () => {
                     >
                         문제 업로드
                     </div>
-                    <div
+                    {/* <div
                         className={`px-5 py-3 cursor-pointer font-bold ${activeTab === '해설'
                             ? 'text-indigo-700 border-b-2 border-indigo-700'
                             : 'text-gray-500'
@@ -63,7 +63,7 @@ const UploadPage = () => {
                         onClick={() => setActiveTab('해설')}
                     >
                         해설 업로드
-                    </div>
+                    </div> */}
                 </div>
 
                 {activeTab === '문제' ? (
@@ -83,10 +83,10 @@ const UploadPage = () => {
                         <div className="bg-white shadow rounded">
                             <div className="flex px-5 py-3 border-b bg-gray-50 font-bold text-gray-700">
                                 <div className="flex-1">파일명</div>
-                                <div className="flex-1">파일 종류</div>
+                                <div className="flex-1">관련학과</div>
                                 <div className="flex-1">크기</div>
                                 <div className="flex-1">상태</div>
-                                <div className="w-24 text-center">작업</div>
+                                <div className="w-50 text-center">작업</div>
                             </div>
                             {files.map((file, index) => (
                                 <div key={index} className="flex px-5 py-3 border-b last:border-b-0 items-center">
@@ -106,11 +106,15 @@ const UploadPage = () => {
                                             {file.status}
                                         </span>
                                     </div>
-                                    <div className="w-24 text-center">
+                                    <div className="w-50 flex justify-center gap-2">
                                         <button className="text-red-600 border border-red-500 px-3 py-1 rounded text-xs hover:bg-red-500 hover:text-white transition">
                                             삭제
                                         </button>
+                                        <button className="text-blue-600 border border-blue-500 px-3 py-1 rounded text-xs hover:bg-blue-500 hover:text-white transition">
+                                            해설 업로드
+                                        </button>
                                     </div>
+
                                 </div>
                             ))}
                         </div>

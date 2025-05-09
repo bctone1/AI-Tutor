@@ -11,8 +11,8 @@ const Navigation = ({ setView }) => {
           <li><a onClick={() => setView('leveltest')} className="text-white cursor-pointer">레벨 테스트</a></li>
           <li><a onClick={() => setView('dashboard')} className="text-white cursor-pointer">대시보드</a></li>
           <li><a onClick={() => setView('active')} className="text-white cursor-pointer">문제 풀이</a></li>
-          <li><a onClick={() => setView('')} className="text-white cursor-pointer">학습 자료</a></li>
-          <li><a onClick={() => setView('')} className="text-white cursor-pointer">설정</a></li>
+          <li><a onClick={() => setView('')} className="text-white cursor-pointer">학습 하기</a></li>
+          <li><a onClick={() => setView('')} className="text-white cursor-pointer">프로필 설정</a></li>
         </ul>
       </nav>
     </header>

@@ -5,10 +5,9 @@ import GoogleProvider from "next-auth/providers/google";
 import NaverProvider from 'next-auth/providers/naver';
 import KakaoProvider from "next-auth/providers/kakao";
 
-
 import axios from "axios";
 
-console.log("⚙️ NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
+// console.log("⚙️ NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
 export const handler = NextAuth({
   providers: [
     GoogleProvider({
