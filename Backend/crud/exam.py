@@ -1,9 +1,10 @@
 from sqlalchemy.orm import Session
-from model import *
+from model.exam import *
 from langchain_service.document_loader.file_loader import load_document
 from langchain_service.document_loader.extract_question import extract_questions_from_pages
 from langchain_openai import OpenAIEmbeddings
 from core.config import CHATGPT_API_KEY
+from sqlalchemy.orm import Session
 import os
 
 embedding_model = OpenAIEmbeddings(
@@ -11,33 +12,26 @@ embedding_model = OpenAIEmbeddings(
     openai_api_key=CHATGPT_API_KEY
 )
 
-def process_exam_with_langchain_embedding(session: Session, file_path: str, department: str, subject: str):
-    # 1. PDF 불러오기
-    pages = load_document(file_path)
-    page_texts = [doc.page_content for doc in pages]
-
-    # 2. 문항 단위로 분리
-    questions = extract_questions_from_pages(page_texts)
-
-    # 3. Exam 레코드 생성
-    exams = Exam(
-        department=department,
-        file_name=os.path.basename(file_path),
-        subject=subject
+def add_exam_data(db : Session, department : str, file_name, subject):
+    new_exam = Exam(
+        department = department,
+        file_name = file_name,
+        subject = subject
     )
-    session.add(exams)
-    session.flush()  # exam.id 확보
+    db.add(new_exam)
+    db.commit()
+    db.refresh(new_exam)
+    return new_exam.id
 
-    # 4. LangChain 임베딩 및 KnowledgeBase에 저장
-    for idx, question_text in enumerate(questions, start=1):
-        vector = embedding_model.embed_query(question_text)
-
-        kb_entry = KnowledgeBase(
-            exam_id=exams.id,
-            question_number=idx,
-            question=question_text,
-            vector_memory=vector
-        )
-        session.add(kb_entry)
-
-    session.commit()
+def update_knowledgebase(db : Session, exam_id : int, question_number : int, question : str):
+    vector = embedding_model.embed_query(question)
+    new_question = KnowledgeBase(
+        exam_id = exam_id,
+        question_number = question_number,
+        question = question,
+        vector_memory = vector
+    )
+    db.add(new_question)
+    db.commit()
+    db.refresh(new_question)
+    return new_question.id
