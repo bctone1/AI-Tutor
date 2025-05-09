@@ -1,0 +1,1 @@
+from langchain_service.chain.qa_chain import get_conversational_chain
