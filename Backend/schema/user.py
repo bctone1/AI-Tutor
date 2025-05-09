@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class StudentRegisterRequest(BaseModel):
     email : str
@@ -22,3 +23,15 @@ class LoginResponse(BaseModel):
     name : str
     department : str
     grade : int
+
+class GoogleLoginRequest(BaseModel):
+    email : str
+    name : str
+    image : Optional[str] = None
+
+class GoogleLoginResponse(BaseModel):
+    id : int
+    message : str
+    email : str
+    name : str
+    image : Optional[str] = None

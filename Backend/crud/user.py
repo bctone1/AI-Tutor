@@ -1,6 +1,7 @@
 import bcrypt
 from sqlalchemy.orm import Session
 from model.user import User
+import random
 
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -39,3 +40,25 @@ def user_login(db: Session, email: str, pw: str):
                 "grade" : user.grade
             }
     return None
+
+def generate_random_password():
+    random_number = ''.join([str(random.randint(0, 9)) for _ in range(8)])
+    return f'default_password{random_number}'
+
+
+def create_social_user(db : Session, email : str, name : str):
+    password = generate_random_password()
+    hashed_pw = hash_password(password)
+    new_user = User(
+        email = email,
+        password = hashed_pw,
+        name = name,
+        role = 'SocialLogin',
+        group = 'newUser',
+        department = "소속 없음",
+        grade= 0
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user.id

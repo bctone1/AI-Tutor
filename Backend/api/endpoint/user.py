@@ -42,3 +42,4 @@ async def login(request: LoginRequest, db : Session = Depends(get_db)):
         )
     else:
         return JSONResponse(content={'message': '정보가 없습니다.'}, status_code=400)
+
