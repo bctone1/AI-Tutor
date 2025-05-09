@@ -23,3 +23,4 @@ class KnowledgeBase(Base):
     vector_memory = Column(Vector(1536))
 
     exam = relationship("Exam", back_populates="knowledge_bases")
+
