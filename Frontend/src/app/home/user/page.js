@@ -10,7 +10,6 @@ import Active from '@/components/active';
 export default function AnatomyTestPage() {
   const [view, setView] = useState('leveltest');
 
-
   return (
     <div className="min-h-screen bg-gray-100">
 
