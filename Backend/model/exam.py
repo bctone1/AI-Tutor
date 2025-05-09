@@ -10,7 +10,7 @@ class Exam(Base):
     department = Column(String(50))
     file_name = Column(String(50))
     subject = Column(String(50))
-
+    knowledge_bases = relationship('KnowledgeBase', back_populates='exam', cascade="all, delete-orphan")
 
 
 class KnowledgeBase(Base):

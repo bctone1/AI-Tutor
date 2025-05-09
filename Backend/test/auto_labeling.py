@@ -1,13 +1,23 @@
-from langchain_service.document_loader.file_loader import load_document
-from langchain_service.document_loader.extract_question import extract_questions_from_pages
-
+from crud.exam import *
 a = load_document("test1.pdf")
 
-page_texts = [doc.page_content for doc in a]
 
-questions = extract_questions_from_pages(page_texts)
+if __name__ == "__main__":
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
 
-for idx, q in enumerate(questions, 1):
-    print(f"--- 문제 {idx} ---")
-    print(q)
-    print("\n\n\n")
+    # DB 연결
+    engine = create_engine(
+        "postgresql+psycopg2://postgres:3636@localhost/knowledge_base",
+        connect_args={"client_encoding": "UTF8"}
+    )
+    SessionLocal = sessionmaker(bind=engine)
+
+    # 테스트 실행
+    with SessionLocal() as session:
+        process_exam_with_langchain_embedding(
+            session=session,
+            file_path="test1.pdf",
+            department="컴퓨터공학과",
+            subject="자료구조"
+        )
