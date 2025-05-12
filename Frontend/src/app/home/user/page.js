@@ -6,6 +6,7 @@ import Navigation from '@/components/Navigation';
 import LevelTest from '@/components/levelTest';
 import Dashboard from '@/components/dashboard';
 import Active from '@/components/active';
+import Profile from '@/components/profile';
 
 export default function AnatomyTestPage() {
   const [view, setView] = useState('leveltest');
@@ -30,6 +31,10 @@ export default function AnatomyTestPage() {
 
       {view === 'active' && (
         <Active />
+      )}
+
+      {view === 'profile' && (
+        <Profile />
       )}
 
     </div>

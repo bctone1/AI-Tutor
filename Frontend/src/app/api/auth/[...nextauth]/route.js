@@ -68,21 +68,21 @@ export const handler = NextAuth({
   callbacks: {
     async signIn({ user, account }) {
       if (account.provider === "google") {
-        try {
-          const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/googlelogin`, {
-            email: user.email,
-            name: user.name,
-            image: user.image,
-          });
-          if (res.status === 200) {
-            user.id = res.data.id;
-            user.message = res.data.message;
-            user.role = res.data.role;
-          }
-        } catch (error) {
-          console.error("Google 로그인 후 백엔드 전송 실패:", error);
-          return false; // 로그인 중단
-        }
+        // try {
+        //   const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/googlelogin`, {
+        //     email: user.email,
+        //     name: user.name,
+        //     image: user.image,
+        //   });
+        //   if (res.status === 200) {
+        //     user.id = res.data.id;
+        //     user.message = res.data.message;
+        //     user.role = res.data.role;
+        //   }
+        // } catch (error) {
+        //   console.error("Google 로그인 후 백엔드 전송 실패:", error);
+        //   return false; // 로그인 중단
+        // }
       }
       if (account.provider === "naver") {
         // console.log("=========================================================");
