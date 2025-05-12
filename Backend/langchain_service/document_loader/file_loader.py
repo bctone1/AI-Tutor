@@ -8,9 +8,8 @@ def load_document(file_path):
 
     if ext == '.pdf':
         loader = PyPDFLoader(file_path, )
+        print(f"FULL TEXT : {loader}")
     else:
         raise ValueError(f"지원되지 않는 파일 형식: {ext}")
 
     return loader.load()
-
-

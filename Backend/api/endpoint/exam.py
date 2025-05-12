@@ -19,10 +19,12 @@ async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db
 
     try:
         documents = load_document(file_location)
+        print(f"PAGE TEXT : {documents}")
     except ValueError as e:
         return {"error": str(e)}
 
     page_texts = [doc.page_content for doc in documents]
+    print(f"PAGE TEXT : {page_texts}")
     questions = extract_questions_from_pages(page_texts)
     exam_data = add_exam_data(db = db, department="물리치료학과", file_name = file.filename, subject="물리치료사 국가시험")
     for i, q in enumerate(questions, start=1):
