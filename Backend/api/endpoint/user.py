@@ -6,8 +6,36 @@ from fastapi.responses import JSONResponse
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import core.config as config
+from fastapi import Request
+import json
 import smtplib
 user_router = APIRouter()
+
+@user_router.post("/Debug")
+async def debug_request(request: Request):
+    # 요청 헤더
+    headers = dict(request.headers)
+
+    # 요청 바디 (JSON 형식으로 파싱 시도)
+    try:
+        body = await request.json()
+    except Exception:
+        body = await request.body()
+        try:
+            body = body.decode("utf-8")
+        except Exception:
+            pass
+
+    print("==== [DEBUG] Incoming Request ====")
+    print("Headers:", headers)
+    print("Body:", body)
+    print("==================================")
+
+    return JSONResponse(content={
+        "headers": headers,
+        "body": body
+    })
+
 
 @user_router.post('/register', response_model=StudentRegisterResponse)
 async def register_endpoint(request: StudentRegisterRequest, db: Session = Depends(get_db)):

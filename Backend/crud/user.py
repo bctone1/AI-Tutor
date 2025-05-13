@@ -35,8 +35,23 @@ def user_login(db: Session, email: str, pw: str):
                 "id": user.id,
                 "name": user.name,
                 "email": user.email,
-                "role": user.role
+                "department" : user.department,
+                "role": user.role,
+                "grade": user.grade
             }
+    else:
+        if user.password == pw:
+            user.password = hash_password(pw)
+            db.commit()
+            return {
+                "id": user.id,
+                "email": user.email,
+                "name": user.name,
+                "department": user.department,
+                "role": user.role,
+                "grade" : user.grade
+            }
+
     return None
 
 def generate_random_password():
