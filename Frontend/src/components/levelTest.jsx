@@ -2,27 +2,51 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 
-const LevelTest = ({ setView }) => {
+
+const LevelTest = ({ setView, userdata }) => {
     const [testQuestions, setTestQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [answers, setAnswers] = useState({});
 
-    const [remainingTime, setRemainingTime] = useState(20); // 30분 = 1800초
-    const fiveMinuteWarnedRef = useRef(false); // ref를 사용하여 상태 유지
+    const [remainingTime, setRemainingTime] = useState(300);
+    const fiveMinuteWarnedRef = useRef(false);
     const submittedRef = useRef(false);
 
+
     useEffect(() => {
+        const submitTest = async () => {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/submitTest`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ answers, userdata }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    console.log("답변 및 userdata:", answers, userdata);
+                    setTimeout(() => {
+                        setView("dashboard");
+                    }, 0);
+                } else {
+                    console.error("제출 실패:", data);
+                }
+            } catch (error) {
+                console.error("제출 중 오류 발생:", error);
+            }
+        };
+
         const timer = setInterval(() => {
             setRemainingTime((prev) => {
                 if (prev <= 1 && !submittedRef.current) {
-                    submittedRef.current = true; // 중복 방지
+                    submittedRef.current = true;
                     clearInterval(timer);
                     alert("시간이 종료되었습니다. 답안을 제출합니다.");
-                    console.log("모든 답변:", answers);
-                    setTimeout(() => {
-                        setView('dashboard'); // ✅ React가 렌더링을 마친 후 실행됨
-                    }, 0);
+                    submitTest(); // ← 비동기 함수 호출
                     return 0;
                 }
 
@@ -36,7 +60,8 @@ const LevelTest = ({ setView }) => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [answers]);
+    }, [answers, userdata]);
+
 
     const formatTime = (seconds) => {
         const min = String(Math.floor(seconds / 60)).padStart(2, '0');
@@ -68,25 +93,58 @@ const LevelTest = ({ setView }) => {
         getQuestion();
     }, []);
 
-    const handleNext = () => {
+    const handleNext = async () => {
+
+        const questionId = testQuestions[currentQuestionIndex]?.id;
+
+        if (!questionId) {
+            console.error("문제 ID를 찾을 수 없습니다.");
+            return;
+        }
+        // alert(questionId);
+
         if (selectedAnswer === null) {
             alert("답변을 선택해주세요.");
             return;
         }
 
-        setAnswers((prev) => ({
-            ...prev,
-            [currentQuestionIndex]: selectedAnswer,
-        }));
+        const updatedAnswers = {
+            ...answers,
+            [questionId]: selectedAnswer,
+        };
 
         if (currentQuestionIndex < testQuestions.length - 1) {
+            setAnswers(updatedAnswers);
             setCurrentQuestionIndex(currentQuestionIndex + 1);
         } else {
-            // 마지막 문제일 경우 제출 처리 등 추가 가능
-            console.log("모든 답변:", answers);
-            setTimeout(() => {
-                setView('dashboard'); // ✅ React가 렌더링을 마친 후 실행됨
-            }, 0);
+            if (confirm("제출하시겠습니까?")) {
+                try {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/submitTest`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ answers, userdata }),
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        console.log("답변 및 userdata:", updatedAnswers, userdata);
+                        setAnswers(updatedAnswers);  // 마지막 답변도 반영
+                        setTimeout(() => {
+                            setView('dashboard');
+                        }, 0);
+                    } else {
+                        console.error("제출 실패:", data);
+                    }
+                } catch (error) {
+                    console.error("제출 중 오류 발생:", error);
+                }
+
+            } else {
+                console.log("제출을 취소했습니다.");
+            }
         }
     };
 
@@ -158,16 +216,16 @@ const LevelTest = ({ setView }) => {
                                 <div className="bg-white rounded shadow p-5 mb-5 relative">
 
                                     {options.map((option, index) => (
-                                        <div className="flex items-start mb-4" key={index}>
+                                        <div className="flex items-start mb-4" key={index + 1}>
                                             <input
                                                 type="radio"
-                                                id={`option${index}`}
+                                                id={`option${index + 1}`}
                                                 name="answer"
                                                 className="mt-1 mr-2"
-                                                checked={selectedAnswer === index}
-                                                onChange={() => setSelectedAnswer(index)}
+                                                checked={selectedAnswer === index + 1}
+                                                onChange={() => setSelectedAnswer(index + 1)}
                                             />
-                                            <label htmlFor={`option${index}`} className="text-base leading-relaxed">
+                                            <label htmlFor={`option${index + 1}`} className="text-base leading-relaxed">
                                                 {option}
                                             </label>
                                         </div>
