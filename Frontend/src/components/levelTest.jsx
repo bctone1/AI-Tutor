@@ -8,7 +8,7 @@ const LevelTest = ({ setView }) => {
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [answers, setAnswers] = useState({});
 
-    const [remainingTime, setRemainingTime] = useState(20); // 30분 = 1800초
+    const [remainingTime, setRemainingTime] = useState(1800); // 30분 = 1800초
     const fiveMinuteWarnedRef = useRef(false); // ref를 사용하여 상태 유지
     const submittedRef = useRef(false);
 
