@@ -1,18 +1,53 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-const LevelTest = () => {
+const LevelTest = ({ setView }) => {
     const [testQuestions, setTestQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [answers, setAnswers] = useState({});
 
+    const [remainingTime, setRemainingTime] = useState(20); // 30분 = 1800초
+    const fiveMinuteWarnedRef = useRef(false); // ref를 사용하여 상태 유지
+    const submittedRef = useRef(false);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setRemainingTime((prev) => {
+                if (prev <= 1 && !submittedRef.current) {
+                    submittedRef.current = true; // 중복 방지
+                    clearInterval(timer);
+                    alert("시간이 종료되었습니다. 답안을 제출합니다.");
+                    console.log("모든 답변:", answers);
+                    setTimeout(() => {
+                        setView('dashboard'); // ✅ React가 렌더링을 마친 후 실행됨
+                    }, 0);
+                    return 0;
+                }
+
+                if (prev === 300 && !fiveMinuteWarnedRef.current) {
+                    alert("5분 남았습니다.");
+                    fiveMinuteWarnedRef.current = true;
+                }
+
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [answers]);
+
+    const formatTime = (seconds) => {
+        const min = String(Math.floor(seconds / 60)).padStart(2, '0');
+        const sec = String(seconds % 60).padStart(2, '0');
+        return `${min}:${sec}`;
+    };
+
     useEffect(() => {
         // 현재 인덱스의 답변 있으면 불러오기
         setSelectedAnswer(answers[currentQuestionIndex] ?? null);
     }, [currentQuestionIndex]);
-    
 
     useEffect(() => {
         const getQuestion = async () => {
@@ -33,35 +68,38 @@ const LevelTest = () => {
         getQuestion();
     }, []);
 
-   const handleNext = () => {
-    if (selectedAnswer === null) {
-        alert("답변을 선택해주세요.");
-        return;
-    }
+    const handleNext = () => {
+        if (selectedAnswer === null) {
+            alert("답변을 선택해주세요.");
+            return;
+        }
 
-    setAnswers((prev) => ({
-        ...prev,
-        [currentQuestionIndex]: selectedAnswer,
-    }));
+        setAnswers((prev) => ({
+            ...prev,
+            [currentQuestionIndex]: selectedAnswer,
+        }));
 
-    if (currentQuestionIndex < testQuestions.length - 1) {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else {
-        // 마지막 문제일 경우 제출 처리 등 추가 가능
-        console.log("모든 답변:", answers);
-    }
-};
+        if (currentQuestionIndex < testQuestions.length - 1) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
+        } else {
+            // 마지막 문제일 경우 제출 처리 등 추가 가능
+            console.log("모든 답변:", answers);
+            setTimeout(() => {
+                setView('dashboard'); // ✅ React가 렌더링을 마친 후 실행됨
+            }, 0);
+        }
+    };
 
-const handlePrev = () => {
-    setAnswers((prev) => ({
-        ...prev,
-        [currentQuestionIndex]: selectedAnswer,
-    }));
+    const handlePrev = () => {
+        setAnswers((prev) => ({
+            ...prev,
+            [currentQuestionIndex]: selectedAnswer,
+        }));
 
-    if (currentQuestionIndex > 0) {
-        setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
-};
+        if (currentQuestionIndex > 0) {
+            setCurrentQuestionIndex(currentQuestionIndex - 1);
+        }
+    };
 
     const currentQuestion = testQuestions[currentQuestionIndex];
 
@@ -91,7 +129,7 @@ const handlePrev = () => {
                     {currentQuestionIndex + 1} / {testQuestions.length} 문항
                 </div>
                 <div className="w-52 h-12 bg-indigo-100 flex justify-center items-center text-indigo-700 text-base">
-                    남은 시간: 28:15
+                    남은 시간: {formatTime(remainingTime)}
                 </div>
             </div>
 
@@ -151,7 +189,7 @@ const handlePrev = () => {
                 <button onClick={handlePrev} className="bg-gray-300 text-gray-800 font-bold px-6 py-3 rounded">
                     이전
                 </button>
-                <button className="text-gray-600 px-6 py-3">일시정지</button>
+                {/* <button className="text-gray-600 px-6 py-3">일시정지</button> */}
                 <button onClick={handleNext} className="bg-indigo-600 text-white font-bold px-6 py-3 rounded">
                     다음
                 </button>

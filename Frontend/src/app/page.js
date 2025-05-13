@@ -36,7 +36,6 @@ export default function LoginPage({ className }) {
     if (result?.error) {
       alert("회원정보가 없습니다.");
     } else {
-      // 로그인 성공 후 세션 정보 가져오기
       const res = await fetch("/api/auth/session");
       const session = await res.json();
       if (session?.user?.role === "admin") {

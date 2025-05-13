@@ -11,6 +11,8 @@ import Profile from '@/components/profile';
 export default function AnatomyTestPage() {
   const [view, setView] = useState('leveltest');
 
+
+
   return (
     <div className="min-h-screen bg-gray-100">
 
@@ -22,7 +24,9 @@ export default function AnatomyTestPage() {
 
       {/* 메인 컨텐츠 */}
       {view === 'leveltest' && (
-        <LevelTest />
+        <LevelTest
+          setView={setView}
+        />
       )}
 
       {view === 'dashboard' && (
