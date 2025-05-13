@@ -33,11 +33,9 @@ def user_login(db: Session, email: str, pw: str):
         if verify_password(pw, user.password):
             return {
                 "id": user.id,
-                "email": user.email,
                 "name": user.name,
-                "role": user.role,
-                "department" : user.department,
-                "grade" : user.grade
+                "email": user.email,
+                "role": user.role
             }
     return None
 
@@ -45,6 +43,8 @@ def generate_random_password():
     random_number = ''.join([str(random.randint(0, 9)) for _ in range(8)])
     return f'default_password{random_number}'
 
+def get_user_data(db : Session, email : str):
+    return db.query(User).filter(User.email.ilike(email)).first()
 
 def create_social_user(db : Session, email : str, name : str):
     password = generate_random_password()

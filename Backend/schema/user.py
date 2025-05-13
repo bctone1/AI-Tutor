@@ -35,3 +35,11 @@ class GoogleLoginResponse(BaseModel):
     email : str
     name : str
     image : Optional[str] = None
+
+
+class SendEmailRequest(BaseModel):
+    email : str
+    secretCode : str
+
+class SendEmailResponse(BaseModel):
+    message : str
