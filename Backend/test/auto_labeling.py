@@ -1,23 +1,15 @@
-from crud.exam import *
-a = load_document("test1.pdf")
+'''from langchain_service.document_loader.file_loader import load_document_by_ocr
+
+file_path = "test2.pdf"
 
 
-if __name__ == "__main__":
-    from sqlalchemy import create_engine
-    from sqlalchemy.orm import sessionmaker
+document = load_document_by_ocr(file_path)
 
-    # DB 연결
-    engine = create_engine(
-        "postgresql+psycopg2://postgres:3636@localhost/knowledge_base",
-        connect_args={"client_encoding": "UTF8"}
-    )
-    SessionLocal = sessionmaker(bind=engine)
+for doc in document:
+    print(doc.page_content)'''
 
-    # 테스트 실행
-    with SessionLocal() as session:
-        process_exam_with_langchain_embedding(
-            session=session,
-            file_path="test1.pdf",
-            department="컴퓨터공학과",
-            subject="자료구조"
-        )
+from langchain_service.document_loader.file_loader import load_document_by_ocr
+
+docs = load_document_by_ocr("test2.pdf")
+for d in docs:
+    print(d.page_content)

@@ -64,12 +64,12 @@ async def submit_test_endpoint(request: SubmitTestRequest, db: Session = Depends
 
     print(f"ANSWER : {answers}")
 
-    grading_test(db, answers)
+    score, num_cases = grading_test(db, answers)
+    level, normalized_score = classify_level(score, num_cases)
 
+    print(f"LEVEL : {level} | SCORE : {score} | NORMALIZED_SCORE : {normalized_score}")
     return {
-        "answers": request.answers,
-        "user_name": request.userdata.user.name,
-        "user_email": request.userdata.user.email,
-        "message": request.userdata.user.message,
-        "expires_at": request.userdata.expires
+        "score": score,
+        "grade": level,
+        "norm_score" : normalized_score
     }

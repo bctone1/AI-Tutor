@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Text
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, JSON
 from database.base import Base
 from sqlalchemy.orm import relationship
 from pgvector.sqlalchemy import Vector
@@ -10,6 +10,7 @@ class Exam(Base):
     department = Column(String(50))
     file_name = Column(String(50))
     subject = Column(String(50))
+    case_list = Column(JSON)
     knowledge_bases = relationship('KnowledgeBase', back_populates='exam', cascade="all, delete-orphan")
 
 
@@ -24,6 +25,7 @@ class KnowledgeBase(Base):
 
     labeling_data = relationship("LabelingData", back_populates="knowledge_base", cascade="all, delete-orphan")
     exam = relationship("Exam", back_populates="knowledge_bases")
+
 
 class LabelingData(Base):
     __tablename__ = "labeling_data"
