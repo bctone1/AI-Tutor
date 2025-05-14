@@ -9,7 +9,7 @@ const LevelTest = ({ setView, userdata }) => {
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [answers, setAnswers] = useState({});
 
-    const [remainingTime, setRemainingTime] = useState(300);
+    const [remainingTime, setRemainingTime] = useState(5);
     const fiveMinuteWarnedRef = useRef(false);
     const submittedRef = useRef(false);
 
