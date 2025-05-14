@@ -21,6 +21,7 @@ export default function AnatomyTestPage() {
 
       {/* 헤더 */}
       <Navigation
+        view={view}
         setView={setView}
       />
 
