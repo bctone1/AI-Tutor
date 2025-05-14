@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
-const LevelTestResult = () => {
+const LevelTestResult = ({ userdata }) => {
+    console.log(userdata);
     const [activeTab, setActiveTab] = useState('anatomy');
 
     const handleTabClick = (tab) => {
@@ -8,8 +9,6 @@ const LevelTestResult = () => {
     };
 
     return (
-
-
         <main className="max-w-5xl mx-auto mt-6 px-5">
             <div className="p-6 space-y-6">
 
@@ -18,20 +17,22 @@ const LevelTestResult = () => {
 
                     <div className="flex items-center mb-6">
                         <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center text-lg font-bold text-white mr-4">
-                            김
+                            <img src={userdata.user.image} />
                         </div>
                         <div>
-                            <div className="text-lg font-medium text-gray-800">김인대</div>
-                            <div className="text-sm text-gray-500">직업치료학과 3학년</div>
+                            <div className="text-lg font-medium text-gray-800">{userdata.user.name}
+                                <span className="ml-3 px-4 py-1.5 rounded-[12px] text-[16px] font-bold text-orange-500 border-2 border-orange-500 bg-[#fff3e6] animate-pulse">
+                                    Level - 중
+                                </span>
+                            </div>
+                            <div className="text-sm text-gray-500 mt-1">{userdata.user.major} 3학년</div>
                         </div>
                     </div>
 
                     <div className="mb-4">
                         <div className="text-sm text-gray-500">이메일</div>
                         <div className="text-sm text-gray-700 flex items-center gap-2 mt-1">
-                            otstudent@university.ac.kr
-                            <span className="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded">레벨테스트</span>
-                            <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded">중</span>
+                            {userdata.user.email}
                         </div>
                     </div>
 
@@ -50,16 +51,16 @@ const LevelTestResult = () => {
                 <div className="bg-white shadow-md rounded-lg p-6 mt-6 mb-6">
                     <h2 className="text-2xl font-semibold mb-6 text-gray-800">레벨테스트 결과</h2>
 
-                    <div className="flex border-b mb-4">
+                    <div className="flex mb-4 gap-2">
                         <button
-                            className={`py-2 px-4 font-medium ${activeTab === 'anatomy' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'
+                            className={`py-2 rounded-[5px] border px-4 font-medium ${activeTab === 'anatomy' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
                                 }`}
                             onClick={() => handleTabClick('anatomy')}
                         >
                             해부학 (9개 유형)
                         </button>
                         <button
-                            className={`py-2 px-4 font-medium ml-4 ${activeTab === 'physiology' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500'
+                            className={`py-2 rounded-[5px] border px-4 font-medium${activeTab === 'physiology' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
                                 }`}
                             onClick={() => handleTabClick('physiology')}
                         >
@@ -141,10 +142,10 @@ const Legend = () => (
 );
 
 const FocusArea = ({ title, areas }) => (
-    <div className="mt-6">
-        <div className="text-sm font-semibold text-gray-800">{title}</div>
-        <div className="text-sm text-gray-700">{areas}</div>
-        <div className="text-sm text-blue-600 mt-1">
+    <div className="mt-6 bg-red-50 p-5 rounded-[5px] border border-red-200">
+        <div className="text-sm font-semibold text-red-500">{title}</div>
+        <div className="text-m">{areas}</div>
+        <div className="text-sm text-gray-700 mt-1">
             해당 영역에 대한 맞춤형 학습 자료를 '학습 자료' 메뉴에서 확인하세요.
         </div>
     </div>
@@ -170,8 +171,8 @@ const ProgressBar = ({ label, percent }) => {
 
 const StatCard = ({ label, value }) => {
     return (
-        <div className="bg-gray-100 p-4 rounded-md text-center">
-            <div className="text-xl font-bold text-gray-800">{value}</div>
+        <div className="bg-white-100 p-4 rounded-md text-center border border-gray-300">
+            <div className="text-xl font-bold text-[#3f51b5]">{value}</div>
             <div className="text-sm text-gray-500 mt-1">{label}</div>
         </div>
     );

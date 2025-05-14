@@ -21,6 +21,7 @@ export default function AnatomyTestPage() {
 
       {/* 헤더 */}
       <Navigation
+        view={view}
         setView={setView}
       />
 
@@ -33,15 +34,21 @@ export default function AnatomyTestPage() {
       )}
 
       {view === 'dashboard' && (
-        <Dashboard />
+        <Dashboard
+          userdata={session}
+        />
       )}
 
       {view === 'active' && (
-        <Active />
+        <Active
+          userdata={session}
+        />
       )}
 
       {view === 'profile' && (
-        <Profile />
+        <Profile
+          userdata={session}
+        />
       )}
 
     </div>

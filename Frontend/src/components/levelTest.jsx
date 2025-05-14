@@ -16,6 +16,7 @@ const LevelTest = ({ setView, userdata }) => {
 
     useEffect(() => {
         const submitTest = async () => {
+            console.log(answers);
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/submitTest`, {
                     method: "POST",
@@ -85,7 +86,7 @@ const LevelTest = ({ setView, userdata }) => {
             const data = await response.json();
             if (response.ok) {
                 setTestQuestions(data);
-                console.log(data);
+                // console.log(data);
             } else {
                 console.error("공급자 오류발생");
             }
