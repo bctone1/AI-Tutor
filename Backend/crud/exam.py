@@ -5,6 +5,8 @@ from langchain_service.document_loader.extract_question import extract_questions
 from langchain_openai import OpenAIEmbeddings
 from core.config import CHATGPT_API_KEY
 from sqlalchemy.orm import Session
+from typing import Dict
+from schema.exam import SubmitTestRequest
 import os
 
 embedding_model = OpenAIEmbeddings(
@@ -41,4 +43,28 @@ def generate_level_test(db: Session, subject: str):
     question_ids = [label.question_id for label in labels]
     questions = db.query(KnowledgeBase).filter(KnowledgeBase.id.in_(question_ids)).all()
     question_texts = [parse_question_block(q.question) for q in questions]
-    return question_texts
+    levels = [label.level for label in labels]
+    return question_ids, question_texts, levels
+
+
+def grading_test(db: Session, answers: Dict[str, int]):
+    for key, value in answers.items():
+        label = db.query(LabelingData).filter(LabelingData.question_id == key).first()
+        score = 0
+        print(f"라벨링 응답 : {label.correct_answer}")
+        print(f"사용자 응답 : {value}")
+        if label.correct_answer == value:
+            print("정답")
+            if label.level == "상":
+                print("상급 문제 맞춤 - 5점 추가")
+                score += 5
+            elif label.level == "중":
+                print("중급 문제 맞춤 - 3점 추가")
+                score += 3
+            elif label.level == "하":
+                print("중급 문제 맞춤 - 2점 추가")
+                score += 2
+        else:
+            print("오답")
+        return score
+

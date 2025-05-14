@@ -40,15 +40,36 @@ async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db
     }
 
 @exam_router.post('/getTestQuestion')
-async def get_test_endpoint(db : Session = Depends(get_db)):
+async def get_test_endpoint(db: Session = Depends(get_db)):
     subject = "물리치료"
-    questions = generate_level_test(db, subject)
+    question_ids, question_texts, levels = generate_level_test(db, subject)
 
-    if not questions:
+    if not question_ids:
         return JSONResponse(content={"error": "No questions found."}, status_code=404)
 
     formatted_questions = [
-        {"question": json.dumps(q, ensure_ascii=False)} for q in questions
+        {
+            "id": qid,
+            "level" : level,
+            "question": json.dumps(qtext, ensure_ascii=False)
+        }
+        for qid, level, qtext in zip(question_ids, levels, question_texts)
     ]
 
     return formatted_questions
+
+@exam_router.post('/submitTest')
+async def submit_test_endpoint(request: SubmitTestRequest, db: Session = Depends(get_db)):
+    answers = request.answers
+
+    print(f"ANSWER : {answers}")
+
+    grading_test(db, answers)
+
+    return {
+        "answers": request.answers,
+        "user_name": request.userdata.user.name,
+        "user_email": request.userdata.user.email,
+        "message": request.userdata.user.message,
+        "expires_at": request.userdata.expires
+    }
