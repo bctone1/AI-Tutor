@@ -85,8 +85,6 @@ export const handler = NextAuth({
         // }
       }
       if (account.provider === "naver") {
-        // console.log("=========================================================");
-        // console.log(JSON.stringify(user, null, 2));
         try {
           const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/googlelogin`, {
           // const res = await axios.post("http://127.0.0.1:5000/googlelogin", {
@@ -138,13 +136,23 @@ export const handler = NextAuth({
       return token;
     },
 
+    // async session({ session, token }) {
+    //   session.user.id = token.id;
+    //   session.user.email = token.email;
+    //   session.user.message = token.message;
+    //   session.user.role = token.role;
+    //   return session;
+    // },
+
     async session({ session, token }) {
-      session.user.id = token.id;
-      session.user.email = token.email;
-      session.user.message = token.message;
-      session.user.role = token.role;
+      session.user.role = "student";
+      session.user.grade = 2;
+      session.user.major = "물리치료학과";
+      session.user.testscore = 72;
       return session;
     },
+
+    
 
   },
 

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-const Active = () => {
+const Active = ({userdata}) => {
     const [selectedSubject, setSelectedSubject] = useState("");
     const [chatLog, setChatLog] = useState([]);
     const [input, setInput] = useState('');
@@ -216,7 +216,7 @@ const Active = () => {
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleLLMChat()}
                             className="flex-1 px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-400 text-sm"
-                            placeholder="추가 질문이 있으시면 입력하세요..."
+                            placeholder="메세지를 입력하세요..."
                         />
                     </div>
                 </section>

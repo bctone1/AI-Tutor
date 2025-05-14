@@ -86,7 +86,7 @@ const LevelTest = ({ setView, userdata }) => {
             const data = await response.json();
             if (response.ok) {
                 setTestQuestions(data);
-                console.log(data);
+                // console.log(data);
             } else {
                 console.error("공급자 오류발생");
             }
