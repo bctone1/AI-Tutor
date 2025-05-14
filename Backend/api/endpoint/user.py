@@ -7,23 +7,21 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import core.config as config
 from fastapi import Request
-import json
 import smtplib
 user_router = APIRouter()
 
 @user_router.post("/Debug")
 async def debug_request(request: Request):
-    # 요청 헤더
     headers = dict(request.headers)
 
-    # 요청 바디 (JSON 형식으로 파싱 시도)
     try:
         body = await request.json()
-    except Exception:
+    except Exception as e:
         body = await request.body()
         try:
             body = body.decode("utf-8")
-        except Exception:
+        except Exception as e:
+            print(e)
             pass
 
     print("==== [DEBUG] Incoming Request ====")
