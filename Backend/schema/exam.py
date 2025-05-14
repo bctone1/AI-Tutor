@@ -13,8 +13,8 @@ class User(BaseModel):
     name: str
     email: str
     id: int
-    message: str
-    role: str
+    # message: str
+    #role: str
 
 class UserData(BaseModel):
     user: User
