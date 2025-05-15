@@ -1,7 +1,7 @@
 import React from 'react';
 
 const dashboard = ({userdata}) => {
-
+console.log(userdata);
 
     return (
         <main className="max-w-6xl mx-auto px-5">
@@ -11,8 +11,8 @@ const dashboard = ({userdata}) => {
                 {/* 사용자 정보 및 카운트다운 */}
                 <div className="flex flex-col md:flex-row gap-4">
                     <div className="w-full md:w-1/3 bg-white rounded shadow p-6">
-                        <h2 className="text-lg font-bold">김의대님, 안녕하세요!</h2>
-                        <p className="text-sm text-gray-600">의과대학 2학년 | 종합 레벨: 중</p>
+                        <h2 className="text-lg font-bold">{userdata.user.name}님, 안녕하세요!</h2>
+                        <p className="text-sm text-gray-600">의과대학 {userdata.user.grade}학년 | 종합 레벨: 중</p>
                     </div>
                     <div className="w-full md:w-2/3 bg-white rounded shadow p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
