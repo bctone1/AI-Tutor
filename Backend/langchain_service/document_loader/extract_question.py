@@ -54,4 +54,5 @@ def extract_all_structured_questions(page_texts: List[str]) -> List[Dict]:
     return [parse_question_block(block) for block in raw_blocks]
 
 
+
 # 출력 예시 : [{'question': '1. 다음 중 경첩관절은 ?', 'choices': ['어깨관절', '팔꿉관절', '손목관절', '엉덩관절', '복장빗장관절']}]

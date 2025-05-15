@@ -112,3 +112,4 @@ def update_user_score_mail(db: Session, user_email : str, score : int):
         return user
     else:
         return None
+
