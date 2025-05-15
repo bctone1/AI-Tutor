@@ -4,26 +4,20 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import NaverProvider from 'next-auth/providers/naver';
 import KakaoProvider from "next-auth/providers/kakao";
-
 import axios from "axios";
 
-// console.log("⚙️ NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
 export const handler = NextAuth({
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
-    NaverProvider({
-      clientId: process.env.NAVER_CLIENT_ID,
-      clientSecret: process.env.NAVER_CLIENT_SECRET,
-    }),
     KakaoProvider({
       clientId: process.env.KAKAO_CLIENT_ID,
       clientSecret: process.env.KAKAO_CLIENT_SECRET || "",
     }),
 
-
+    // 최초 로그인
     CredentialsProvider({
       name: "Credentials",
       credentials: {
@@ -58,14 +52,15 @@ export const handler = NextAuth({
       },
     }),
 
+    // 두 번째 credentials2 프로필 업데이트
     CredentialsProvider({
-      id: "credentials2", // 두 번째 credentials2 로그인 방식
+      id: "credentials2",
       name: "Credentials2",
       credentials: {
         email: { label: "Email", type: "text" },
         major: { label: "major", type: "text" },
         grade: { label: "major", type: "number" },
-        password: { label: "Password", type: "password" },//나중에 뺄거
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         try {
@@ -73,11 +68,11 @@ export const handler = NextAuth({
             email: credentials.email,
             major: credentials.major,
             grade: credentials.grade,
-            password: credentials.password, //나중에 뺄거
+            password: credentials.password,
           });
 
           if (res.status === 200) {
-            console.log("💥credentials2방식~~~~~~~~" + res.data);
+            // console.log("💥credentials2방식~~~~~~~~" + res.data);
             return {
               id: res.data.id,
               name: res.data.name,
@@ -108,57 +103,39 @@ export const handler = NextAuth({
   callbacks: {
     async signIn({ user, account }) {
       if (account.provider === "google") {
-        // try {
-        //   const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/googlelogin`, {
-        //     email: user.email,
-        //     name: user.name,
-        //     image: user.image,
-        //   });
-        //   if (res.status === 200) {
-        //     user.id = res.data.id;
-        //     user.message = res.data.message;
-        //     user.role = res.data.role;
-        //   }
-        // } catch (error) {
-        //   console.error("Google 로그인 후 백엔드 전송 실패:", error);
-        //   return false; // 로그인 중단
-        // }
-      }
-      if (account.provider === "naver") {
         try {
           const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/googlelogin`, {
-            // const res = await axios.post("http://127.0.0.1:5000/googlelogin", {
             email: user.email,
             name: user.name,
-            image: user.image,
           });
           if (res.status === 200) {
             user.id = res.data.id;
             user.message = res.data.message;
             user.role = res.data.role;
+            user.major = res.data.major;
+            user.grade = res.data.grade;
+            user.testscore = res.data.testscore;
           }
-
         } catch (error) {
-          console.error("Naver 로그인 후 백엔드 전송 실패:", error);
-          return false;
+          console.error("Google 로그인 후 백엔드 전송 실패:", error);
+          return false; // 로그인 중단
         }
       }
       if (account.provider === "kakao") {
         console.log(JSON.stringify(user, null, 2));
         try {
           const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/googlelogin`, {
-            // const res = await axios.post("http://127.0.0.1:5000/googlelogin", {
             email: user.name,
             name: user.name,
-            image: user.image,
           });
           if (res.status === 200) {
             user.id = res.data.id;
             user.message = res.data.message;
             user.role = res.data.role;
-
+            user.major = res.data.major;
+            user.grade = res.data.grade;
+            user.testscore = res.data.testscore;
           }
-
         } catch (error) {
           console.error("Kakao 로그인 후 백엔드 전송 실패:", error);
           return false;
@@ -180,16 +157,6 @@ export const handler = NextAuth({
       return token;
     },
 
-    // async session({ session, token }) {
-    //   session.user.id = token.id;
-    //   session.user.email = token.email;
-    //   session.user.message = token.message;
-    //   session.user.role = token.role;
-    //   return session;
-    // },
-
-
-
     async session({ session, token }) {
       session.user.id = token.id;
       session.user.email = token.email;
@@ -200,13 +167,7 @@ export const handler = NextAuth({
       session.user.testscore = token.testscore;
       return session;
     },
-
-
-
   },
-
-
-
 
 });
 

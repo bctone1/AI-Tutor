@@ -28,9 +28,6 @@ const Profile = ({ userdata }) => {
     };
 
 
-    console.log(userdata);
-
-
 
     return (
         <main className="max-w-6xl mx-auto px-5">
@@ -65,7 +62,9 @@ const Profile = ({ userdata }) => {
                     ) : (
                         <div className="flex items-center mb-6">
                             <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center text-lg font-bold text-white mr-4">
-                                {userdata.user.name}
+                                {userdata.user.image && (
+                                    <img src={userdata.user.image} alt="User" className="w-full h-full object-cover rounded-full" />
+                                )}
                             </div>
                             <div>
                                 <div className="text-lg font-medium text-gray-800">
