@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 
 llm_router = APIRouter()
 
-@llm_router.post("/Chat", response_model=MessageResponse)
+@llm_router.post("/chatLLM", response_model=MessageResponse)
 async def chat(request: MessageRequest):
     user_prompt = request.message
     session_id = request.session_id
@@ -19,7 +19,7 @@ async def chat(request: MessageRequest):
     return JSONResponse(content={"message": response}, status_code=200)
 
 @llm_router.post("/RagSearch", response_model=MessageResponse)
-async def chat(request: MessageRequest, db: Session = Depends(get_db)):
+async def rag(request: MessageRequest, db: Session = Depends(get_db)):
     user_prompt = request.message
 
     vector_response = convert_to_vector(user_prompt)
