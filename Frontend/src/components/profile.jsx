@@ -23,7 +23,7 @@ const Profile = ({ userdata }) => {
             email: session.user.email,
             major: department,
             grade: grade,
-            password: 123456789111,
+            // password: 123456789111,
         });
     };
 

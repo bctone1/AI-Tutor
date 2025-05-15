@@ -60,7 +60,6 @@ export const handler = NextAuth({
         email: { label: "Email", type: "text" },
         major: { label: "major", type: "text" },
         grade: { label: "major", type: "number" },
-        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         try {
@@ -68,11 +67,9 @@ export const handler = NextAuth({
             email: credentials.email,
             major: credentials.major,
             grade: credentials.grade,
-            password: credentials.password,
           });
 
           if (res.status === 200) {
-            // console.log("💥credentials2방식~~~~~~~~" + res.data);
             return {
               id: res.data.id,
               name: res.data.name,
@@ -91,6 +88,44 @@ export const handler = NextAuth({
         }
       },
     }),
+
+    // 두 번째 credentials3 테스트 점수 업데이트
+    CredentialsProvider({
+      id: "credentials3",
+      name: "Credentials3",
+      credentials: {
+        email: { label: "Email", type: "text" },
+        testscore: { label: "testscore", type: "number" },
+
+      },
+      async authorize(credentials) {
+        try {
+          const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/updateScore`, {
+            email: credentials.email,
+            testscore: credentials.testscore,
+
+          });
+
+          if (res.status === 200) {
+            return {
+              id: res.data.id,
+              name: res.data.name,
+              email: res.data.email,
+              message: res.data.message,
+              role: res.data.role,
+              major: res.data.major,
+              grade: res.data.grade,
+              testscore: res.data.testscore,
+            };
+          }
+          return null;
+        } catch (error) {
+          console.error("에러 발생:", error);
+          throw new Error("Invalid credentials3");
+        }
+      },
+    }),
+
   ],
 
 
@@ -107,6 +142,7 @@ export const handler = NextAuth({
           const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/googlelogin`, {
             email: user.email,
             name: user.name,
+            image: user.image,
           });
           if (res.status === 200) {
             user.id = res.data.id;
@@ -127,6 +163,7 @@ export const handler = NextAuth({
           const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/googlelogin`, {
             email: user.name,
             name: user.name,
+            image: user.image,
           });
           if (res.status === 200) {
             user.id = res.data.id;

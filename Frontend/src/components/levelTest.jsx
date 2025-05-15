@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
+import { signIn, useSession } from 'next-auth/react';
 
 
 const LevelTest = ({ setView, userdata }) => {
@@ -27,12 +28,21 @@ const LevelTest = ({ setView, userdata }) => {
                 });
 
                 const data = await response.json();
+                console.log(data.testscore);
+                console.log(userdata.user.email);
 
                 if (response.ok) {
-                    console.log("답변 및 userdata:", answers, userdata);
-                    setTimeout(() => {
-                        setView("dashboard");
-                    }, 0);
+                    // 스코어 업데이트 후 세션 초기화
+                    await signIn("credentials3", {
+                        redirect: false,
+                        email: userdata.user.email,
+                        testscore: data.testscore
+                    });
+
+                    // console.log("답변 및 userdata:", answers, userdata);
+                    // setTimeout(() => {
+                    //     setView("dashboard");
+                    // }, 0);
                 } else {
                     console.error("제출 실패:", data);
                 }
@@ -119,6 +129,7 @@ const LevelTest = ({ setView, userdata }) => {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
         } else {
             if (confirm("제출하시겠습니까?")) {
+
                 try {
                     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/submitTest`, {
                         method: "POST",
@@ -127,21 +138,28 @@ const LevelTest = ({ setView, userdata }) => {
                         },
                         body: JSON.stringify({ answers, userdata }),
                     });
-
                     const data = await response.json();
-
                     if (response.ok) {
-                        console.log("답변 및 userdata:", updatedAnswers, userdata);
-                        setAnswers(updatedAnswers);  // 마지막 답변도 반영
-                        setTimeout(() => {
-                            setView('dashboard');
-                        }, 0);
+
+                        // 스코어 업데이트 후 세션 초기화
+                        await signIn("credentials3", {
+                            redirect: false,
+                            email: session.user.email,
+                            testscore: data.score
+                        });
+
+
                     } else {
                         console.error("제출 실패:", data);
                     }
                 } catch (error) {
                     console.error("제출 중 오류 발생:", error);
                 }
+
+
+
+
+
 
             } else {
                 console.log("제출을 취소했습니다.");
