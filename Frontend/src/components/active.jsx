@@ -40,7 +40,7 @@ const Active = ({ userdata }) => {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getQuestion`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userdata: userdata })
+                body: JSON.stringify({ userdata: userdata, selectedSubject: selectedSubject })
             });
 
             const data = await res.json();
@@ -137,11 +137,35 @@ const Active = ({ userdata }) => {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chatAgent`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMessage, userdata: userdata })
+                body: JSON.stringify({ message: userMessage, userdata: userdata, selectedSubject: selectedSubject })
             });
-
             const data = await res.json();
-            setChatLog(prev => [...prev, { sender: 'AI 튜터', content: data.message }]);
+            if (data.method) {
+                const { question, choices } = data;
+                setChatLog(prev => [
+                    ...prev,
+                    {
+                        sender: 'AI 튜터',
+                        content: (
+                            <>
+                                <div className="mb-2">{question}</div>
+                                {choices.map((choice, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => handleSubmitAnswer(idx + 1)}
+                                        className="block w-full text-left bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded mb-1"
+                                    >
+                                        {idx + 1}. {choice}
+                                    </button>
+                                ))}
+                            </>
+                        )
+                    }
+                ]);
+            }else{
+                setChatLog(prev => [...prev, { sender: 'AI 튜터', content: data.message }]);
+            }
+            
         } catch (e) {
             console.error(e);
         } finally {
