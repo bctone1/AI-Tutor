@@ -11,6 +11,8 @@ class User(Base):
     role = Column(String(50))
     department = Column(String(100))
     grade = Column(Integer, nullable = False)
+    score = Column(Integer)
+
 
 
 

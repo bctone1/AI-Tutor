@@ -23,6 +23,7 @@ class LoginResponse(BaseModel):
     name : str
     department : str
     grade : int
+    score : int
 
 class GoogleLoginRequest(BaseModel):
     email : str
@@ -43,3 +44,18 @@ class SendEmailRequest(BaseModel):
 
 class SendEmailResponse(BaseModel):
     message : str
+
+
+class UpdateProfileRequest(BaseModel):
+    email: str
+    major : str
+    grade : int
+
+class UpdateProfileResponse(BaseModel):
+    id : int
+    name : str
+    email : str
+    role : str
+    major : str
+    grade : int
+    testscore : int
