@@ -66,8 +66,9 @@ async def login_endpoint(request: LoginRequest, db : Session = Depends(get_db)):
                 "role": "user",
                 "email": user_data["email"],
                 "name": user_data["name"],
-                "department" : user_data["department"],
-                "grade" : user_data["grade"]
+                "major" : user_data["major"],
+                "grade" : user_data["grade"],
+                "testscore" : user_data["testscore"],
             },
             status_code=200
         )
@@ -132,3 +133,26 @@ async def send_email(request: SendEmailRequest):
         return JSONResponse(content={'message': '요청되었습니다'}, status_code=200)
     except Exception as e:
         return JSONResponse(content={'message': f'이메일 전송 실패 : {str(e)}'}, status_code=500)
+
+@user_router.post("/updateProfile", response_model=UpdateProfileResponse)
+async def send_email(request: UpdateProfileRequest, db : Session = Depends(get_db)):
+    email = request.email
+    major = request.major
+    grade = request.grade
+
+    try:
+        user = change_user_info(db = db, email = email, major = major, grade = grade)
+        return JSONResponse(
+            content={
+                "id": user.id,
+                "name": user.name,
+                "email": user.email,
+                "role": user.role,
+                "major": user.department,
+                "grade": user.grade,
+                "testscore": user.score
+            },
+            status_code=200
+        )
+    except Exception as e:
+        return JSONResponse(content={'message': f'서버 오류 : {str(e)}'}, status_code=500)

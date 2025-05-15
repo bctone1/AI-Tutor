@@ -33,11 +33,12 @@ def user_login(db: Session, email: str, pw: str):
         if verify_password(pw, user.password):
             return {
                 "id": user.id,
-                "name": user.name,
+                "name" : user.name,
                 "email": user.email,
-                "department" : user.department,
+                "major": user.department,
                 "role": user.role,
-                "grade": user.grade
+                "grade" : user.grade,
+                "testscore" : user.score
             }
     else:
         if user.password == pw:
@@ -45,11 +46,12 @@ def user_login(db: Session, email: str, pw: str):
             db.commit()
             return {
                 "id": user.id,
+                "name" : user.name,
                 "email": user.email,
-                "name": user.name,
-                "department": user.department,
+                "major": user.department,
                 "role": user.role,
-                "grade" : user.grade
+                "grade" : user.grade,
+                "testscore" : user.score
             }
 
     return None
@@ -77,3 +79,15 @@ def create_social_user(db : Session, email : str, name : str):
     db.commit()
     db.refresh(new_user)
     return new_user.id
+
+def change_user_info(db: Session, email : str, major : str, grade : int):
+    user = db.query(User).filter(User.email == email).first()
+    if user:
+        user.department = major
+        user.grade = grade
+
+        db.commit()
+        db.refresh(user)
+        return user
+    else:
+        return None
