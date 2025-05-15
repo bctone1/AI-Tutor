@@ -49,10 +49,24 @@ const Profile = ({ userdata }) => {
                                     {userdata.user.name}
 
                                     {userdata.user.testscore > 0 && (
-                                        <span className="ml-3 px-4 py-1.5 rounded-[12px] text-[16px] font-bold text-orange-500 border-2 border-orange-500 bg-[#fff3e6] animate-pulse">
-                                            Level - 중
+                                        <span
+                                            className={`ml-3 px-4 py-1.5 rounded-[12px] text-[16px] font-bold border-2 animate-pulse 
+                                                ${userdata.user.testscore >= 80
+                                                    ? 'text-green-500 border-green-500 bg-[#e6fff3]'
+                                                    : userdata.user.testscore >= 50
+                                                        ? 'text-orange-500 border-orange-500 bg-[#fff3e6]'
+                                                        : 'text-red-500 border-red-500 bg-[#ffe6e6]'
+                                                }`}
+                                        >
+                                            Level -{' '}
+                                            {userdata.user.testscore >= 80
+                                                ? '상'
+                                                : userdata.user.testscore >= 50
+                                                    ? '중'
+                                                    : '하'}
                                         </span>
                                     )}
+
                                 </div>
                                 <div className="text-sm text-gray-500 mt-1">
                                     {userdata.user.major} {userdata.user.grade}학년
@@ -170,14 +184,14 @@ const Profile = ({ userdata }) => {
 
                         <div className="flex mb-4 gap-2">
                             <button
-                                className={`py-2 rounded-[5px] border px-4 font-medium ${activeTab === 'anatomy' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
+                                className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer ${activeTab === 'anatomy' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
                                     }`}
                                 onClick={() => handleTabClick('anatomy')}
                             >
                                 해부학 (9개 유형)
                             </button>
                             <button
-                                className={`py-2 rounded-[5px] border px-4 font-medium${activeTab === 'physiology' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
+                                className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer ${activeTab === 'physiology' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
                                     }`}
                                 onClick={() => handleTabClick('physiology')}
                             >

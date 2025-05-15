@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 
-const Active = ({userdata}) => {
+const Active = ({ userdata }) => {
     const [selectedSubject, setSelectedSubject] = useState("");
     const [chatLog, setChatLog] = useState([]);
     const [input, setInput] = useState('');
@@ -15,13 +15,6 @@ const Active = ({userdata}) => {
         }
 
         fetchInitialQuestion();
-    };
-
-
-    // 임의 사용자 정보 (실제로는 props나 context로 받아야 함)
-    const userInfo = {
-        major: '물리치료학과',
-        grade: '3학년',
     };
 
     useEffect(() => {
@@ -43,13 +36,20 @@ const Active = ({userdata}) => {
     }, []);
 
     const fetchInitialQuestion = async () => {
-
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getFirstQuestion`);
-            const data = await res.json();
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getQuestion`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userdata: userdata })
+            });
 
+            const data = await res.json();
             if (res.ok) {
                 const { question, choices } = data;
+
+
+
+
                 setChatLog(prev => [
                     ...prev,
                     {
@@ -172,7 +172,7 @@ const Active = ({userdata}) => {
                         </select>
 
                         <p className="text-sm text-gray-600 mt-4">
-                            {userInfo.major} | {userInfo.grade}
+                            {userdata.user.major} | {userdata.user.grade}학년
                         </p>
                     </div>
 
