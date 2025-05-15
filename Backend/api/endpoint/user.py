@@ -79,6 +79,9 @@ async def login_endpoint(request: LoginRequest, db : Session = Depends(get_db)):
 async def login(request: GoogleLoginRequest, db : Session = Depends(get_db)):
     email = request.email
     name = request.name
+    image = request.image
+    print(f"GOOGLE EMAIL : {email}")
+    print(f"GOOGLE NAME : {name}")
 
     try:
         user = get_user_data(db, email)
@@ -87,10 +90,15 @@ async def login(request: GoogleLoginRequest, db : Session = Depends(get_db)):
             create_social_user(db, email, name)
             return JSONResponse(
                 content={
-                    "message": f"{user.name}님 반갑습니다! 새 계정이 생성되었습니다.",
-                    "role": user.role,
+                    "message": f"{user.name}님 반갑습니다!.",
+                    "id": user.id,
+                    "name": user.name,
                     "email": user.email,
-                    "id":user.id
+                    "role": user.role,
+                    "major": user.department,
+                    "grade": user.grade,
+                    "testscore": user.score,
+                    "image": image
                 },
                 status_code=200
             )
@@ -99,10 +107,14 @@ async def login(request: GoogleLoginRequest, db : Session = Depends(get_db)):
             return JSONResponse(
                 content={
                     "message": message,
-                    "role": user.role,
-                    "email": user.email,
+                    "id": user.id,
                     "name": user.name,
-                    "id" : user.id
+                    "email": user.email,
+                    "role": user.role,
+                    "major": user.department,
+                    "grade": user.grade,
+                    "testscore": user.score,
+                    "image" : image
                 },
                 status_code=200
             )
@@ -135,13 +147,36 @@ async def send_email(request: SendEmailRequest):
         return JSONResponse(content={'message': f'이메일 전송 실패 : {str(e)}'}, status_code=500)
 
 @user_router.post("/updateProfile", response_model=UpdateProfileResponse)
-async def send_email(request: UpdateProfileRequest, db : Session = Depends(get_db)):
+async def update_profile_endpoint(request: UpdateProfileRequest, db : Session = Depends(get_db)):
     email = request.email
     major = request.major
     grade = request.grade
 
     try:
         user = change_user_info(db = db, email = email, major = major, grade = grade)
+        return JSONResponse(
+            content={
+                "id": user.id,
+                "name": user.name,
+                "email": user.email,
+                "role": user.role,
+                "major": user.department,
+                "grade": user.grade,
+                "testscore": user.score
+            },
+            status_code=200
+        )
+    except Exception as e:
+        return JSONResponse(content={'message': f'서버 오류 : {str(e)}'}, status_code=500)
+
+
+@user_router.post("/updateScore", response_model=UpdateScoreResponse)
+async def update_profile_endpoint(request: UpdateScoreRequest, db : Session = Depends(get_db)):
+    email = request.email
+    score = request.testscore
+
+    try:
+        user = update_user_score_mail(db = db, user_email = email, score = score)
         return JSONResponse(
             content={
                 "id": user.id,

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, File, UploadFile
 from core.config import UPLOAD_DIR
 from crud.exam import *
+from crud.user import update_user_score
 from langchain_service.document_loader.file_loader import load_document
 from langchain_service.document_loader.extract_question import extract_questions_from_pages
 from fastapi.responses import JSONResponse
@@ -61,6 +62,7 @@ async def get_test_endpoint(db: Session = Depends(get_db)):
 @exam_router.post('/submitTest')
 async def submit_test_endpoint(request: SubmitTestRequest, db: Session = Depends(get_db)):
     answers = request.answers
+    user_id = request.userdata.user.id
 
     print(f"ANSWER : {answers}")
 
@@ -68,6 +70,8 @@ async def submit_test_endpoint(request: SubmitTestRequest, db: Session = Depends
     level, normalized_score = classify_level(score, num_cases)
 
     print(f"LEVEL : {level} | SCORE : {score} | NORMALIZED_SCORE : {normalized_score}")
+    update_user_score(db = db, user_id = user_id, score = score)
+
     return {
         "score": score,
         "grade": level,

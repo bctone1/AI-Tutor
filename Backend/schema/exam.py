@@ -23,3 +23,14 @@ class UserData(BaseModel):
 class SubmitTestRequest(BaseModel):
     answers: Dict[str, int]
     userdata: UserData
+
+
+'''
+class SubmitTestResponse(BaseModel):
+    id : int
+    name : str
+    email : str
+    role : str
+    major : str
+    grade : int
+    testscore : int'''

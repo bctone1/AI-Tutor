@@ -98,9 +98,9 @@ def classify_level(score: int, num_cases: int) -> Tuple[str, int]:
     ratio = score / max_score
     normalized_score = int(ratio * 100)
 
-    if ratio >= 0.8:
+    if ratio >= 80:
         level = "상"
-    elif ratio >= 0.5:
+    elif ratio >= 50:
         level = "중"
     else:
         level = "하"

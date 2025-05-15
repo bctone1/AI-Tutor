@@ -70,7 +70,7 @@ def create_social_user(db : Session, email : str, name : str):
         email = email,
         password = hashed_pw,
         name = name,
-        role = 'SocialLogin',
+        role = 'googleUser',
         group = 'newUser',
         department = "소속 없음",
         grade= 0
@@ -78,7 +78,7 @@ def create_social_user(db : Session, email : str, name : str):
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-    return new_user.id
+    return new_user
 
 def change_user_info(db: Session, email : str, major : str, grade : int):
     user = db.query(User).filter(User.email == email).first()
@@ -86,6 +86,27 @@ def change_user_info(db: Session, email : str, major : str, grade : int):
         user.department = major
         user.grade = grade
 
+        db.commit()
+        db.refresh(user)
+        return user
+    else:
+        return None
+
+def update_user_score(db: Session, user_id : int, score : int):
+    user = db.query(User).filter(User.id == user_id).first()
+    if user:
+        user.score = score
+        db.commit()
+        db.refresh(user)
+        return user
+    else:
+        return None
+
+
+def update_user_score_mail(db: Session, user_email : str, score : int):
+    user = db.query(User).filter(User.email == user_email).first()
+    if user:
+        user.score = score
         db.commit()
         db.refresh(user)
         return user

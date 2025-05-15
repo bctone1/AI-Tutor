@@ -31,10 +31,14 @@ class GoogleLoginRequest(BaseModel):
     image : Optional[str] = None
 
 class GoogleLoginResponse(BaseModel):
-    id : int
-    message : str
-    email : str
-    name : str
+    message: str
+    id: int
+    role: str
+    email: str
+    name: str
+    department: str
+    grade: int
+    score: int
     image : Optional[str] = None
 
 
@@ -59,3 +63,16 @@ class UpdateProfileResponse(BaseModel):
     major : str
     grade : int
     testscore : int
+
+class UpdateScoreRequest(BaseModel):
+    email : str
+    testscore : int
+
+class UpdateScoreResponse(BaseModel):
+    id: int
+    name: str
+    email: str
+    role: str
+    major: str
+    grade: int
+    testscore: int
