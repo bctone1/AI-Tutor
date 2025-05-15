@@ -153,7 +153,7 @@ const Active = ({userdata}) => {
     };
 
     return (
-        <main className="max-w-5xl mx-auto mt-6 px-5 relative">
+        <main className="max-w-6xl mx-auto mt-6 px-5 relative">
             <div className="flex gap-6">
                 {/* 사이드바: 과목 선택 */}
                 <aside className="w-64 bg-white rounded-md shadow-md p-6 border border-gray-200 h-fit sticky top-6 flex flex-col justify-between min-h-[300px]">

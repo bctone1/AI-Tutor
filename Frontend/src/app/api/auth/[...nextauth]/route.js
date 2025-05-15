@@ -33,18 +33,21 @@ export const handler = NextAuth({
       async authorize(credentials) {
         try {
           const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
-          // const res = await axios.post("http://127.0.0.1:5000/login", {
             email: credentials.email,
             password: credentials.password,
           });
 
           if (res.status === 200) {
+            console.log(res.data);
             return {
               id: res.data.id,
               name: res.data.name,
               email: res.data.email,
               message: res.data.message,
               role: res.data.role,
+              major: res.data.major,
+              grade: res.data.grade,
+              testscore: res.data.testscore,
             };
           }
           return null;
@@ -54,9 +57,46 @@ export const handler = NextAuth({
         }
       },
     }),
+
+    CredentialsProvider({
+      id: "credentials2", // 두 번째 credentials2 로그인 방식
+      name: "Credentials2",
+      credentials: {
+        email: { label: "Email", type: "text" },
+        major: { label: "major", type: "text" },
+        grade: { label: "major", type: "number" },
+        password: { label: "Password", type: "password" },//나중에 뺄거
+      },
+      async authorize(credentials) {
+        try {
+          const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/updateProfile`, {
+            email: credentials.email,
+            major: credentials.major,
+            grade: credentials.grade,
+            password: credentials.password, //나중에 뺄거
+          });
+
+          if (res.status === 200) {
+            console.log("💥credentials2방식~~~~~~~~" + res.data);
+            return {
+              id: res.data.id,
+              name: res.data.name,
+              email: res.data.email,
+              message: res.data.message,
+              role: res.data.role,
+              major: res.data.major,
+              grade: res.data.grade,
+              testscore: res.data.testscore,
+            };
+          }
+          return null;
+        } catch (error) {
+          console.error("에러 발생:", error);
+          throw new Error("Invalid credentials2");
+        }
+      },
+    }),
   ],
-
-
 
 
   pages: {
@@ -87,7 +127,7 @@ export const handler = NextAuth({
       if (account.provider === "naver") {
         try {
           const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/googlelogin`, {
-          // const res = await axios.post("http://127.0.0.1:5000/googlelogin", {
+            // const res = await axios.post("http://127.0.0.1:5000/googlelogin", {
             email: user.email,
             name: user.name,
             image: user.image,
@@ -107,7 +147,7 @@ export const handler = NextAuth({
         console.log(JSON.stringify(user, null, 2));
         try {
           const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/googlelogin`, {
-          // const res = await axios.post("http://127.0.0.1:5000/googlelogin", {
+            // const res = await axios.post("http://127.0.0.1:5000/googlelogin", {
             email: user.name,
             name: user.name,
             image: user.image,
@@ -116,6 +156,7 @@ export const handler = NextAuth({
             user.id = res.data.id;
             user.message = res.data.message;
             user.role = res.data.role;
+
           }
 
         } catch (error) {
@@ -132,6 +173,9 @@ export const handler = NextAuth({
         token.email = user.email;
         token.message = user.message;
         token.role = user.role;
+        token.major = user.major;
+        token.grade = user.grade;
+        token.testscore = user.testscore;
       }
       return token;
     },
@@ -144,15 +188,20 @@ export const handler = NextAuth({
     //   return session;
     // },
 
+
+
     async session({ session, token }) {
-      session.user.role = "student";
-      session.user.grade = 2;
-      session.user.major = "물리치료학과";
-      session.user.testscore = 72;
+      session.user.id = token.id;
+      session.user.email = token.email;
+      session.user.message = token.message;
+      session.user.role = token.role;
+      session.user.grade = token.grade;
+      session.user.major = token.major;
+      session.user.testscore = token.testscore;
       return session;
     },
 
-    
+
 
   },
 

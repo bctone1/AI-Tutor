@@ -12,9 +12,23 @@ import Profile from '@/components/profile';
 
 
 export default function AnatomyTestPage() {
-  const [view, setView] = useState('leveltest');
-  const { data: session } = useSession();
-  // console.log(session);
+  const [view, setView] = useState();
+  const { data: session, status } = useSession();
+  // const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    // if (status === "authenticated") {
+    //   setUserInfo(session);
+    // }
+
+    if (status !== "loading") {
+      if (session?.user?.testscore === "") {
+        setView("profile");
+      } else {
+        setView("dashboard");
+      }
+    }
+  }, [session, status]);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -23,6 +37,7 @@ export default function AnatomyTestPage() {
       <Navigation
         view={view}
         setView={setView}
+        userdata={session}
       />
 
       {/* 메인 컨텐츠 */}
@@ -48,6 +63,7 @@ export default function AnatomyTestPage() {
       {view === 'profile' && (
         <Profile
           userdata={session}
+          // setUserInfo={setUserInfo}
         />
       )}
 

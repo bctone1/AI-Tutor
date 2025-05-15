@@ -4,7 +4,7 @@ const dashboard = ({userdata}) => {
 
 
     return (
-        <main className="max-w-5xl mx-auto mt-6 px-5">
+        <main className="max-w-6xl mx-auto px-5">
 
 
             <div className="p-6 space-y-6">

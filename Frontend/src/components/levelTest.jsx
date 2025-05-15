@@ -175,7 +175,7 @@ const LevelTest = ({ setView, userdata }) => {
     };
 
     return (
-        <main className="max-w-5xl mx-auto mt-6 px-5">
+        <main className="max-w-6xl mx-auto mt-6 px-5">
 
             {/* 테스트 제목 */}
             <div className="bg-white rounded shadow p-5 mb-5">
