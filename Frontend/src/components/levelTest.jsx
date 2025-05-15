@@ -28,15 +28,13 @@ const LevelTest = ({ setView, userdata }) => {
                 });
 
                 const data = await response.json();
-                console.log(data.testscore);
-                console.log(userdata.user.email);
 
                 if (response.ok) {
                     // 스코어 업데이트 후 세션 초기화
                     await signIn("credentials3", {
                         redirect: false,
                         email: userdata.user.email,
-                        testscore: data.testscore
+                        testscore: data.score
                     });
 
                     // console.log("답변 및 userdata:", answers, userdata);
@@ -144,7 +142,7 @@ const LevelTest = ({ setView, userdata }) => {
                         // 스코어 업데이트 후 세션 초기화
                         await signIn("credentials3", {
                             redirect: false,
-                            email: session.user.email,
+                            email: userdata.user.email,
                             testscore: data.score
                         });
 

@@ -22,7 +22,7 @@ export default function AnatomyTestPage() {
     // }
 
     if (status !== "loading") {
-      if (session?.user?.testscore === "") {
+      if (!session?.user?.testscore) {
         setView("profile");
       } else {
         setView("dashboard");
