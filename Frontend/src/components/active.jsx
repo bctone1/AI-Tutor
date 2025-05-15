@@ -47,9 +47,6 @@ const Active = ({ userdata }) => {
             if (res.ok) {
                 const { question, choices } = data;
 
-
-
-
                 setChatLog(prev => [
                     ...prev,
                     {
@@ -137,14 +134,14 @@ const Active = ({ userdata }) => {
         setLoading(true);
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chatLLM`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chatAgent`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMessage })
+                body: JSON.stringify({ message: userMessage, userdata: userdata })
             });
 
             const data = await res.json();
-            setChatLog(prev => [...prev, { sender: 'AI 튜터', content: data.reply }]);
+            setChatLog(prev => [...prev, { sender: 'AI 튜터', content: data.message }]);
         } catch (e) {
             console.error(e);
         } finally {
