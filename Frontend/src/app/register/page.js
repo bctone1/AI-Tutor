@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signIn} from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 export default function Register() {
 
@@ -40,19 +40,48 @@ export default function Register() {
         emailCode: '',
         phone: '',
         phoneCode: '',
+        grade: '',
+        major: '',
+
     });
 
     const [emailVerified, setEmailVerified] = useState(false);
-    const [phoneVerified, setPhoneVerified] = useState(false);
     const [secretCode, setSecretCode] = useState('');
-    const [secretCodePhone, setSecretCodePhone] = useState('');
+    const [checkinfo, setCheckinfo] = useState(false);
+    const handleCheckboxChange = (e) => {
+        setCheckinfo(e.target.checked);
+    };
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
+    const checkemailcode = async () => {
+        const { emailCode, } = formData;
+
+        if (!emailVerified) {
+            alert('Please verify your email.');
+            return;
+        }
+        if (emailCode !== secretCode) {
+            alert('Invalid email verification code.');
+            return;
+        }
+        alert('확인되었습니다!');
+        setEmailVerified(false);
+
+
+    }
+
     const handleEmailVerification = async () => {
+        const email = formData.email;
+        if (!email) {
+            alert("Please verify your email.");
+            return;
+        }
+
         try {
             const code = Math.floor(100000 + Math.random() * 900000).toString();
             setSecretCode(code);
@@ -71,53 +100,31 @@ export default function Register() {
         }
     };
 
-    const handlePhoneVerification = async () => {
-        try {
-            const code = Math.floor(100000 + Math.random() * 900000).toString();
-            setSecretCodePhone(code);
-            console.log(code);
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/Phonerequest`, {
-                phone_number: formData.phone,
-                phoneCode: code,
-            });
-            if (response.status === 200) {
-                alert(response.data.message);
-                setPhoneVerified(true);
-            }
-        } catch (error) {
-            console.error('Error sending Phone:', error);
-            alert('An error occurred while sending the verification Phone.');
-        }
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { name, email, password, confirmPassword, emailCode, phone, phoneCode } = formData;
-        if (!name || !email || !password || !confirmPassword) {
+        const { name, email, password, confirmPassword, emailCode, phone, phoneCode, grade, major } = formData;
+        if (!name || !email || !password || !emailCode || !emailVerified) {
             alert('All fields are required.');
             return;
         }
-        if (password !== confirmPassword) {
-            alert('Passwords do not match.');
-            return;
-        }
-        if (!emailVerified) {
-            alert('Please verify your email.');
-            return;
-        }
+        // if (password !== confirmPassword) {
+        //     alert('Passwords do not match.');
+        //     return;
+        // }
+        // if (!emailVerified) {
+        //     alert('Please verify your email.');
+        //     return;
+        // }
         if (emailCode !== secretCode) {
             alert('Invalid email verification code.');
             return;
         }
+        if(!checkinfo){
+            alert("개인정보 처림방침 동의해주세요.");
+            return;
+        }
 
-        if (!phoneVerified) {
-            alert('Please verify your phone.');
-            return;
-        }
-        if (phoneCode !== secretCodePhone) {
-            alert('Invalid Phone verification code.');
-            return;
-        }
 
 
 
@@ -164,7 +171,7 @@ export default function Register() {
                                     type="button"
                                     onClick={handleEmailVerification}
                                     disabled={emailVerified}
-                                    className="bg-gray-300 text-black px-4"
+                                    className="bg-gray-300 text-black px-4 hover:text-white"
                                 >
                                     인증번호 발송
                                 </Button>
@@ -175,8 +182,9 @@ export default function Register() {
                                 <Input type="text" name="emailCode" value={formData.emailCode} onChange={handleChange} placeholder="인증번호를 입력하세요" />
                                 <Button
                                     type="button"
-                                    disabled={emailVerified}
-                                    className="bg-gray-300 text-black px-4"
+                                    onClick={checkemailcode}
+                                    disabled={!emailVerified}
+                                    className="bg-gray-300 text-black px-4 hover:text-white"
                                 >
                                     확인
                                 </Button>
@@ -200,17 +208,21 @@ export default function Register() {
                             </div>
 
                             <div>
-                                <Label htmlFor="grade">학과</Label>
-                                <select id="grade" name="grade" className="border rounded px-3 py-2 w-full border-gray-200">
+                                <Label htmlFor="major">학과</Label>
+                                <select id="major" name="major" className="border rounded px-3 py-2 w-full border-gray-200">
                                     <option>학과을 선택하세요</option>
-                                    <option value="1">~~과</option>
-                                    <option value="2">~~과</option>
-                                    <option value="3">~~과</option>
+                                    <option value="물리치료학과">물리치료학과</option>
+                                    <option value="직업치료학과">직업치료학과</option>
                                 </select>
                             </div>
 
                             <div className="flex items-center gap-1">
-                                <input type="checkbox" id="auto-login" />
+                                <input
+                                    type="checkbox"
+                                    id="auto-login"
+                                    checked={checkinfo}
+                                    onChange={handleCheckboxChange}
+                                />
                                 <label htmlFor="auto-login" className="text-sm">이용약관 및 개인정보 처리방침에 동의합니다</label>
                             </div>
 
