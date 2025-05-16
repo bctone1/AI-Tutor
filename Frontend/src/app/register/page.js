@@ -135,7 +135,7 @@ export default function Register() {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/register`, formData);
             if (response.status === 200) {
                 alert('Registration successful!');
-                router.push("/login");
+                router.push("/");
             }
         } catch (error) {
             console.error('Error registering:', error);
