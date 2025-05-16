@@ -106,3 +106,7 @@ def classify_level(score: int, num_cases: int) -> Tuple[str, int]:
         level = "하"
 
     return level, normalized_score
+
+def get_correct_answer(db: Session,question_id):
+    label = db.query(LabelingData).filter(LabelingData.question_id == question_id).first()
+    return label.correct_answer

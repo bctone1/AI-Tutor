@@ -13,7 +13,7 @@ def convert_to_vector(user_prompt : str):
     vector = embedding_model.embed_query(user_prompt)
     return vector
 
-def get_similar_questions(db: Session, embedding: list[float], top_k: int = 3):
+def get_similar_questions(db: Session, embedding: list[float], top_k: int = 1):
     vector_str = "[" + ",".join(map(str, embedding)) + "]"
     query = text("""
         SELECT *, vector_memory <-> CAST(:embedding AS vector) AS distance
