@@ -1,11 +1,8 @@
 from langchain_community.document_loaders import (
-    PyPDFLoader,
-    UnstructuredPDFLoader
+    PyPDFLoader
 )
 import os
-from pdf2image import convert_from_path
-import pytesseract
-from langchain_core.documents import Document
+
 
 def load_document(file_path):
     ext = os.path.splitext(file_path)[1].lower()
@@ -17,7 +14,7 @@ def load_document(file_path):
         raise ValueError(f"지원되지 않는 파일 형식: {ext}")
 
     return loader.load()
-
+'''
 def load_document_by_ocr(file_path):
     ext = os.path.splitext(file_path)[1].lower()
 
@@ -29,6 +26,8 @@ def load_document_by_ocr(file_path):
 
     return loader.load()
 
+'''
+'''
 def load_document_by_ocr_manual(file_path, poppler_path):
     # 이미지로 변환
     images = convert_from_path(file_path, poppler_path=poppler_path)
@@ -39,4 +38,4 @@ def load_document_by_ocr_manual(file_path, poppler_path):
         doc = Document(page_content=text, metadata={"page": i + 1})
         docs.append(doc)
 
-    return docs
+    return docs'''
