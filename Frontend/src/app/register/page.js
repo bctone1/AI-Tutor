@@ -261,7 +261,7 @@ export default function Register() {
                                 이미 계정이 있으신가요?{" "}
                                 <a
                                     className="text-sm text-blue-500 cursor-pointer"
-                                    onClick={() => window.location = "/register"}
+                                    onClick={() => window.location = "/"}
                                 >
                                     로그인
                                 </a>
