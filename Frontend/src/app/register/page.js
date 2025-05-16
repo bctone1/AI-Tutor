@@ -36,16 +36,18 @@ export default function Register() {
         name: '',
         email: '',
         password: '',
-        confirmPassword: '',
+        // confirmPassword: '',
         emailCode: '',
-        phone: '',
-        phoneCode: '',
+        // phone: '',
+        // phoneCode: '',
         grade: '',
         major: '',
 
     });
 
     const [emailVerified, setEmailVerified] = useState(false);
+    const [confirmCode, setConfirmCode] = useState(false);
+
     const [secretCode, setSecretCode] = useState('');
     const [checkinfo, setCheckinfo] = useState(false);
     const handleCheckboxChange = (e) => {
@@ -55,6 +57,8 @@ export default function Register() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        // console.log(name, value);
+
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
@@ -70,9 +74,7 @@ export default function Register() {
             return;
         }
         alert('확인되었습니다!');
-        setEmailVerified(false);
-
-
+        setConfirmCode(true);
     }
 
     const handleEmailVerification = async () => {
@@ -102,9 +104,10 @@ export default function Register() {
 
 
     const handleSubmit = async (e) => {
+        // console.log(formData);
         e.preventDefault();
-        const { name, email, password, confirmPassword, emailCode, phone, phoneCode, grade, major } = formData;
-        if (!name || !email || !password || !emailCode || !emailVerified) {
+        const { name, email, password, emailCode, grade, major } = formData;
+        if (!name || !email || !password || !emailCode || !grade || !major) {
             alert('All fields are required.');
             return;
         }
@@ -112,15 +115,15 @@ export default function Register() {
         //     alert('Passwords do not match.');
         //     return;
         // }
-        // if (!emailVerified) {
-        //     alert('Please verify your email.');
-        //     return;
-        // }
+        if (!emailVerified) {
+            alert('Please verify your email.');
+            return;
+        }
         if (emailCode !== secretCode) {
             alert('Invalid email verification code.');
             return;
         }
-        if(!checkinfo){
+        if (!checkinfo) {
             alert("개인정보 처림방침 동의해주세요.");
             return;
         }
@@ -183,7 +186,7 @@ export default function Register() {
                                 <Button
                                     type="button"
                                     onClick={checkemailcode}
-                                    disabled={!emailVerified}
+                                    disabled={confirmCode}
                                     className="bg-gray-300 text-black px-4 hover:text-white"
                                 >
                                     확인
@@ -199,17 +202,30 @@ export default function Register() {
 
                             <div>
                                 <Label htmlFor="grade">학년</Label>
-                                <select id="grade" name="grade" className="border rounded px-3 py-2 w-full border-gray-200">
-                                    <option>학년을 선택하세요</option>
+                                <select
+                                    id="grade"
+                                    name="grade"
+                                    className="border rounded px-3 py-2 w-full border-gray-200"
+                                    onChange={handleChange}
+                                    value={formData.grade}
+                                >
+                                    <option value="">학년을 선택하세요</option>
                                     <option value="1">1학년</option>
                                     <option value="2">2학년</option>
                                     <option value="3">3학년</option>
                                 </select>
                             </div>
 
+
                             <div>
                                 <Label htmlFor="major">학과</Label>
-                                <select id="major" name="major" className="border rounded px-3 py-2 w-full border-gray-200">
+                                <select
+                                    id="major"
+                                    name="major"
+                                    className="border rounded px-3 py-2 w-full border-gray-200"
+                                    onChange={handleChange}
+                                    value={formData.major}
+                                >
                                     <option>학과을 선택하세요</option>
                                     <option value="물리치료학과">물리치료학과</option>
                                     <option value="직업치료학과">직업치료학과</option>
