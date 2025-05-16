@@ -42,3 +42,5 @@ class GetExplantationRequest(BaseModel):
 class GetExplantationResponse(BaseModel):
     isCorrect: bool
     explanation: str
+
+

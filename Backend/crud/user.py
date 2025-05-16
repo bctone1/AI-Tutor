@@ -71,7 +71,6 @@ def create_social_user(db : Session, email : str, name : str):
         password = hashed_pw,
         name = name,
         role = 'googleUser',
-        group = 'newUser',
         department = "소속 없음",
         grade= 0
     )

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, File, UploadFile
-from core.config import UPLOAD_DIR
+from core.config import UPLOAD_FOLDER
 from crud.exam import *
 from crud.user import update_user_score
 from langchain_service.document_loader.file_loader import load_document
@@ -14,7 +14,7 @@ exam_router = APIRouter()
 
 @exam_router.post("/upload/")
 async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db)):
-    file_location = os.path.join(UPLOAD_DIR, file.filename)
+    file_location = os.path.join(UPLOAD_FOLDER, file.filename)
 
     with open(file_location, "wb") as f:
         contents = await file.read()
