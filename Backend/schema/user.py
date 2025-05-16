@@ -5,7 +5,7 @@ class StudentRegisterRequest(BaseModel):
     email : str
     password : str
     name : str
-    department : str
+    major : str
     grade : int
 
 class StudentRegisterResponse(BaseModel):

@@ -77,3 +77,24 @@ async def submit_test_endpoint(request: SubmitTestRequest, db: Session = Depends
         "grade": level,
         "norm_score" : normalized_score
     }
+
+
+@exam_router.post("/getExplanation")
+async def get_explantation_endpoint(request: GetExplantationRequest, db: Session = Depends(get_db)):
+    answer = request.answer
+    question_id = request.question_id
+
+    correct_answer = get_correct_answer(db = db, question_id = question_id)
+    print(f"CORRECT ANSWER  {correct_answer}")
+    if correct_answer == answer:
+        is_correct = True
+    else:
+        is_correct = False
+
+    explanation = get_explantation(db = db, question_id = question_id, correct_answer = correct_answer)
+
+    return JSONResponse(content={
+        "isCorrect": is_correct,
+        "explanation": explanation,
+    })
+
