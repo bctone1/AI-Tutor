@@ -34,3 +34,11 @@ class SubmitTestResponse(BaseModel):
     major : str
     grade : int
     testscore : int'''
+
+class GetExplantationRequest(BaseModel):
+    answer : int
+    question_id : int
+
+class GetExplantationResponse(BaseModel):
+    isCorrect: bool
+    explanation: str

@@ -40,7 +40,7 @@ async def register_endpoint(request: StudentRegisterRequest, db: Session = Depen
     email = request.email
     password = request.password
     name = request.name
-    department = request.department
+    department = request.major
     grade = request.grade
 
     try:

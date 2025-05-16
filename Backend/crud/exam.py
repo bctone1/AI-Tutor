@@ -1,15 +1,12 @@
-from sqlalchemy.orm import Session
 from model.exam import *
-from langchain_service.document_loader.file_loader import load_document
-from langchain_service.document_loader.extract_question import extract_questions_from_pages, parse_question_block
+from langchain_service.document_loader.extract_question import parse_question_block
 from langchain_openai import OpenAIEmbeddings
 from core.config import CHATGPT_API_KEY
 from sqlalchemy.orm import Session
 from typing import Dict, Tuple
-from schema.exam import SubmitTestRequest
 from collections import defaultdict
+from langchain_service.chain.get_explantation import generate_explantation
 import random
-import os
 
 embedding_model = OpenAIEmbeddings(
     model="text-embedding-3-small",
@@ -107,6 +104,11 @@ def classify_level(score: int, num_cases: int) -> Tuple[str, int]:
 
     return level, normalized_score
 
-def get_correct_answer(db: Session,question_id):
+def get_correct_answer(db: Session, question_id : int):
     label = db.query(LabelingData).filter(LabelingData.question_id == question_id).first()
     return label.correct_answer
+
+def get_explantation(db : Session, question_id : int, correct_answer : int):
+    question = db.query(KnowledgeBase).filter(KnowledgeBase.id == question_id).first()
+    explantation = generate_explantation(question.question, correct_answer)
+    return explantation
