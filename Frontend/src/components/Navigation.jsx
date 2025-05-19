@@ -1,4 +1,5 @@
 import React from 'react';
+import { signOut } from "next-auth/react";
 
 const Navigation = ({ view, setView, userdata }) => {
   const getLinkClass = (viewName) =>
@@ -13,25 +14,24 @@ const Navigation = ({ view, setView, userdata }) => {
       setView('active');
     }
   };
+
   const handleLeveltestClick = () => {
     if (!userdata?.user?.major) {
       alert("프로필을 완성해주세요.");
     } else if (userdata?.user?.testscore) {
       alert("레벨테스트를 이미 완료했습니다.");
-
     } else {
       setView('leveltest');
     }
-  }
+  };
 
   return (
-    <header className="bg-[#3f51b5] text-white  p-5 flex justify-between items-center">
+    <header className="bg-[#3f51b5] text-white p-5 flex justify-between items-center">
       <div className="text-2xl font-bold">AI Tutor KyungBok</div>
-      <nav>
+      <nav className="flex items-center">
         <ul className="flex space-x-5">
           <li>
             <a
-              // onClick={() => setView('leveltest')}
               onClick={handleLeveltestClick}
               className={`${getLinkClass('leveltest')} cursor-pointer p-5`}
             >
@@ -46,7 +46,6 @@ const Navigation = ({ view, setView, userdata }) => {
               대시보드
             </a>
           </li>
-
           <li>
             <a
               onClick={handleActiveClick}
@@ -72,6 +71,12 @@ const Navigation = ({ view, setView, userdata }) => {
             </a>
           </li>
         </ul>
+        <button
+          onClick={() => signOut({ callbackUrl: "/" })}
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded ml-6 cursor-pointer"
+        >
+          로그아웃
+        </button>
       </nav>
     </header>
   );
