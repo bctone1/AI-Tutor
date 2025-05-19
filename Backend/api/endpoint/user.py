@@ -87,10 +87,10 @@ async def login(request: GoogleLoginRequest, db : Session = Depends(get_db)):
         user = get_user_data(db, email)
 
         if not user:
-            create_social_user(db, email, name)
+            new_user = create_social_user(db, email, name)
             return JSONResponse(
                 content={
-                    "message": f"{user.name}님 반갑습니다!.",
+                    "message": f"{new_user.name}님 반갑습니다!.",
                     "id": user.id,
                     "name": user.name,
                     "email": user.email,
