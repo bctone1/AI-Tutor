@@ -8,11 +8,7 @@ app = FastAPI(debug = True)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3001",
-        f"http://{DB_SERVER}:3001",
-        "https://onecloud.kr",
-    ],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
