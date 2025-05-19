@@ -23,7 +23,7 @@ prompt = PromptTemplate(
 )
 
 # 2. LLM 모델 설정
-llm = ChatOpenAI(model="gpt-4", temperature=0.7)
+llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7)
 
 # 3. Chain 구성
 chain = LLMChain(llm=llm, prompt=prompt)

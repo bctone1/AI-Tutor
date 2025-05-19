@@ -1,5 +1,4 @@
 from starlette.middleware.cors import CORSMiddleware
-from core.config import DB_SERVER
 from api.router import router
 from fastapi import FastAPI
 import uvicorn
