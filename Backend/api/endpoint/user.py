@@ -91,13 +91,13 @@ async def login(request: GoogleLoginRequest, db : Session = Depends(get_db)):
             return JSONResponse(
                 content={
                     "message": f"{new_user.name}님 반갑습니다!.",
-                    "id": user.id,
-                    "name": user.name,
-                    "email": user.email,
-                    "role": user.role,
-                    "major": user.department,
-                    "grade": user.grade,
-                    "testscore": user.score,
+                    "id": new_user.id,
+                    "name": new_user.name,
+                    "email": new_user.email,
+                    "role": new_user.role,
+                    "major": new_user.department,
+                    "grade": new_user.grade,
+                    "testscore": new_user.score,
                     "image": image
                 },
                 status_code=200
