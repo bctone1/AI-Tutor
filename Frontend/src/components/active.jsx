@@ -53,7 +53,11 @@ const Active = ({ userdata }) => {
                         sender: 'AI 튜터',
                         content: (
                             <>
-                                <div className="mb-2">{question}</div>
+                                <div
+                                    className="mb-2"
+                                    dangerouslySetInnerHTML={{ __html: question.replace(/\n/g, '<br />') }}
+                                ></div>
+
                                 {choices.map((choice, idx) => (
                                     <button
                                         key={idx}
@@ -152,7 +156,11 @@ const Active = ({ userdata }) => {
                         sender: 'AI 튜터',
                         content: (
                             <>
-                                <div className="mb-2">{question}</div>
+                                <div
+                                    className="mb-2"
+                                    dangerouslySetInnerHTML={{ __html: question.replace(/\n/g, '<br />') }}
+                                ></div>
+
                                 {choices.map((choice, idx) => (
                                     <button
                                         key={idx}
