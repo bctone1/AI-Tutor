@@ -57,7 +57,7 @@ const Active = ({ userdata }) => {
                                 {choices.map((choice, idx) => (
                                     <button
                                         key={idx}
-                                        onClick={() => handleSubmitAnswer(idx + 1,id)}
+                                        onClick={() => handleSubmitAnswer(idx + 1, id)}
                                         className="block w-full text-left bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded mb-1"
                                     >
                                         {idx + 1}. {choice}
@@ -74,23 +74,22 @@ const Active = ({ userdata }) => {
     };
 
     const handleSubmitAnswer = async (choiceNumber, id) => {
-        // let isCorrect = false;
-        // if (choiceNumber === answer) {
-        //     isCorrect = true;
-        // }
+        setChatLog(prev => [
+            ...prev,
+            { sender: '나', content: `답: ${choiceNumber}번` },
+        ]);
 
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getExplanation`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ answer: choiceNumber, question_id : id })
+                body: JSON.stringify({ answer: choiceNumber, question_id: id })
             });
 
             const data = await res.json();
 
             setChatLog(prev => [
                 ...prev,
-                { sender: '나', content: `답: ${choiceNumber}번` },
                 {
                     sender: 'AI 튜터',
                     content: (
@@ -157,7 +156,7 @@ const Active = ({ userdata }) => {
                                 {choices.map((choice, idx) => (
                                     <button
                                         key={idx}
-                                        onClick={() => handleSubmitAnswer(idx + 1,id)}
+                                        onClick={() => handleSubmitAnswer(idx + 1, id)}
                                         className="block w-full text-left bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded mb-1"
                                     >
                                         {idx + 1}. {choice}

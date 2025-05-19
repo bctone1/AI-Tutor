@@ -10,7 +10,7 @@ const LevelTest = ({ setView, userdata }) => {
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [answers, setAnswers] = useState({});
 
-    const [remainingTime, setRemainingTime] = useState(5);
+    const [remainingTime, setRemainingTime] = useState(1800);
     const fiveMinuteWarnedRef = useRef(false);
     const submittedRef = useRef(false);
 
@@ -223,7 +223,13 @@ const LevelTest = ({ setView, userdata }) => {
 
                                 <div className="bg-white rounded shadow p-5 mb-5">
                                     <div className="text-lg font-bold mb-2">문항 {currentQuestionIndex + 1}.</div>
-                                    <p className="text-base leading-relaxed mb-4">{questionText}</p>
+                                    <p
+                                        className="text-base leading-relaxed mb-4"
+                                        dangerouslySetInnerHTML={{ __html: questionText.replace(/\n/g, '<br />') }}
+                                    />
+
+
+
                                     {/* <div className="w-full h-44 border border-gray-300 flex justify-center items-center text-gray-400 mb-5">
                                         [이미지 또는 해부도 등]
                                     </div> */}

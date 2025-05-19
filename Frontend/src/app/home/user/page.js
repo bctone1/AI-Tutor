@@ -14,6 +14,7 @@ import Profile from '@/components/profile';
 export default function AnatomyTestPage() {
   const [view, setView] = useState();
   const { data: session, status } = useSession();
+  console.log(session);
   // const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
@@ -22,8 +23,10 @@ export default function AnatomyTestPage() {
     // }
 
     if (status !== "loading") {
-      if (!session?.user?.testscore) {
+      if (!session?.user?.grade) {
         setView("profile");
+      } else if (session?.user?.grade && !session?.user?.testscore) {
+        setView('leveltest');
       } else {
         setView("dashboard");
       }
@@ -63,7 +66,7 @@ export default function AnatomyTestPage() {
       {view === 'profile' && (
         <Profile
           userdata={session}
-          // setUserInfo={setUserInfo}
+        // setUserInfo={setUserInfo}
         />
       )}
 

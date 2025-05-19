@@ -3,6 +3,7 @@ import { signIn, useSession } from 'next-auth/react';
 
 const Profile = ({ userdata }) => {
     const { data: session } = useSession();
+    console.log(session.user);
 
     const [activeTab, setActiveTab] = useState('anatomy');
     const [department, setDepartment] = useState('');
@@ -37,7 +38,7 @@ const Profile = ({ userdata }) => {
                     <h2 className="text-xl font-semibold mb-4 text-gray-800">프로필</h2>
 
 
-                    {userdata.user.major ? (
+                    {userdata.user.major !="소속 없음" ? (
                         <div className="flex items-center mb-6">
                             <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center text-lg font-bold text-white mr-4">
                                 {userdata.user.image && (
@@ -99,7 +100,7 @@ const Profile = ({ userdata }) => {
                             {userdata.user.email}
                         </div>
                     </div>
-                    {!userdata.user.major && (
+                    {userdata.user.major == "소속 없음" && (
                         <div>
                             <div className="flex items-center mb-5 p-3 rounded bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800">
                                 <span className="mr-2 text-lg">ⓘ</span>
