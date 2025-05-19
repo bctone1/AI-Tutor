@@ -16,7 +16,7 @@ const Navigation = ({ view, setView, userdata }) => {
   };
 
   const handleLeveltestClick = () => {
-    if (!userdata?.user?.major) {
+    if (userdata?.user?.major === "소속 없음") {
       alert("프로필을 완성해주세요.");
     } else if (userdata?.user?.testscore) {
       alert("레벨테스트를 이미 완료했습니다.");
