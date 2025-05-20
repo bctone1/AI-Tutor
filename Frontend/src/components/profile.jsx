@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 
-const Profile = ({ userdata }) => {
+const Profile = ({ userdata, setView }) => {
     const { data: session } = useSession();
-    console.log(session.user);
+    // console.log(session.user);
 
     const [activeTab, setActiveTab] = useState('anatomy');
     const [department, setDepartment] = useState('');
@@ -28,6 +28,10 @@ const Profile = ({ userdata }) => {
         });
     };
 
+    const handleLevelTestClick = () => {
+        setView('leveltest');
+    };
+
 
 
     return (
@@ -38,7 +42,7 @@ const Profile = ({ userdata }) => {
                     <h2 className="text-xl font-semibold mb-4 text-gray-800">프로필</h2>
 
 
-                    {userdata.user.major !="소속 없음" ? (
+                    {userdata.user.major != "소속 없음" ? (
                         <div className="flex items-center mb-6">
                             <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center text-lg font-bold text-white mr-4">
                                 {userdata.user.image && (
@@ -179,7 +183,7 @@ const Profile = ({ userdata }) => {
                     </div>
                 </div>
 
-                {userdata.user.major && (
+                {userdata.user.testscore ? (
                     <div className="bg-white shadow-md rounded-lg p-6 mt-6 mb-6">
                         <h2 className="text-2xl font-semibold mb-6 text-gray-800">레벨테스트 결과</h2>
 
@@ -235,6 +239,22 @@ const Profile = ({ userdata }) => {
                                 />
                             </div>
                         )}
+                    </div>
+
+                ) : (
+                    <div className="bg-white shadow-md rounded-lg p-6 mt-6 mb-6">
+                        <div className="text-gray-600 text-lg mb-6">
+                            ⚠️ 먼저 <span className="font-bold text-[#3f51b5]">레벨테스트</span>를 완료해주세요.
+                        </div>
+
+                        <div className="flex">
+                            <button
+                                onClick={handleLevelTestClick}
+                                className="bg-[#3f51b5] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#303f9f] transition cusor-pointer"
+                            >
+                                레벨테스트 바로가기
+                            </button>
+                        </div>
                     </div>
 
                 )}
