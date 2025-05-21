@@ -1,30 +1,34 @@
 "use client";
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Upload, FileText } from 'lucide-react';
 
-const UploadPage = ({userdata}) => {
+const UploadPage = ({ userdata }) => {
     const fileInputRef = useRef(null);
-    const [files, setFiles] = useState([
-        {
-            name: '해부학_문제_01.docx',
-            type: '작업치료학과',
-            size: '2.4MB',
-            uploader: '임00',
-        },
-        {
-            name: '해부학_시험문제_1학기.xlsx',
-            type: '작업치료학과',
-            size: '1.8MB',
-            uploader: '김00',
-        },
-        {
-            name: '2학기_중간고사_문제_데이터.csv',
-            type: '물리치료학과',
-            size: '756KB',
-            uploader: '박00',
-        },
-    ]);
+    const [uploadStatus, setuploadStatus] = useState(true);
+    const [files, setFiles] = useState([]);
+
+    useEffect(() => {
+        const getQuestion = async () => {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getQuestionData`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const data = await response.json();
+            if (response.ok) {
+                console.log(data);
+                setFiles(data);
+            } else {
+                console.error("지식베이스 오류");
+            }
+        };
+        if (uploadStatus) {
+            getQuestion();
+            setuploadStatus(false)
+        }
+    }, []);
 
     const handleFileClick = () => {
         fileInputRef.current?.click();
@@ -33,13 +37,16 @@ const UploadPage = ({userdata}) => {
     const handleFileChange = async (event) => {
         const selectedFile = event.target.files[0];
         if (!selectedFile) return;
+        console.log(selectedFile);
+        console.log(userdata);
+
 
         const formData = new FormData();
         formData.append("file", selectedFile);
         formData.append("userData", userdata);
 
         try {
-            const res = await fetch("/uploadquestion", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/uploadquestion`, {
                 method: "POST",
                 body: formData,
             });
@@ -107,22 +114,22 @@ const UploadPage = ({userdata}) => {
                 {/* File List */}
                 <div className="bg-white shadow rounded">
                     <div className="flex px-5 py-3 border-b bg-gray-50 font-bold text-gray-700">
-                        <div className="flex-1">파일명</div>
+                        <div className="flex-[2]">파일명</div>
                         <div className="flex-1">관련학과</div>
                         <div className="flex-1">교수</div>
-                        <div className="flex-1">크기</div>
+                        {/* <div className="flex-1">크기</div> */}
                         <div className="w-50 text-center">작업</div>
                     </div>
                     {files.map((file, index) => (
                         <div key={index} className="flex px-5 py-3 border-b last:border-b-0 items-center">
-                            <div className="flex-1 flex items-center gap-2">
+                            <div className="flex-[2] flex items-center gap-2">
                                 <FileText className="text-indigo-600" size={18} />
-                                {file.name}
+                                {file.file_name}
                             </div>
-                            <div className="flex-1 text-gray-600">{file.type}</div>
+                            <div className="flex-1 text-gray-600">{file.department}</div>
                             <div className="flex-1 text-gray-600">{file.uploader}</div>
-                            <div className="flex-1 text-gray-600">{file.size}</div>
-                            
+                            {/* <div className="flex-1 text-gray-600">{file.size}</div> */}
+
                             <div className="w-50 flex justify-center gap-2">
                                 <button className="text-red-600 border border-red-500 px-3 py-1 rounded text-xs hover:bg-red-500 hover:text-white transition">
                                     삭제
