@@ -73,6 +73,20 @@ async def login_endpoint(request: LoginRequest, db : Session = Depends(get_db)):
             },
             status_code=200
         )
+    elif user_data["role"] == "professor":
+        return JSONResponse(
+            content={
+                "message": f"{user_data['name']}님 반갑습니다.",
+                "id": user_data["id"],
+                "role": "professor",
+                "email": user_data["email"],
+                "name": user_data["name"],
+                "major" : user_data["major"],
+                "grade" : user_data["grade"],
+                "testscore" : user_data["testscore"],
+            },
+            status_code=200
+        )
     else:
         return JSONResponse(content={'message': '정보가 없습니다.'}, status_code=400)
 

@@ -15,10 +15,10 @@ import json
 import shutil
 exam_router = APIRouter()
 
-'''
-@exam_router.post("/upload/")
+
+@exam_router.post("/uploadquestion")
 async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db)):
-    file_location = os.path.join(UPLOAD_DIR, file.filename)
+    file_location = os.path.join(EXAM_DATA, file.filename)
 
     with open(file_location, "wb") as f:
         contents = await file.read()
@@ -43,10 +43,10 @@ async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db
         "question_count": len(questions),
         "questions_preview": questions[:]
     }
+
+
 '''
-
-
-@exam_router.post("/upload/")
+@exam_router.post("/uploadquestion/")
 async def upload_two_files(
     file1: UploadFile = File(...),
     file2: UploadFile = File(...),
@@ -85,7 +85,7 @@ async def upload_two_files(
         "file1_name": file1.filename,
         "file2_name": file2.filename
     }
-
+'''
 
 
 '''
