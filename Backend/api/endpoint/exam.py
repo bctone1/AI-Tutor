@@ -43,9 +43,9 @@ async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db
 
 
 
-@exam_router.post("/uploadlabeling/")
+@exam_router.post("/uploadAnswer")
 async def upload_two_files(
-    exam_id: int = Form(...),
+    ExamID: int = Form(...),
     file: UploadFile = File(...),
     db: Session = Depends(get_db)
 ):
@@ -59,7 +59,7 @@ async def upload_two_files(
 
     label = excel_to_list(label_location)
 
-    question_ids = sorted(pick_question_ids(db, exam_id))
+    question_ids = sorted(pick_question_ids(db, ExamID))
 
     print(label)
     print(question_ids)
@@ -81,7 +81,7 @@ async def upload_two_files(
                 level=level,
                 case=case
             )
-
+    get_all_exam(db = db)
 
     return {
         "file_name": file.filename,
