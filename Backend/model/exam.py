@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Text, JSON
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, JSON, Boolean
 from database.base import Base
 from sqlalchemy.orm import relationship
 from pgvector.sqlalchemy import Vector
@@ -12,6 +12,7 @@ class Exam(Base):
     subject = Column(String(50))
     case_list = Column(JSON)
     uploader = Column(String(100))
+    status = Column(Boolean)
     knowledge_bases = relationship('KnowledgeBase', back_populates='exam', cascade="all, delete-orphan")
 
 

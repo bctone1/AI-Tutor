@@ -17,7 +17,8 @@ def add_exam_data(db : Session, department : str, file_name, subject):
     new_exam = Exam(
         department = department,
         file_name = file_name,
-        subject = subject
+        subject = subject,
+        status = False
     )
     db.add(new_exam)
     db.commit()
@@ -35,6 +36,10 @@ def update_knowledgebase(db : Session, exam_id : int, question_number : int, que
     db.add(new_question)
     db.commit()
     db.refresh(new_question)
+    exam = db.query(Exam).filter(Exam.id == new_question.exam_id).first()
+    exam.status = True
+    db.commit()
+    db.refresh(exam)
     return new_question.id
 
 def pick_question_ids(db: Session, exam_id : int):
