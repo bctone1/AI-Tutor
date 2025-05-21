@@ -5,7 +5,6 @@ from schema.llm import *
 from crud.llm import *
 from fastapi.responses import JSONResponse
 from langchain_service.document_loader.extract_question import parse_question_block
-from langchain_service.agent.tutor import agent
 from langchain_service.chain.discrimination import discrimination
 import random
 llm_router = APIRouter()

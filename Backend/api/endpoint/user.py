@@ -17,6 +17,7 @@ async def debug_request(request: Request):
     try:
         body = await request.json()
     except Exception as e:
+        print(e)
         body = await request.body()
         try:
             body = body.decode("utf-8")

@@ -49,7 +49,7 @@ def generate_level_test(db: Session, subject: str):
     selected_question_ids = []
 
     for case, level_dict in case_level_map.items():
-        for level in ['상', '중', '하']:  # 순서 중요: 상 중 하
+        for level in ['상', '중', '하']:
             question_ids = level_dict.get(level, [])
             if question_ids:
                 selected_question_ids.append(random.choice(question_ids))

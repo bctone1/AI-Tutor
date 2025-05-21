@@ -49,16 +49,4 @@ def discrimination(input: str) -> int:
         return 2
     else :
         return 2
-'''
-# ✅ 예시 사용
-if __name__ == "__main__":
-    answer = discrimination("관절에 관한 문제 내주세요.")
-    print("LLM 응답:", answer)
-    if isinstance(answer, str):
-        print("문자열(str)입니다.")
-    elif isinstance(answer, int):
-        print("정수(int)입니다.")
-    else:
-        print("다른 타입입니다.")
 
-'''
