@@ -5,8 +5,11 @@ import { Upload, FileText } from 'lucide-react';
 
 const UploadPage = ({ userdata }) => {
     const fileInputRef = useRef(null);
+    const AnswerfileInputRef = useRef(null);
+
     const [uploadStatus, setuploadStatus] = useState(true);
     const [files, setFiles] = useState([]);
+    const [answerID, setanswerID] = useState();
 
     useEffect(() => {
         const getQuestion = async () => {
@@ -33,14 +36,50 @@ const UploadPage = ({ userdata }) => {
     const handleFileClick = () => {
         fileInputRef.current?.click();
     };
+    const handleAnswerUpload = (fileID) => {
+        setanswerID(fileID);
+        AnswerfileInputRef.current?.click();
+    }
+
+    const handleUploadAnswer = async (event) => {
+        const selectedFile = event.target.files[0];
+        if (!selectedFile) return;
+        const formData = new FormData();
+        alert(answerID);
+        formData.append("file", selectedFile);
+        formData.append("userData", userdata);
+        formData.append("ExamID", answerID);
+
+        // return;
+
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/uploadAnswer`, {
+                method: "POST",
+                body: formData,
+            });
+            const data = await res.json();
+            if (res.ok) {
+                console.log(data);
+                setFiles(data);
+                alert("파일이 성공적으로 업로드되었습니다.");
+                setanswerID();
+
+            } else {
+                alert("업로드 실패: 서버 오류");
+            }
+        } catch (error) {
+            console.error("업로드 오류:", error);
+            alert("업로드 중 오류가 발생했습니다.");
+        }
+
+    }
+
 
     const handleFileChange = async (event) => {
         const selectedFile = event.target.files[0];
         if (!selectedFile) return;
-        console.log(selectedFile);
-        console.log(userdata);
-
-
+        // console.log(selectedFile);
+        // console.log(userdata);
         const formData = new FormData();
         formData.append("file", selectedFile);
         formData.append("userData", userdata);
@@ -50,9 +89,11 @@ const UploadPage = ({ userdata }) => {
                 method: "POST",
                 body: formData,
             });
-
+            const data = await res.json();
             if (res.ok) {
+                console.log(data);
                 alert("파일이 성공적으로 업로드되었습니다.");
+                setFiles(data);
             } else {
                 alert("업로드 실패: 서버 오류");
             }
@@ -114,6 +155,7 @@ const UploadPage = ({ userdata }) => {
                 {/* File List */}
                 <div className="bg-white shadow rounded">
                     <div className="flex px-5 py-3 border-b bg-gray-50 font-bold text-gray-700">
+                        <div className="flex-1">ID</div>
                         <div className="flex-[2]">파일명</div>
                         <div className="flex-1">관련학과</div>
                         <div className="flex-1">교수</div>
@@ -122,6 +164,7 @@ const UploadPage = ({ userdata }) => {
                     </div>
                     {files.map((file, index) => (
                         <div key={index} className="flex px-5 py-3 border-b last:border-b-0 items-center">
+                            <div className="flex-1 text-gray-600">{file.id}</div>
                             <div className="flex-[2] flex items-center gap-2">
                                 <FileText className="text-indigo-600" size={18} />
                                 {file.file_name}
@@ -134,13 +177,29 @@ const UploadPage = ({ userdata }) => {
                                 <button className="text-red-600 border border-red-500 px-3 py-1 rounded text-xs hover:bg-red-500 hover:text-white transition">
                                     삭제
                                 </button>
-                                <button className="text-blue-600 border border-blue-500 px-3 py-1 rounded text-xs hover:bg-blue-500 hover:text-white transition">
-                                    해설 업로드
-                                </button>
+                                {!file.status ? (
+                                    <button
+                                        className="text-blue-600 border border-blue-500 px-3 py-1 rounded text-xs hover:bg-blue-500 hover:text-white transition"
+                                        onClick={() => handleAnswerUpload(file.id)}
+                                    >
+                                        해설 업로드
+                                    </button>
+                                ) : (
+                                    <div>해설 업로드 됨</div>
+
+                                )}
                             </div>
 
                         </div>
                     ))}
+
+                    <input
+                        type="file"
+                        ref={AnswerfileInputRef}
+                        onChange={handleUploadAnswer}
+                        className="hidden"
+                        accept=".docx,.xlsx,.csv,.pdf"
+                    />
                 </div>
             </main>
         </div>
