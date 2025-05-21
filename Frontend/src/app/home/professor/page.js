@@ -40,7 +40,9 @@ export default function Main() {
             )}
 
             {view === 'upload' && (
-                <Upload />
+                <Upload
+                    userdata={session}
+                />
             )}
 
         </div>
