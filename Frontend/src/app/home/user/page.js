@@ -35,7 +35,6 @@ export default function AnatomyTestPage() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-
       {/* 헤더 */}
       <Navigation
         view={view}
@@ -70,7 +69,6 @@ export default function AnatomyTestPage() {
         // setUserInfo={setUserInfo}
         />
       )}
-
     </div>
   );
 }

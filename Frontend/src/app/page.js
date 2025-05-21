@@ -35,8 +35,8 @@ export default function LoginPage({ className }) {
     } else {
       const res = await fetch("/api/auth/session");
       const session = await res.json();
-      if (session?.user?.role === "admin") {
-        router.push("/home/admin");
+      if (session?.user?.role === "professor") {
+        router.push("/home/professor");
       } else if (session?.user?.role === "user") {
         router.push("/home/user");
       }
@@ -45,15 +45,16 @@ export default function LoginPage({ className }) {
 
   const handleGoogleLogin = () => {
     signIn("google", {
-      callbackUrl: "/home/user",
+      callbackUrl: "/home/redirect",
     });
   };
 
   const handleKakaoLogin = () => {
     signIn("kakao", {
-      callbackUrl: "/home/user",
+      callbackUrl: "/home/redirect",
     });
   };
+
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
