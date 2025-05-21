@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Dict
+from typing import List, Dict, Any
 from datetime import datetime
 
 class User(BaseModel):
@@ -25,5 +25,18 @@ class GetExplantationResponse(BaseModel):
     explanation: str
 
 
-class UploadLabelingRequest(BaseModel):
-    exam_id : int
+class UploadTestResponse(BaseModel):
+    id : int
+    department : str
+    file_name : str
+    subject : str
+    case_list: List[Dict[str, Any]]
+    uploader : str
+
+class GetQuestionDataResponse(BaseModel):
+    id: int
+    department: str
+    file_name: str
+    subject: str
+    case_list: List[Dict[str, Any]]
+    uploader: str

@@ -37,13 +37,9 @@ async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db
     exam_data = add_exam_data(db = db, department="물리치료학과", file_name = file.filename, subject="물리치료사 국가시험")
     for i, q in enumerate(questions, start=1):
         print(f"[문항 {i}]\n{q}\n{'-' * 40}")
-        update_knowledgebase(db = db, exam_id = exam_data, question_number=i, question = q)
+        update_knowledgebase(db = db, exam_id = exam_data.id, question_number=i, question = q)
 
-    return {
-        "filename": file.filename,
-        "question_count": len(questions),
-        "questions_preview": questions[:]
-    }
+    return exam_data
 
 
 
@@ -181,3 +177,8 @@ async def get_explantation_endpoint(request: GetExplantationRequest, db: Session
         "explanation": explanation,
     })
 
+
+@exam_router.post("/getQuestionData")
+async def get_qeuestion_data_endpoint(db: Session = Depends(get_db)):
+    exams = get_all_exam(db)
+    return exams

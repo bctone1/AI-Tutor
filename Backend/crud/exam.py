@@ -22,7 +22,7 @@ def add_exam_data(db : Session, department : str, file_name, subject):
     db.add(new_exam)
     db.commit()
     db.refresh(new_exam)
-    return new_exam.id
+    return new_exam
 
 def update_knowledgebase(db : Session, exam_id : int, question_number : int, question : str):
     vector = embedding_model.embed_query(question)
@@ -131,3 +131,7 @@ def get_explantation(db : Session, question_id : int, correct_answer : int):
     question = db.query(KnowledgeBase).filter(KnowledgeBase.id == question_id).first()
     explantation = generate_explantation(question.question, correct_answer)
     return explantation
+
+def get_all_exam(db : Session):
+    exam_entries = db.query(Exam).all()
+    return exam_entries
