@@ -13,6 +13,7 @@ from schema.exam import *
 from pathlib import Path
 import json
 import shutil
+from fastapi import Form
 exam_router = APIRouter()
 
 
@@ -45,47 +46,51 @@ async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db
     }
 
 
-'''
-@exam_router.post("/uploadquestion/")
+
+@exam_router.post("/uploadlabeling/")
 async def upload_two_files(
-    file1: UploadFile = File(...),
-    file2: UploadFile = File(...),
+    exam_id: int = Form(...),
+    file: UploadFile = File(...),
     db: Session = Depends(get_db)
 ):
     LABELING_DATA.mkdir(parents=True, exist_ok=True)
-    EXAM_DATA.mkdir(parents=True, exist_ok=True)
-    print(f"파일 1 이름: {file1.filename}")
-    print(f"파일 2 이름: {file2.filename}")
-    exam_location = EXAM_DATA / file1.filename
-    label_location = LABELING_DATA / file2.filename
+    label_location = LABELING_DATA / file.filename
 
-    with open(exam_location, "wb") as f:
-        contents = await file1.read()
-        f.write(contents)
     with open(label_location, "wb") as f:
-        contents = await file2.read()
+        contents = await file.read()
         f.write(contents)
 
 
     label = excel_to_list(label_location)
 
-    try:
-        documents = load_document(exam_location)
-        print(f"PAGE TEXT : {documents}")
-    except ValueError as e:
-        return {"error": str(e)}
+    question_ids = sorted(pick_question_ids(db, exam_id))
 
-    page_texts = [doc.page_content for doc in documents]
-    print(f"PAGE TEXT : {page_texts}")
-    questions = extract_questions_from_pages(page_texts)
-    exam_data = add_exam_data(db=db, department="물리치료학과", file_name=file1.filename, subject="물리치료 기초")
+    print(label)
+    print(question_ids)
+
+    for subject, rows in label.items():
+        for i, row in enumerate(rows):
+            if i >= len(question_ids):
+                break  # question_id가 부족할 경우 방지
+
+            question_id = question_ids[i]
+            _, subject_name, _, correct_answer, level, case = row
+
+            # DB 저장 함수 호출
+            update_labelingdata(
+                db=db,
+                subject=subject_name,
+                question_id=question_id,
+                correct_answer=correct_answer,
+                level=level,
+                case=case
+            )
 
 
     return {
-        "file1_name": file1.filename,
-        "file2_name": file2.filename
+        "file_name": file.filename,
     }
-'''
+
 
 
 '''

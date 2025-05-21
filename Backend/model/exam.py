@@ -11,6 +11,7 @@ class Exam(Base):
     file_name = Column(String(50))
     subject = Column(String(50))
     case_list = Column(JSON)
+    uploader = Column(String(100))
     knowledge_bases = relationship('KnowledgeBase', back_populates='exam', cascade="all, delete-orphan")
 
 

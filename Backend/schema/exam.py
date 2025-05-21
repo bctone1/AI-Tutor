@@ -25,3 +25,5 @@ class GetExplantationResponse(BaseModel):
     explanation: str
 
 
+class UploadLabelingRequest(BaseModel):
+    exam_id : int

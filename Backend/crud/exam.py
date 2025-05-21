@@ -37,6 +37,25 @@ def update_knowledgebase(db : Session, exam_id : int, question_number : int, que
     db.refresh(new_question)
     return new_question.id
 
+def pick_question_ids(db: Session, exam_id : int):
+    questions = db.query(KnowledgeBase).filter(KnowledgeBase.exam_id == exam_id).all()
+    question_ids = [q.id for q in questions]
+    return question_ids
+
+
+def update_labelingdata(db : Session, subject : str, question_id : int, correct_answer : int, level : str, case : str):
+    new_label = LabelingData(
+        subject = subject,
+        question_id = question_id,
+        correct_answer = correct_answer,
+        level = level,
+        case = case
+    )
+    db.add(new_label)
+    db.commit()
+    db.refresh(new_label)
+    return new_label.id
+
 def generate_level_test(db: Session, subject: str):
     # 1. 해당 과목의 라벨링 데이터 모두 조회
     labels = db.query(LabelingData).filter(LabelingData.subject == subject).all()
