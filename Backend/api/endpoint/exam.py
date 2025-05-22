@@ -10,9 +10,7 @@ import os
 from database.session import get_db
 from fastapi import Depends
 from schema.exam import *
-from pathlib import Path
 import json
-import shutil
 from fastapi import Form
 exam_router = APIRouter()
 
