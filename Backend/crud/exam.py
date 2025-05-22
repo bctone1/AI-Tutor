@@ -7,17 +7,19 @@ from typing import Dict, Tuple
 from collections import defaultdict
 from langchain_service.chain.get_explantation import generate_explantation
 import random
+from pathlib import Path
 
 embedding_model = OpenAIEmbeddings(
     model="text-embedding-3-small",
     openai_api_key=CHATGPT_API_KEY
 )
 
-def add_exam_data(db : Session, department : str, file_name, subject):
+def add_exam_data(db : Session, department : str, file_name : str, subject : str, email : str):
     new_exam = Exam(
         department = department,
         file_name = file_name,
         subject = subject,
+        uploader = email,
         status = False
     )
     db.add(new_exam)
@@ -140,10 +142,28 @@ def get_all_exam(db : Session):
     exam_entries = db.query(Exam).all()
     return exam_entries
 
-def change_status(db : Session, exam_id = int):
+def change_status(db : Session, exam_id = int, file_name = str):
     exam = db.query(Exam).filter(Exam.id == exam_id).first()
     exam.status = True
+    exam.file_location = file_name
     db.add(exam)
     db.commit()
     db.refresh(exam)
     return exam.id
+
+def get_unique_filename(path: Path) -> tuple[Path, str]:
+    path = Path(path)
+    if not path.exists():
+        return path, path.name  # path.name만 리턴해도 됨
+
+    stem = path.stem
+    suffix = path.suffix
+    parent = path.parent
+
+    counter = 1
+    while True:
+        new_name = f"{stem}_{counter}{suffix}"
+        new_path = parent / new_name
+        if not new_path.exists():
+            return new_path, new_name  # 경로 전체 + 파일명만 분리해서 리턴
+        counter += 1

@@ -2,9 +2,12 @@ from starlette.middleware.cors import CORSMiddleware
 from api.router import router
 from fastapi import FastAPI
 import uvicorn
+from fastapi.staticfiles import StaticFiles
+
+
 
 app = FastAPI(debug = True)
-
+app.mount("/files", StaticFiles(directory="files"), name="files")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

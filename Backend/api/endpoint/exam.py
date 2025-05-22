@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, UploadFile
+from fastapi import APIRouter, File, UploadFile, HTTPException
 from core.config import LABELING_DATA, EXAM_DATA
 from crud.exam import *
 from crud.user import update_user_score
@@ -14,17 +14,55 @@ import json
 from fastapi import Form
 exam_router = APIRouter()
 
+'''
+@exam_router.post("/uploadquestion")
+async def upload_question(
+        file: UploadFile = File(...),
+        userData: str = Form(...),
+        ExamID: str = Form(None)  # 선택사항
+):
+    try:
+        print("=== [UPLOAD DEBUG] ===")
+        print(f"Filename: {file.filename}")
+        print(f"Raw userData: {userData}")
+
+        user_info = json.loads(userData)
+        print(f"Parsed userData: {user_info}")
+
+        # ✅ 이메일만 추출
+        email = user_info["user"]["email"]
+        print(f"✅ Extracted Email: {email}")
+
+    except json.JSONDecodeError as e:
+        print(f"❌ JSON Decode Error: {e}")
+        raise HTTPException(status_code=400, detail="Invalid userData format")
+
+    print("======================\n")
+
+    return {"message": "DEBUG: received data"}
+'''
 
 @exam_router.post("/uploadquestion")
-async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db)):
+async def upload_file(file: UploadFile = File(...), userData: str = Form(...), db: Session = Depends(get_db)):
     file_location = os.path.join(EXAM_DATA, file.filename)
+    unique_file_location = get_unique_filename(file_location)
 
-    with open(file_location, "wb") as f:
+    try:
+        user_info = json.loads(userData)
+        email = user_info["user"]["email"]
+        if not email:
+            raise ValueError("email missing")
+    except Exception as e:
+        print(f"userData JSON decode error: {str(e)}")
+        raise HTTPException(status_code=400, detail=f"userData JSON decode error: {str(e)}")
+
+    with open(unique_file_location, "wb") as f:
         contents = await file.read()
         f.write(contents)
 
+
     try:
-        documents = load_document(file_location)
+        documents = load_document(unique_file_location)
         print(f"PAGE TEXT : {documents}")
     except ValueError as e:
         return {"error": str(e)}
@@ -32,7 +70,7 @@ async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db
     page_texts = [doc.page_content for doc in documents]
     print(f"PAGE TEXT : {page_texts}")
     questions = extract_questions_from_pages(page_texts)
-    exam_data = add_exam_data(db = db, department="물리치료학과", file_name = file.filename, subject="물리치료사 국가시험")
+    exam_data = add_exam_data(db = db, department="물리치료학과", file_name = file.filename, subject="물리치료사 국가시험", email = email)
     for i, q in enumerate(questions, start=1):
         print(f"[문항 {i}]\n{q}\n{'-' * 40}")
         update_knowledgebase(db = db, exam_id = exam_data.id, question_number=i, question = q)
@@ -50,7 +88,10 @@ async def upload_two_files(
     LABELING_DATA.mkdir(parents=True, exist_ok=True)
     label_location = LABELING_DATA / file.filename
 
-    with open(label_location, "wb") as f:
+    # 중복 방지된 파일명으로 경로 변경
+    unique_label_location, unique_name = get_unique_filename(label_location)
+
+    with open(unique_label_location, "wb") as f:
         contents = await file.read()
         f.write(contents)
 
@@ -79,7 +120,8 @@ async def upload_two_files(
                 level=level,
                 case=case
             )
-    change_status(db = db, exam_id = ExamID)
+
+    change_status(db = db, exam_id = ExamID, file_name=str(unique_name))
     exam_data = get_all_exam(db = db)
 
 
