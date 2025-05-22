@@ -81,11 +81,11 @@ async def upload_two_files(
                 level=level,
                 case=case
             )
-    get_all_exam(db = db)
+    change_status(db = db, exam_id = ExamID)
+    exam_data = get_all_exam(db = db)
 
-    return {
-        "file_name": file.filename,
-    }
+
+    return exam_data
 
 
 

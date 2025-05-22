@@ -140,3 +140,11 @@ def get_explantation(db : Session, question_id : int, correct_answer : int):
 def get_all_exam(db : Session):
     exam_entries = db.query(Exam).all()
     return exam_entries
+
+def change_status(db : Session, exam_id = int):
+    exam = db.query(Exam).filter(Exam.id == exam_id).first()
+    exam.status = True
+    db.add(exam)
+    db.commit()
+    db.refresh(exam)
+    return exam.id
