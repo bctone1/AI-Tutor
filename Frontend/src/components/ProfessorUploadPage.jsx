@@ -45,12 +45,10 @@ const UploadPage = ({ userdata }) => {
         const selectedFile = event.target.files[0];
         if (!selectedFile) return;
         const formData = new FormData();
-        alert(answerID);
+        // alert(answerID);
         formData.append("file", selectedFile);
         formData.append("userData", userdata);
         formData.append("ExamID", answerID);
-
-        // return;
 
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/uploadAnswer`, {
