@@ -45,7 +45,7 @@ async def upload_question(
 @exam_router.post("/uploadquestion")
 async def upload_file(file: UploadFile = File(...), userData: str = Form(...), db: Session = Depends(get_db)):
     file_location = os.path.join(EXAM_DATA, file.filename)
-    unique_file_location = get_unique_filename(file_location)
+    unique_file_location, unique_name = get_unique_filename(file_location)
 
     try:
         user_info = json.loads(userData)
@@ -96,7 +96,7 @@ async def upload_two_files(
         f.write(contents)
 
 
-    label = excel_to_list(unique_label_location)
+    label = excel_to_list(label_location)
 
     question_ids = sorted(pick_question_ids(db, ExamID))
 
