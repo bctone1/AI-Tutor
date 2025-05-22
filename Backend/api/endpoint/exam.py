@@ -70,7 +70,7 @@ async def upload_file(file: UploadFile = File(...), userData: str = Form(...), d
     page_texts = [doc.page_content for doc in documents]
     print(f"PAGE TEXT : {page_texts}")
     questions = extract_questions_from_pages(page_texts)
-    exam_data = add_exam_data(db = db, department="물리치료학과", file_name = file.filename, subject="물리치료사 국가시험", email = email)
+    exam_data = add_exam_data(db = db, department="물리치료학과", file_name = file.filename, subject="물리치료 기초", email = email)
     for i, q in enumerate(questions, start=1):
         print(f"[문항 {i}]\n{q}\n{'-' * 40}")
         update_knowledgebase(db = db, exam_id = exam_data.id, question_number=i, question = q)
@@ -161,7 +161,7 @@ async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db
 
 @exam_router.post('/getTestQuestion')
 async def get_test_endpoint(db: Session = Depends(get_db)):
-    subject = "물리치료"
+    subject = "물리치료 기초"
     question_ids, question_texts, levels = generate_level_test(db, subject)
 
     if not question_ids:

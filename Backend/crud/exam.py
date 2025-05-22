@@ -61,7 +61,7 @@ def update_labelingdata(db : Session, subject : str, question_id : int, correct_
     db.commit()
     db.refresh(new_label)
     return new_label.id
-
+'''
 def generate_level_test(db: Session, subject: str):
     # 1. 해당 과목의 라벨링 데이터 모두 조회
     labels = db.query(LabelingData).filter(LabelingData.subject == subject).all()
@@ -87,7 +87,45 @@ def generate_level_test(db: Session, subject: str):
 
     return selected_question_ids, question_texts, levels
 
+'''
 
+def generate_level_test(db: Session, subject: str):
+    labels = db.query(LabelingData).filter(LabelingData.subject == subject).all()
+
+    case_level_map = defaultdict(lambda: defaultdict(list))
+    for label in labels:
+        case_level_map[label.case][label.level].append(label.question_id)
+
+    selected_question_ids = []
+
+    for case, level_dict in case_level_map.items():
+        selected_ids_for_case = []
+
+        # 1. 우선 각 레벨에서 1개씩 뽑기
+        for level in ['상', '중', '하']:
+            question_ids = level_dict.get(level, [])
+            if question_ids:
+                selected_ids_for_case.append(random.choice(question_ids))
+
+        # 2. 부족한 개수만큼 아무 레벨에서 추가로 뽑기 (중복 제외)
+        remaining = 3 - len(selected_ids_for_case)
+        if remaining > 0:
+            all_question_ids = sum(level_dict.values(), [])  # 모든 레벨의 ID 평탄화
+            remaining_ids = list(set(all_question_ids) - set(selected_ids_for_case))
+            if remaining_ids:
+                additional_ids = random.sample(remaining_ids, min(remaining, len(remaining_ids)))
+                selected_ids_for_case.extend(additional_ids)
+
+        selected_question_ids.extend(selected_ids_for_case)
+
+    # 최종 문제 조회 및 정리
+    questions = db.query(KnowledgeBase).filter(KnowledgeBase.id.in_(selected_question_ids)).all()
+    question_texts = [parse_question_block(q.question) for q in questions]
+
+    id_to_level = {label.question_id: label.level for label in labels}
+    levels = [id_to_level.get(q.id, '미정') for q in questions]
+
+    return selected_question_ids, question_texts, levels
 
 def grading_test(db: Session, answers: Dict[str, int]):
     score = 0
