@@ -37,7 +37,6 @@ def update_knowledgebase(db : Session, exam_id : int, question_number : int, que
     db.commit()
     db.refresh(new_question)
     exam = db.query(Exam).filter(Exam.id == new_question.exam_id).first()
-    exam.status = True
     db.commit()
     db.refresh(exam)
     return new_question.id
