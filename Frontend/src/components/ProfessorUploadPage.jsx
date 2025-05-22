@@ -91,7 +91,7 @@ const UploadPage = ({ userdata }) => {
             if (res.ok) {
                 console.log(data);
                 alert("파일이 성공적으로 업로드되었습니다.");
-                setFiles(data);
+                setFiles(prevFiles => [...prevFiles, data]); // 단일 객체일 때
             } else {
                 alert("업로드 실패: 서버 오류");
             }
