@@ -96,7 +96,7 @@ async def upload_two_files(
         f.write(contents)
 
 
-    label = excel_to_list(label_location)
+    label = excel_to_list(unique_label_location)
 
     question_ids = sorted(pick_question_ids(db, ExamID))
 
