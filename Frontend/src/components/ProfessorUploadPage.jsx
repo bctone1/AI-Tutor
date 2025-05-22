@@ -81,7 +81,7 @@ const UploadPage = ({ userdata }) => {
         // console.log(userdata);
         const formData = new FormData();
         formData.append("file", selectedFile);
-        formData.append("userData", userdata);
+        formData.append("userData", JSON.stringify(userdata));
 
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/uploadquestion`, {
