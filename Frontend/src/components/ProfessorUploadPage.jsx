@@ -6,6 +6,7 @@ import { Upload, FileText } from 'lucide-react';
 const UploadPage = ({ userdata }) => {
     const fileInputRef = useRef(null);
     const AnswerfileInputRef = useRef(null);
+    const [dragActive, setDragActive] = useState(false);
 
     const [uploadStatus, setuploadStatus] = useState(true);
     const [files, setFiles] = useState([]);
@@ -101,6 +102,29 @@ const UploadPage = ({ userdata }) => {
         }
     };
 
+    const handleDragOver = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setDragActive(true);
+    };
+
+    const handleDragLeave = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setDragActive(false);
+    };
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setDragActive(false);
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+            handleFileChange({ target: { files: e.dataTransfer.files } });
+        }
+    };
+
+
+
     return (
         <div className="bg-gray-100 min-h-screen text-sm text-gray-800">
             {/* Breadcrumb */}
@@ -128,7 +152,13 @@ const UploadPage = ({ userdata }) => {
 
 
                 {/* Upload Box */}
-                <div className="border border-dashed border-gray-300 bg-white rounded-lg p-10 text-center mb-8">
+                <div
+                    className={`border border-dashed border-gray-300 bg-white rounded-lg p-10 text-center mb-8 transition ${dragActive ? 'border-indigo-500 bg-indigo-50' : ''
+                        }`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                >
                     <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center border-2 border-gray-400 text-gray-400 rounded">
                         <Upload size={24} />
                     </div>
@@ -165,7 +195,7 @@ const UploadPage = ({ userdata }) => {
                             <div className="flex-1 text-gray-600">{file.id}</div>
                             <div className="flex-[2] flex items-center gap-2">
                                 <FileText className="text-indigo-600" size={18} />
-                                {file.file_name}
+                                <a target="_blank" href={`${process.env.NEXT_PUBLIC_API_URL}/files/test/${file.file_name}`}>{file.file_name}</a>
                             </div>
                             <div className="flex-1 text-gray-600">{file.department}</div>
                             <div className="flex-1 text-gray-600">{file.uploader}</div>
@@ -182,9 +212,15 @@ const UploadPage = ({ userdata }) => {
                                     >
                                         해설 업로드
                                     </button>
-                                ) : (
-                                    <div>해설 업로드 됨</div>
 
+                                ) : (
+                                    <a
+                                        target="_blank"
+                                        className="text-green-600 border border-green-500 px-3 py-1 rounded text-xs hover:bg-green-500 hover:text-white transition"
+                                        href={`${process.env.NEXT_PUBLIC_API_URL}/files/label/${file.file_location}`}
+                                    >
+                                        해설 다운로드
+                                    </a>
                                 )}
                             </div>
 
