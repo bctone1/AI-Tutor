@@ -53,6 +53,7 @@ export default function AnatomyTestPage() {
       {view === 'dashboard' && (
         <Dashboard
           userdata={session}
+          setView={setView}
         />
       )}
 

@@ -11,8 +11,8 @@ const Header = ({ setView }) => {
                 <ul className="flex space-x-5">
                     <li><a onClick={() => setView('dashboard')} className="cursor-pointer">전체 현황</a></li>
                     <li><a onClick={() => setView('upload')} className="cursor-pointer">데이터 추가</a></li>
-                    <li><a onClick={() => setView('')} className="cursor-pointer">개인별 분석</a></li>
-                    <li><a onClick={() => setView('')} className="cursor-pointer">리포트</a></li>
+                    <li><a onClick={() => setView('analysis')} className="cursor-pointer">개인별 분석</a></li>
+                    {/* <li><a onClick={() => setView('')} className="cursor-pointer">리포트</a></li> */}
                     <li><a onClick={() => setView('')} className="cursor-pointer">설정</a></li>
                 </ul>
                 <button

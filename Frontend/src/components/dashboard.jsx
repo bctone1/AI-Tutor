@@ -1,7 +1,7 @@
 import React from 'react';
 
-const dashboard = ({userdata}) => {
-console.log(userdata);
+const dashboard = ({ userdata, setView }) => {
+    // console.log(userdata);
 
     return (
         <main className="max-w-6xl mx-auto px-5">
@@ -12,14 +12,24 @@ console.log(userdata);
                 <div className="flex flex-col md:flex-row gap-4">
                     <div className="w-full md:w-1/3 bg-white rounded shadow p-6">
                         <h2 className="text-lg font-bold">{userdata.user.name}님, 안녕하세요!</h2>
-                        <p className="text-sm text-gray-600">의과대학 {userdata.user.grade}학년 | 종합 레벨: 중</p>
+                        <p className="text-sm text-gray-600">
+                            {userdata.user.major && userdata.user.grade
+                                ? `${userdata.user.major} ${userdata.user.grade}학년 | 종합 레벨: ${userdata.user.testscore >= 80
+                                    ? '상'
+                                    : userdata.user.testscore >= 50
+                                        ? '중'
+                                        : '하'
+                                }`
+                                : "프로필을 완성해주세요"
+                            }
+                        </p>
                     </div>
                     <div className="w-full md:w-2/3 bg-white rounded shadow p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
                             <h3 className="text-base font-bold">국가고시 D-120</h3>
                             <p className="text-sm text-gray-600">오늘의 학습: 3/5 완료 | 주간 목표: 65% 달성</p>
                         </div>
-                        <button className="bg-green-500 text-white px-4 py-2 rounded-full font-semibold">
+                        <button className="bg-green-500 text-white px-4 py-2 rounded-full font-semibold cursor-pointer" onClick={() => setView('active')}>
                             오늘의 학습 계속하기
                         </button>
                     </div>

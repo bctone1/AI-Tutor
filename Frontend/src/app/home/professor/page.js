@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import Hearder from '@/components/professorHeader';
 import ProfessorDashboard from '@/components/professorDashboard';
 import Upload from '@/components/ProfessorUploadPage';
-
+import Analysis from '@/components/analysis';
 
 
 
@@ -36,11 +36,19 @@ export default function Main() {
 
             {/* 메인 컨텐츠 */}
             {view === 'dashboard' && (
-                <ProfessorDashboard />
+                <ProfessorDashboard
+                    userdata={session}
+                />
             )}
 
             {view === 'upload' && (
                 <Upload
+                    userdata={session}
+                />
+            )}
+
+            {view === 'analysis' && (
+                <Analysis
                     userdata={session}
                 />
             )}

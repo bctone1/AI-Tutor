@@ -62,14 +62,14 @@ const Navigation = ({ view, setView, userdata }) => {
               프로필
             </a>
           </li>
-          <li>
+          {/* <li>
             <a
               onClick={() => setView('setting')}
               className={`${getLinkClass('setting')} cursor-pointer p-5`}
             >
               설정
             </a>
-          </li>
+          </li> */}
         </ul>
         <button
           onClick={() => signOut({ callbackUrl: "/" })}
