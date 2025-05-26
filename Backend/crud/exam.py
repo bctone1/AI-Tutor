@@ -5,7 +5,7 @@ from core.config import CHATGPT_API_KEY
 from sqlalchemy.orm import Session
 from typing import Dict, Tuple
 from collections import defaultdict
-from langchain_service.chain.get_explantation import generate_explantation
+from langchain_service.chain.get_explantation import generate_explantation, generate_hint
 import random
 from pathlib import Path
 
@@ -175,6 +175,24 @@ def get_explantation(db : Session, question_id : int, correct_answer : int):
     question = db.query(KnowledgeBase).filter(KnowledgeBase.id == question_id).first()
     explantation = generate_explantation(question.question, correct_answer)
     return explantation
+
+def get_hint(db: Session, question_id: int):
+    """
+    문제 ID를 받아서 해당 문제에 대한 힌트를 생성합니다.
+    
+    Args:
+        db (Session): 데이터베이스 세션
+        question_id (int): 문제 ID
+        
+    Returns:
+        str: 생성된 힌트 텍스트
+    """
+    question = db.query(KnowledgeBase).filter(KnowledgeBase.id == question_id).first()
+    if not question:
+        raise ValueError(f"Question with ID {question_id} not found")
+    
+    hint = generate_hint(question.question)
+    return hint
 
 def get_all_exam(db : Session):
     exam_entries = db.query(Exam).all()
