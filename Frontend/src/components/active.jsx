@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 
 const Active = ({ userdata }) => {
     const [selectedSubject, setSelectedSubject] = useState("");
     const [chatLog, setChatLog] = useState([]);
     const [input, setInput] = useState('');
+    const [currentID, setCurrentID] = useState('');
     const [loading, setLoading] = useState(false);
 
     const handleFetchQuestion = () => {
@@ -46,7 +47,8 @@ const Active = ({ userdata }) => {
             const data = await res.json();
             if (res.ok) {
                 const { question, choices, id } = data;
-
+                setCurrentID(id);
+                
                 setChatLog(prev => [
                     ...prev,
                     {
@@ -78,6 +80,7 @@ const Active = ({ userdata }) => {
     };
 
     const handleSubmitAnswer = async (choiceNumber, id) => {
+        alert(id);
         setChatLog(prev => [
             ...prev,
             { sender: '나', content: `답: ${choiceNumber}번` },
@@ -112,7 +115,10 @@ const Active = ({ userdata }) => {
 
     const handleHint = async () => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getHint`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getHint/${currentID}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
             const data = await res.json();
 
             setChatLog(prev => [
@@ -254,8 +260,6 @@ const Active = ({ userdata }) => {
                     </div>
                 </section>
             </div>
-
-
         </main>
     );
 };
