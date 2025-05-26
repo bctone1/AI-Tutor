@@ -80,7 +80,7 @@ const Active = ({ userdata }) => {
     };
 
     const handleSubmitAnswer = async (choiceNumber, id) => {
-        alert(id);
+        // alert(id);
         setChatLog(prev => [
             ...prev,
             { sender: '나', content: `답: ${choiceNumber}번` },
@@ -114,6 +114,11 @@ const Active = ({ userdata }) => {
     };
 
     const handleHint = async () => {
+        if (!currentID) {
+            alert("문제를 풀어야 힌트를 받을 수 있어요.");
+            return;
+        }
+
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getHint/${currentID}`, {
                 method: 'GET',
@@ -123,7 +128,7 @@ const Active = ({ userdata }) => {
 
             setChatLog(prev => [
                 ...prev,
-                { sender: 'AI 튜터', content: `힌트: ${data.hint}` }
+                { sender: 'AI 튜터', content: data.hint }
             ]);
         } catch (e) {
             console.error(e);
@@ -156,6 +161,7 @@ const Active = ({ userdata }) => {
             const data = await res.json();
             if (data.method) {
                 const { question, choices, id } = data;
+                setCurrentID(id);
                 setChatLog(prev => [
                     ...prev,
                     {
@@ -241,7 +247,17 @@ const Active = ({ userdata }) => {
                                     <div className={`font-semibold ${chat.sender === '나' ? 'text-teal-600' : 'text-indigo-600'} mb-1`}>
                                         {chat.sender}
                                     </div>
-                                    <div className="text-sm text-gray-800">{chat.content}</div>
+                                    <div className="text-sm text-gray-800">
+                                        {typeof chat.content === 'string' 
+                                            ? chat.content.split('\n').map((line, i) => (
+                                                <React.Fragment key={i}>
+                                                    {line}
+                                                    <br />
+                                                </React.Fragment>
+                                              ))
+                                            : chat.content
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         ))}
