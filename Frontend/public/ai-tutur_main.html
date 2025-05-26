@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tutor - 개인 맞춤형 학습 도우미</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #f97316;
+            --danger: #ef4444;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f9fafb;
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        header {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo span {
+            margin-left: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--gray-800);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .hero {
+            padding: 4rem 0;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .hero-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+            color: var(--gray-800);
+        }
+
+        .features {
+            padding: 4rem 0;
+            background-color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 4px;
+            background-color: var(--primary);
+            position: absolute;
+            bottom: -0.75rem;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background-color: var(--gray-100);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            background-color: var(--primary-light);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .screenshots {
+            padding: 4rem 0;
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .screenshot-card {
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .screenshot-card:hover {
+            transform: scale(1.03);
+        }
+
+        .screenshot-img {
+            width: 100%;
+            height: 200px;
+            background-color: var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            color: var(--gray-800);
+        }
+
+        .screenshot-info {
+            padding: 1rem;
+            background-color: white;
+        }
+
+        .screenshot-info h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.125rem;
+        }
+
+        .how-it-works {
+            padding: 4rem 0;
+            background-color: white;
+        }
+
+        .steps {
+            display: flex;
+            flex-direction: column;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .step:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .step-content h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+        .cta {
+            padding: 4rem 0;
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-light {
+            background-color: white;
+            color: var(--primary);
+        }
+
+        .btn-light:hover {
+            background-color: var(--gray-100);
+        }
+
+        footer {
+            background-color: var(--gray-900);
+            color: white;
+            padding: 2rem 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--gray-300);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .stats-section {
+            padding: 4rem 0;
+            background-color: var(--gray-100);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .testimonials {
+            padding: 4rem 0;
+        }
+
+        .testimonial-card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial-content {
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--gray-300);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-800);
+            font-weight: 500;
+        }
+
+        .testimonial-info h4 {
+            font-weight: 600;
+        }
+
+        .testimonial-info p {
+            color: var(--gray-800);
+            font-size: 0.875rem;
+        }
+
+        /* 기술적 기능 섹션 전용 스타일 */
+        .tech-features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tech-feature-card {
+            background-color: #f0f4f8;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .tech-feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+        }
+
+        .tech-feature-icon {
+            background-color: #f97316;
+            color: white;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+            flex-shrink: 0;
+            align-self: flex-start;
+        }
+
+        .tech-feature-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+            color: var(--gray-900);
+            width: 100%;
+            text-align: left;
+            min-height: 2.5rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .tech-feature-card p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+            color: var(--gray-700);
+            flex-grow: 1;
+            width: 100%;
+            text-align: left;
+        }
+
+        .tech-feature-list {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .tech-feature-list li {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+            color: var(--gray-600);
+            padding-left: 0;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .tech-feature-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 새로운 대시보드 스타일 */
+        .new-dashboard {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 24px;
+            background-color: #f3f4f6;
+            border-radius: 8px;
+        }
+
+        .dashboard-row {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        /* 첫 번째 행: 2개 카드 (1:2 비율) */
+        .dashboard-row:nth-child(1) {
+            grid-template-columns: 1fr 2fr;
+        }
+
+        /* 두 번째, 세 번째 행: 2개 카드 (2:1 비율) */
+        .dashboard-row:nth-child(2),
+        .dashboard-row:nth-child(3) {
+            grid-template-columns: 2fr 1fr;
+        }
+
+        .new-dashboard .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+        }
+
+        .new-dashboard .card-header {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0 0 16px 0;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 24px;
+        }
+
+        /* 사용자 인사 카드 */
+        .user-greeting h2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .user-greeting p {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        /* 카운트다운과 버튼이 함께 있는 카드 */
+        .countdown-info-with-button {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .countdown-text h3 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .countdown-text p {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        /* 학습 계속하기 버튼 */
+        .continue-btn {
+            background-color: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 9999px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .continue-btn:hover {
+            background-color: #059669;
+        }
+
+        /* 진행률 섹션 */
+        .progress-item {
+            margin-bottom: 16px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-fill.green { background-color: #10b981; }
+        .progress-fill.yellow { background-color: #f59e0b; }
+        .progress-fill.red { background-color: #ef4444; }
+
+        .progress-scale {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 8px;
+        }
+
+        /* 집중 학습 추천 */
+        .recommendation-item {
+            background-color: #e0e7ff;
+            color: #3730a3;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        /* 일정 섹션 */
+        .schedule-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            position: relative;
+            background-color: #f9fafb;
+        }
+
+        .schedule-item.highlight {
+            background-color: #fef3c7;
+        }
+
+        .schedule-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .schedule-item.completed::before {
+            background-color: #10b981;
+        }
+
+        .schedule-item.highlight::before {
+            background-color: #f59e0b;
+        }
+
+        .schedule-content {
+            padding-left: 16px;
+        }
+
+        .schedule-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1f2937;
+            margin-bottom: 2px;
+        }
+
+        .schedule-status {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .schedule-btn {
+            padding: 6px 16px;
+            border: none;
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .schedule-btn.completed {
+            background-color: #d1d5db;
+            color: #1f2937;
+        }
+
+        .schedule-btn.active {
+            background-color: #10b981;
+            color: white;
+        }
+
+        /* 통계 차트 */
+        .chart-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            height: 120px;
+            margin-bottom: 12px;
+        }
+
+        .chart-bar {
+            width: 24px;
+            border-radius: 4px 4px 0 0;
+            background-color: #bfdbfe;
+        }
+
+        .chart-bar.today {
+            background-color: #4f46e5;
+        }
+
+        .chart-labels {
+            display: flex;
+            justify-content: space-around;
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .chart-average {
+            text-align: center;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        /* 수정된 CTA 및 Footer 스타일 */
+        .cta {
+            padding: 4rem 0;
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            margin-bottom: 0;
+        }
+
+        .cta h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer {
+            background-color: var(--gray-900);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 0;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .step {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .step-number {
+                margin-bottom: 0.5rem;
+            }
+
+            .user-info-section,
+            .progress-section,
+            .schedule-section {
+                flex-direction: column;
+            }
+
+            .countdown-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .continue-btn {
+                align-self: stretch;
+                text-align: center;
+            }
+
+            /* 모바일에서 대시보드 행들을 세로로 배치 */
+            .dashboard-row {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* 모바일에서 카운트다운 카드도 세로로 배치 */
+            .countdown-info-with-button {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .continue-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            /* 모바일에서 기술적 기능 카드 조정 */
+            .tech-features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .tech-feature-card {
+                min-height: auto;
+                padding: 1.5rem;
+                text-align: left;
+            }
+
+            .tech-feature-card h3 {
+                font-size: 1.125rem;
+                min-height: auto;
+                margin-bottom: 0.75rem;
+            }
+
+            .tech-feature-icon {
+                width: 48px;
+                height: 48px;
+                margin-bottom: 1rem;
+            }
+
+            .tech-feature-card p {
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
+
+            .tech-feature-list li {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                    </svg>
+                    <span>AI Tutor</span>
+                </div>
+                <a href="/login" class="btn">로그인</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero">
+                    <div class="hero-content">
+                        <h1>AI 기반 맞춤형 학습 도우미</h1>
+                        <p>
+                            AI Tutor는 학생들의 자기주도 학습을 돕는 AI 기반 웹 튜터링 시스템입니다.
+                            학생 개개인의 학습 수준을 측정하여 관련 학과에 맞춘 자동형 학습 지원 기능을 제공하며, 
+                            강의 외 시간에도 언제 어디서든 학습할 수 있도록 설계되었습니다.
+                        </p>
+                    </div>
+                    <div class="hero-image">
+                        <img src="/api/placeholder/400/320" alt="AI Tutor 서비스 미리보기" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="container">
+                <h2 class="section-title">주요 특징</h2>
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <p style="font-size: 1.125rem; max-width: 800px; margin: 0 auto;">
+                        AI 튜터는 단순한 학습을 넘어서, 다음과 같은 특징을 갖는 '디지털 학습 코치'로 설계됩니다.
+                    </p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 16v-4"></path>
+                                <path d="M12 8h.01"></path>
+                            </svg>
+                        </div>
+                        <h3>사용자 개인별 레벨 테스트</h3>
+                        <p>서비스 최초 이용 시 진단형 테스트를 통해 학생의 전공 이해도 및 수준을 분석합니다.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                        </div>
+                        <h3>맞춤형 기출문제 풀이 기능</h3>
+                        <p>진단 결과를 기반으로 학생 수준에 적합한 문제를 선별하여 반복 학습할 수 있습니다.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                        </div>
+                        <h3>생성형 AI 기반 해설 제공</h3>
+                        <p>기존 문제은행 외에도 GPT 기반 AI가 새로운 해설을 생성하여, 실전 대비력을 강화합니다.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                        </div>
+                        <h3>직관적이고 접근성 높은 웹 기반 UI</h3>
+                        <p>학습 장소와 시간의 제약 없이 사용할 수 있도록, 반응형 웹 인터페이스로 설계됩니다.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                        </div>
+                        <h3>대시보드 기반 자기주도 학습 관리</h3>
+                        <p>본인의 풀이 이력, 정답률, 추천 문제 현황 등을 한눈에 확인할 수 있는 대시보드를 제공합니다.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="2" x2="12" y2="6"></line>
+                                <line x1="12" y1="18" x2="12" y2="22"></line>
+                                <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                                <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                                <line x1="2" y1="12" x2="6" y2="12"></line>
+                                <line x1="18" y1="12" x2="22" y2="12"></line>
+                                <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                                <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                            </svg>
+                        </div>
+                        <h3>빅데이터 기반 피드백 제공</h3>
+                        <p>축적된 학습 로그를 분석해 학생에게 맞춤 피드백을 제공하고, 집합적인 학습 경향을 파악합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-section">
+            <div class="container">
+                <h2 class="section-title">기술적 기능</h2>
+                <div class="tech-features-grid">
+                    <div class="tech-feature-card">
+                        <div class="tech-feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                <path d="M10 7.5L14 10l-4 2.5v-5z"></path>
+                            </svg>
+                        </div>
+                        <h3>외부 LLM 연동 기반<br>학습 해설 시스템</h3>
+                        <p>ChatGPT API를 활용하여 복잡한 문제에 대해 개인별 수준에 맞춘 친근하고 이해하기 쉬운 해설을 실시간으로 생성합니다.</p>
+                        <ul class="tech-feature-list">
+                            <li>• OpenAI ChatGPT API 통합 및 활용</li>
+                            <li>• 개인별 맞춤형 해설 생성</li>
+                            <li>• 과목 특성에 맞는 동적 설명 제공</li>
+                        </ul>
+                    </div>
+                    <div class="tech-feature-card">
+                        <div class="tech-feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                        </div>
+                        <h3>하이브리드 문제 은행 시스템<br>(RAG + RDBMS)</h3>
+                        <p>RAG(Retrieval-Augmented Generation)와 관계형 데이터베이스를 결합하여 효율적인 문제 관리와 정확한 정답 제공을 동시에 구현합니다.</p>
+                        <ul class="tech-feature-list">
+                            <li>• Vector DB를 통한 고속 문제 검색</li>
+                            <li>• 관계형 DB로 정답 데이터 정확성 보장</li>
+                            <li>• 과목별 순차적 문제 제공 시스템</li>
+                        </ul>
+                    </div>
+                    <div class="tech-feature-card">
+                        <div class="tech-feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 3v18h18"></path>
+                                <path d="M7 12l4-4 4 4 6-6"></path>
+                            </svg>
+                        </div>
+                        <h3>3계층 시스템<br>아키텍처</h3>
+                        <p>확장 가능한 마이크로서비스 구조로 설계되어 각 기능이 독립적으로 동작하며, 시스템 확장성과 안정성을 보장합니다.</p>
+                        <ul class="tech-feature-list">
+                            <li>• 데이터 저장/관리 계층 (Vector DB + RDBMS)</li>
+                            <li>• 애플리케이션 처리 계층 (Frontend + Backend)</li>
+                            <li>• GPU 서버를 통한 고성능 AI 모델 추론</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="how-it-works">
+            <div class="container">
+                <h2 class="section-title">서비스 이용 방법</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>학생 로그인</h3>
+                            <p>소셜 로그인(카카오, 구글 등)을 통해 간편하게 로그인하거나 이메일로 회원가입합니다.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>진단 테스트</h3>
+                            <p>30문제로 구성된 진단 테스트를 통해 학습자의 현재 수준과 강점/약점을 파악합니다.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>자료 제공 및 레벨 분류</h3>
+                            <p>테스트 결과에 따라 상, 중, 하로 수준을 분류하고 적합한 학습 자료를 제공합니다.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h3>맞춤형 학습 진행</h3>
+                            <p>개인별 학습 계획에 따라 AI 튜터와 상호작용하며 맞춤형 학습을 진행합니다.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h3>진도 확인 및 피드백</h3>
+                            <p>대시보드를 통해 실시간으로 학습 진도를 확인하고 AI 튜터로부터 개인화된 피드백을 받습니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="dashboard" class="features">
+            <div class="container">
+                <h2 class="section-title">사용자 학습 대시보드</h2>
+                   <p class="section-description" style="text-align: center; margin-bottom: 2rem;">
+                    AI 튜터가 학습자의 개인별 학습 데이터를 분석하여 맞춤형 학습 관리와 진도 추천을 제공하는 대시보드입니다.
+                </p>
+                <div class="new-dashboard">
+                    <!-- 첫 번째 행: 사용자 정보와 카운트다운 -->
+                    <div class="dashboard-row">
+                        <div class="card user-greeting">
+                            <h2>튜터님, 안녕하세요!</h2>
+                            <p>의과대학 1학년 | 종합 레벨: 중</p>
+                        </div>
+                        <div class="card countdown-info-with-button">
+                            <div class="countdown-text">
+                                <h3>국가고시 D-120</h3>
+                                <p>오늘의 학습: 3/5 완료 | 주간 목표: 65% 달성</p>
+                            </div>
+                            <button class="continue-btn">
+                                오늘의 학습 계속하기
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 두 번째 행: 유형별 학습 현황과 집중 학습 추천 -->
+                    <div class="dashboard-row">
+                        <div class="card progress-section">
+                            <div class="card-header">유형별 학습 현황</div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span>근육계</span>
+                                    <span>중</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill green" style="width: 70%"></div>
+                                </div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span>골격계</span>
+                                    <span>상</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill green" style="width: 80%"></div>
+                                </div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span>신경계</span>
+                                    <span>하</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill red" style="width: 50%"></div>
+                                </div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span>순환계</span>
+                                    <span>중</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill yellow" style="width: 60%"></div>
+                                </div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span>내장기관</span>
+                                    <span>중</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill green" style="width: 65%"></div>
+                                </div>
+                            </div>
+                            <div class="progress-scale">
+                                <span>0%</span>
+                                <span>50%</span>
+                                <span>100%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card recommendation-section">
+                            <div class="card-header">집중 학습 추천</div>
+                            <div class="recommendation-item">신경계 - 중추신경계</div>
+                            <div class="recommendation-item">순환계 - 심장구조</div>
+                            <div class="recommendation-item">신경계 - 말초신경</div>
+                        </div>
+                    </div>
+
+                    <!-- 세 번째 행: 오늘의 학습 일정과 주간 학습 현황 -->
+                    <div class="dashboard-row">
+                        <div class="card schedule-section">
+                            <div class="card-header">오늘의 학습 일정</div>
+                            <div class="schedule-item completed">
+                                <div class="schedule-content">
+                                    <div class="schedule-title">골격계 응용 문제 (15문항)</div>
+                                    <div class="schedule-status">완료</div>
+                                </div>
+                                <button class="schedule-btn completed">복습</button>
+                            </div>
+                            <div class="schedule-item completed">
+                                <div class="schedule-content">
+                                    <div class="schedule-title">내장기관 기초 문제 (20문항)</div>
+                                    <div class="schedule-status">완료</div>
+                                </div>
+                                <button class="schedule-btn completed">복습</button>
+                            </div>
+                            <div class="schedule-item highlight">
+                                <div class="schedule-content">
+                                    <div class="schedule-title">신경계 취약점 집중 (25문항)</div>
+                                    <div class="schedule-status">진행중</div>
+                                </div>
+                                <button class="schedule-btn active">계속</button>
+                            </div>
+                        </div>
+                        
+                        <div class="card stats-section">
+                            <div class="card-header">주간 학습 현황</div>
+                            <div class="chart-container">
+                                <div class="chart-bar" style="height: 30px"></div>
+                                <div class="chart-bar" style="height: 50px"></div>
+                                <div class="chart-bar" style="height: 65px"></div>
+                                <div class="chart-bar" style="height: 45px"></div>
+                                <div class="chart-bar" style="height: 75px"></div>
+                                <div class="chart-bar" style="height: 60px"></div>
+                                <div class="chart-bar today" style="height: 85px"></div>
+                            </div>
+                            <div class="chart-labels">
+                                <span>월</span>
+                                <span>화</span>
+                                <span>수</span>
+                                <span>목</span>
+                                <span>금</span>
+                                <span>토</span>
+                                <span>일</span>
+                            </div>
+                            <div class="chart-average">평균: 45문항/일</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ai-chat" class="features">
+            <div class="container">
+                <h2 class="section-title">AI Tutor 사용자 학습공간</h2>
+                <p class="section-description" style="text-align: center; margin-bottom: 2rem;">
+                    AI 튜터는 단순한 학습을 넘어서, 개인별 맞춤 학습을 제공하는 '디지털 학습 공간'입니다.
+                </p>
+                
+                <div style="max-width: 900px; margin: 0 auto; background-color: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); overflow: hidden;">
+                    <div style="background-color: #4f46e5; color: white; padding: 12px 16px; font-weight: 600; display: flex; justify-content: space-between; align-items: center;">
+                        <div>AI Tutor - 학습 대화</div>
+                        <div style="font-size: 0.85rem;"></div>
+                    </div>
+                    
+                    <div style="padding: 16px; max-height: 400px; overflow-y: auto;">
+                        <div style="max-width: 80%; background-color: #e0e7ff; padding: 12px 16px; border-radius: 12px; margin-bottom: 16px; border-top-left-radius: 4px;">
+                            <div style="font-weight: 600; color: #4f46e5; margin-bottom: 4px;">AI 튜터</div>
+                            <div style="font-size: 0.875rem; line-height: 1.5;">
+                                안녕하세요! 저는 여러분의 AI 튜터입니다. 😊<br><br>
+                                지금부터 기출문제를 함께 풀어보며 학습할 거예요. 각 문항에 대해 정답을 채팅창에 입력하시면, 해설과 함께 피드백을 드릴게요.<br><br>
+                                답안은 번호(1~5)나 정답 내용을 직접 입력해 주세요. 궁금한 내용이 있다면 언제든 채팅창에 "힌트"라고 입력하거나 힌트 버튼을 눌러 도움을 받을 수 있습니다.
+                            </div>
+                        </div>
+                        
+                        <div style="max-width: 80%; background-color: #e0e7ff; padding: 12px 16px; border-radius: 12px; margin-bottom: 16px; border-top-left-radius: 4px;">
+                            <div style="font-weight: 600; color: #4f46e5; margin-bottom: 4px;">AI 튜터</div>
+                            <div style="font-size: 0.875rem; line-height: 1.5;">
+                                <div>
+                                    <p><strong>문제 1:</strong> 다음 중 중추신경계에 포함되지 않는 것은?</p>
+                                    
+                                    <div style="margin-top: 8px;">
+                                        <div style="margin-bottom: 4px;">① 대뇌</div>
+                                        <div style="margin-bottom: 4px;">② 소뇌</div>
+                                        <div style="margin-bottom: 4px;">③ 척수신경</div>
+                                        <div style="margin-bottom: 4px;">④ 뇌간</div>
+                                        <div style="margin-bottom: 4px;">⑤ 척수</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="max-width: 80%; background-color: #d1fae5; padding: 12px 16px; border-radius: 12px; margin-bottom: 16px; margin-left: auto; border-top-right-radius: 4px; text-align: right;">
+                            <div style="font-weight: 600; margin-bottom: 4px;">나</div>
+                            <div style="font-size: 0.875rem;">3</div>
+                        </div>
+                        
+                        <div style="max-width: 80%; background-color: #e0e7ff; padding: 12px 16px; border-radius: 12px; margin-bottom: 16px; border-top-left-radius: 4px;">
+                            <div style="font-weight: 600; color: #4f46e5; margin-bottom: 4px;">AI 튜터</div>
+                            <div style="font-size: 0.875rem; line-height: 1.5;">
+                                <p>정답입니다! ③ 척수신경은 중추신경계에 포함되지 않습니다.</p>
+                                <p><strong>해설:</strong> 중추신경계(CNS)는 뇌와 척수로 구성됩니다. 대뇌, 소뇌, 뇌간은 모두 뇌의 일부이며, 척수와 함께 중추신경계를 형성합니다. 반면, 척수신경은 말초신경계(PNS)에 속합니다. 말초신경계는 뇌신경과 척수신경으로 구성되어 있으며, 중추신경계와 신체의 다른 부분을 연결하는 역할을 합니다.</p>
+                                <p>척수신경은 31쌍으로 구성되어 있으며, 경추 신경 8쌍, 흉추 신경 12쌍, 요추 신경 5쌍, 천추 신경 5쌍, 미추 신경 1쌍으로 이루어져 있습니다.</p>
+                                <p>다음 문제로 넘어가시려면 "다음 문제"라고 입력해주세요.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="padding: 12px 16px; border-top: 1px solid #e5e7eb; display: flex; gap: 8px;">
+                        <input type="text" placeholder="정답 번호 또는 추가 질문을 입력하세요..." style="flex: 1; padding: 8px 12px; border-radius: 9999px; border: 1px solid #d1d5db; font-size: 0.875rem;" />
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem; text-align: center;">
+                    <p style="font-weight: 500; margin-bottom: 1rem;">AI 튜터 특징</p>
+                    <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1rem;">
+                        <div style="flex: 1; min-width: 200px; background-color: #f0f4f8; padding: 1rem; border-radius: 0.5rem;">
+                            <h4 style="margin-bottom: 0.5rem;">자연스러운 대화</h4>
+                            <p>친근한 어투로 학습자와 자연스러운 대화를 통해 학습 진행</p>
+                        </div>
+                        <div style="flex: 1; min-width: 200px; background-color: #f0f4f8; padding: 1rem; border-radius: 0.5rem;">
+                            <h4 style="margin-bottom: 0.5rem;">맞춤형 설명</h4>
+                            <p>학습자의 수준과 이해도에 맞춘 개인화된 설명 제공</p>
+                        </div>
+                        <div style="flex: 1; min-width: 200px; background-color: #f0f4f8; padding: 1rem; border-radius: 0.5rem;">
+                            <h4 style="margin-bottom: 0.5rem;">실시간 피드백</h4>
+                            <p>문제 풀이 과정에서 즉각적인 피드백과 오답 분석 제공</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="admin-features" class="features">
+            <div class="container">
+                <h2 class="section-title">관리자 지식베이스 기능</h2>
+                <p class="section-description" style="text-align: center; margin-bottom: 2rem;">
+                    관리자(교수자)를 위한 전용 관리 도구로 문제 업로드, 파일 관리(업로드/삭제), 네비게이션 구조를 통해 체계적으로 지식베이스를 구축할 수 있습니다.
+                </p>
+                
+                <!-- 교수자 문제 업로드 시스템 -->
+                <div style="max-width: 900px; margin: 0 auto 3rem auto; background-color: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); overflow: hidden;">
+                    <!-- 브레드크럼 -->
+                    <div style="background-color: #f8f9fa; padding: 12px 24px; border-bottom: 1px solid #e9ecef; font-size: 0.875rem; color: #6c757d; display: flex; align-items: center; gap: 8px;">
+                        <a href="#" style="color: #6b7280; text-decoration: none;">홈</a>
+                        <span>></span>
+                        <a href="#" style="color: #6b7280; text-decoration: none;">지식베이스 관리</a>
+                        <span>></span>
+                        <span>문제 업로드</span>
+                    </div>
+                    
+                    <!-- 메인 컨텐츠 -->
+                    <div style="padding: 16px 24px;">
+                        <h4 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 16px; color: #374151;">문제 RAG 지식베이스 업로드</h4>
+                        
+                        <!-- 탭 -->
+                        <div style="border-bottom: 1px solid #d1d5db; margin-bottom: 16px;">
+                            <div style="display: inline-block; padding: 8px 16px; font-weight: 600; color: #4f46e5; border-bottom: 2px solid #4f46e5; font-size: 0.875rem;">
+                                문제 업로드
+                            </div>
+                        </div>
+                        
+                        <!-- 파일 업로드 영역 -->
+                        <div style="border: 2px dashed #d1d5db; border-radius: 8px; padding: 24px; text-align: center; background-color: white; margin-bottom: 16px;">
+                            <div style="width: 36px; height: 36px; margin: 0 auto 12px auto; display: flex; align-items: center; justify-content: center; border: 2px solid #9ca3af; color: #9ca3af; border-radius: 4px;">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                </svg>
+                            </div>
+                            <p style="font-size: 1rem; margin-bottom: 6px; color: #374151;">문제 파일을 여기에 끌어다 놓거나 선택하세요</p>
+                            <p style="font-size: 0.75rem; color: #6b7280; margin-bottom: 16px;">Excel(.xlsx), CSV(.csv) 또는 Word(.docx) 파일을 업로드할 수 있습니다.</p>
+                            <button style="background-color: #4f46e5; color: white; padding: 6px 16px; border-radius: 4px; font-weight: 600; border: none; cursor: pointer; font-size: 0.8rem;" onclick="document.getElementById('adminFileInput').click()">
+                                파일 선택
+                            </button>
+                            <input type="file" id="adminFileInput" style="display: none;" accept=".docx,.xlsx,.csv,.pdf">
+                            <p style="font-size: 0.7rem; color: #9ca3af; margin-top: 12px;">권장 형식: 번호, 문제, 선택지, 정답, 해설, 난이도, 유형</p>
+                        </div>
+                        
+                        <!-- 업로드된 파일 목록 -->
+                        <div style="background-color: white; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1); border-radius: 4px; overflow: hidden;">
+                            <!-- 테이블 헤더 -->
+                            <div style="display: flex; padding: 12px 20px; border-bottom: 1px solid #e5e7eb; background-color: #f9fafb; font-weight: 700; color: #374151; font-size: 0.875rem;">
+                                <div style="flex: 1;">파일명</div>
+                                <div style="flex: 1;">관련학과</div>
+                                <div style="flex: 1;">교수</div>
+                                <div style="flex: 1;">크기</div>
+                                <div style="width: 200px; text-align: center;">작업</div>
+                            </div>
+                            
+                            <!-- 파일 목록 -->
+                            <div style="display: flex; padding: 12px 20px; border-bottom: 1px solid #e5e7eb; align-items: center; font-size: 0.875rem;">
+                                <div style="flex: 1; display: flex; align-items: center; gap: 8px;">
+                                    <svg style="color: #4f46e5; width: 18px; height: 18px;" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M4 4v12a2 2 0 002 2h8a2 2 0 002-2V6.414A2 2 0 0015.414 5L13 2.586A2 2 0 0011.586 2H6a2 2 0 00-2 2z"></path>
+                                    </svg>
+                                    해부학_문제_01.docx
+                                </div>
+                                <div style="flex: 1; color: #6b7280;">작업치료학과</div>
+                                <div style="flex: 1; color: #6b7280;">임00</div>
+                                <div style="flex: 1; color: #6b7280;">2.4MB</div>
+                                <div style="width: 200px; display: flex; justify-content: center; gap: 8px;">
+                                    <button style="color: #dc2626; border: 1px solid #dc2626; background: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#dc2626'; this.style.color='white'" onmouseout="this.style.backgroundColor='white'; this.style.color='#dc2626'">삭제</button>
+                                    <button style="color: #2563eb; border: 1px solid #2563eb; background: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#2563eb'; this.style.color='white'" onmouseout="this.style.backgroundColor='white'; this.style.color='#2563eb'">해설 업로드</button>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; padding: 12px 20px; border-bottom: 1px solid #e5e7eb; align-items: center; font-size: 0.875rem;">
+                                <div style="flex: 1; display: flex; align-items: center; gap: 8px;">
+                                    <svg style="color: #4f46e5; width: 18px; height: 18px;" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M4 4v12a2 2 0 002 2h8a2 2 0 002-2V6.414A2 2 0 0015.414 5L13 2.586A2 2 0 0011.586 2H6a2 2 0 00-2 2z"></path>
+                                    </svg>
+                                    해부학_시험문제_1학기.xlsx
+                                </div>
+                                <div style="flex: 1; color: #6b7280;">작업치료학과</div>
+                                <div style="flex: 1; color: #6b7280;">김00</div>
+                                <div style="flex: 1; color: #6b7280;">1.8MB</div>
+                                <div style="width: 200px; display: flex; justify-content: center; gap: 8px;">
+                                    <button style="color: #dc2626; border: 1px solid #dc2626; background: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#dc2626'; this.style.color='white'" onmouseout="this.style.backgroundColor='white'; this.style.color='#dc2626'">삭제</button>
+                                    <button style="color: #2563eb; border: 1px solid #2563eb; background: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#2563eb'; this.style.color='white'" onmouseout="this.style.backgroundColor='white'; this.style.color='#2563eb'">해설 업로드</button>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; padding: 12px 20px; align-items: center; font-size: 0.875rem;">
+                                <div style="flex: 1; display: flex; align-items: center; gap: 8px;">
+                                    <svg style="color: #4f46e5; width: 18px; height: 18px;" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M4 4v12a2 2 0 002 2h8a2 2 0 002-2V6.414A2 2 0 0015.414 5L13 2.586A2 2 0 0011.586 2H6a2 2 0 00-2 2z"></path>
+                                    </svg>
+                                    2학기_중간고사_문제_데이터.csv
+                                </div>
+                                <div style="flex: 1; color: #6b7280;">물리치료학과</div>
+                                <div style="flex: 1; color: #6b7280;">박00</div>
+                                <div style="flex: 1; color: #6b7280;">756KB</div>
+                                <div style="width: 200px; display: flex; justify-content: center; gap: 8px;">
+                                    <button style="color: #dc2626; border: 1px solid #dc2626; background: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#dc2626'; this.style.color='white'" onmouseout="this.style.backgroundColor='white'; this.style.color='#dc2626'">삭제</button>
+                                    <button style="color: #2563eb; border: 1px solid #2563eb; background: white; padding: 4px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='#2563eb'; this.style.color='white'" onmouseout="this.style.backgroundColor='white'; this.style.color='#2563eb'">해설 업로드</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- CTA 섹션 -->
+    <section id="cta" class="cta">
+        <div class="container">
+            <h2>지금 바로 AI Tutor를 경험해보세요</h2>
+            <p>
+                개인 맞춤형 학습으로 학습 효율을 극대화하고, 실시간 피드백을 통해 
+                학습 성취도를 높여보세요.
+            </p>
+            <a href="login" class="btn btn-light">시작하기</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="logo" style="color: white; margin-bottom: 0.5rem;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                        </svg>
+                        <span>AI Tutor</span>
+                    </div>
+                    <p>© 2025 AI Tutor. 모든 권리 보유.</p>
+                </div>    
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 관리자 파일 업로드 스크립트
+        document.getElementById('adminFileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                alert(`선택된 파일: ${file.name}`);
+                // 실제 구현에서는 여기서 파일 업로드 처리
+            }
+        });
+    </script>
+</body>
+</html>
