@@ -217,6 +217,34 @@ async def get_explantation_endpoint(request: GetExplantationRequest, db: Session
         "explanation": explanation,
     })
 
+@exam_router.get("/getHint/{question_id}")
+async def get_hint_endpoint(question_id: int, db: Session = Depends(get_db)):
+    """
+    문제 ID를 URL 경로에서 받아서 해당 문제에 대한 단계별 힌트를 제공합니다.
+    스키마 없이 Path Parameter를 사용하여 더 간단하게 구현합니다.
+    
+    Args:
+        question_id (int): URL 경로의 문제 ID
+        db (Session): 데이터베이스 세션
+        
+    Returns:
+        JSONResponse: 생성된 힌트가 포함된 응답
+    """
+    
+    try:
+        hint = get_hint(db=db, question_id=question_id)
+        
+        return JSONResponse(content={
+            "hint": hint
+        })
+    
+    except ValueError as e:
+        print(f"ERROR: {str(e)}")
+        raise HTTPException(status_code=404, detail=str(e))
+    
+    except Exception as e:
+        print(f"UNEXPECTED ERROR: {str(e)}")
+        raise HTTPException(status_code=500, detail="힌트 생성 중 오류가 발생했습니다.")
 
 @exam_router.post("/getQuestionData")
 async def get_qeuestion_data_endpoint(db: Session = Depends(get_db)):
