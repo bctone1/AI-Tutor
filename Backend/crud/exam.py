@@ -169,7 +169,10 @@ def classify_level(score: int, num_cases: int) -> Tuple[str, int]:
 
 def get_correct_answer(db: Session, question_id : int):
     label = db.query(LabelingData).filter(LabelingData.question_id == question_id).first()
-    return label.correct_answer
+    if label:
+        return label.correct_answer
+    else:
+        return 0
 
 def get_explantation(db : Session, question_id : int, correct_answer : int):
     question = db.query(KnowledgeBase).filter(KnowledgeBase.id == question_id).first()
