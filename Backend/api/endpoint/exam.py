@@ -185,18 +185,48 @@ async def submit_test_endpoint(request: SubmitTestRequest, db: Session = Depends
 
     print(f"ANSWER : {answers}")
 
+    # 기존 전체 채점
     score, num_cases = grading_test(db, answers)
     level, normalized_score = classify_level(score, num_cases)
 
+    # 유형별 채점 추가
+    total_score_by_case, num_cases_by_case, case_results = grading_test_by_case(db, answers)
+    
+    # 유형별 점수 저장
+    save_user_case_scores(db, user_id, case_results)
+
     print(f"LEVEL : {level} | SCORE : {score} | NORMALIZED_SCORE : {normalized_score}")
+    print(f"유형별 결과: {case_results}")
+    
     update_user_score(db = db, user_id = user_id, score = score)
 
     return {
         "score": score,
         "grade": level,
-        "norm_score" : normalized_score
+        "norm_score" : normalized_score,
+        "case_results": case_results
     }
 
+@exam_router.post('/getUserCaseProgress')
+async def get_user_case_progress_endpoint(request: dict, db: Session = Depends(get_db)):
+    """
+    사용자의 유형별 학습 현황을 조회하는 엔드포인트
+    """
+    try:
+        user_id = request.get("user_id")
+        if not user_id:
+            raise HTTPException(status_code=400, detail="user_id가 필요합니다.")
+        
+        progress = get_user_case_progress(db, user_id)
+        
+        return {
+            "success": True,
+            "progress": progress
+        }
+        
+    except Exception as e:
+        print(f"유형별 학습 현황 조회 오류: {str(e)}")
+        raise HTTPException(status_code=500, detail="학습 현황 조회 중 오류가 발생했습니다.")
 
 @exam_router.post("/getExplanation")
 async def get_explantation_endpoint(request: GetExplantationRequest, db: Session = Depends(get_db)):

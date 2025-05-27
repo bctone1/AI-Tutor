@@ -40,3 +40,18 @@ class GetQuestionDataResponse(BaseModel):
     subject: str
     case_list: List[Dict[str, Any]]
     uploader: str
+
+class UserCaseProgressRequest(BaseModel):
+    user_id: int
+
+class CaseProgressDetail(BaseModel):
+    total_questions: int
+    correct_answers: int
+    total_score: int
+    accuracy: float
+    level: str
+    last_updated: str = None
+
+class UserCaseProgressResponse(BaseModel):
+    success: bool
+    progress: Dict[str, CaseProgressDetail]
