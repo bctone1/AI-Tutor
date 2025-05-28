@@ -241,30 +241,26 @@ const Profile = ({ userdata, setView }) => {
                         {activeTab === 'anatomy' && (
                             <div>
                                 {caseProgress && Object.entries(caseProgress).map(([case_name, data]) => (
-                                    <LevelItem 
+                                    <LevelItem
                                         key={case_name}
-                                        label={case_name} 
+                                        label={case_name}
                                         score={`${data.level} (${data.correct_answers}/${data.total_questions})`}
                                         width={`${data.accuracy * 100}%`}
                                         level={data.level === '상' ? 'high' : data.level === '중' ? 'mid' : 'low'}
                                     />
                                 ))}
 
-                                
-                                {/* <LevelItem label="뼈대와 관절계" score="상 (4/4)" width="88%" level="high" />
-                                <LevelItem label="근육계" score="중 (2/3)" width="75%" level="mid" />
-                                <LevelItem label="심혈관계, 면역계" score="하 (0/2)" width="65%" level="low" />
-                                <LevelItem label="호흡계, 음성/발성기 관련 기관" score="중 (1/2)" width="72%" level="mid" />
-                                <LevelItem label="소화계, 섭취 관련 기관" score="중 (1/3)" width="72%" level="mid" />
-                                <LevelItem label="신경계" score="하 (0/3)" width="65%" level="low" />
-                                <LevelItem label="피부, 눈, 귀 등 감각계" score="중 (1/2)" width="72%" level="mid" />
-                                <LevelItem label="내분비계, 비뇨계, 생식계" score="하 (0/2)" width="65%" level="low" /> */}
-
-
                                 <Legend />
                                 <FocusArea
                                     title="집중 학습 필요 영역:"
-                                    areas="심혈관계, 신경계, 내분비계/비뇨계/생식계"
+                                    areas={
+                                        caseProgress ? 
+                                        Object.entries(caseProgress)
+                                            .filter(([_, data]) => data.level === '하')
+                                            .map(([case_name]) => case_name)
+                                            .join(', ') 
+                                        : ''
+                                    }
                                 />
                             </div>
                         )}
