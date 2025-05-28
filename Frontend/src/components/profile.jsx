@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 
 const Profile = ({ userdata, setView }) => {
@@ -8,6 +8,40 @@ const Profile = ({ userdata, setView }) => {
     const [activeTab, setActiveTab] = useState('anatomy');
     const [department, setDepartment] = useState('');
     const [grade, setGrade] = useState('');
+    const [caseProgress, setCaseProgress] = useState(null);
+
+    useEffect(() => {
+        const fetchCaseProgress = async () => {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getUserCaseProgress`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: userdata.user.id
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('유형별 학습 현황을 가져오는데 실패했습니다.');
+                }
+
+                const data = await response.json();
+                if (data.success) {
+                    console.log(userdata.user.id);
+                    console.log(data);
+                    setCaseProgress(data.progress);
+                }
+            } catch (error) {
+                console.error('유형별 학습 현황 조회 오류:', error);
+            }
+        };
+
+        if (userdata?.user?.id) {
+            fetchCaseProgress();
+        }
+    }, [userdata?.user?.id]);
 
     const handleTabClick = (tab) => {
         setActiveTab(tab);
@@ -195,26 +229,38 @@ const Profile = ({ userdata, setView }) => {
                             >
                                 해부학 (9개 유형)
                             </button>
-                            <button
+                            {/* <button
                                 className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer ${activeTab === 'physiology' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
                                     }`}
                                 onClick={() => handleTabClick('physiology')}
                             >
                                 생리학 (7개 유형)
-                            </button>
+                            </button> */}
                         </div>
 
                         {activeTab === 'anatomy' && (
                             <div>
-                                <LevelItem label="인체의 체계" score="상 (3/3)" width="85%" level="high" />
-                                <LevelItem label="뼈대와 관절계" score="상 (4/4)" width="88%" level="high" />
+                                {caseProgress && Object.entries(caseProgress).map(([case_name, data]) => (
+                                    <LevelItem 
+                                        key={case_name}
+                                        label={case_name} 
+                                        score={`${data.level} (${data.correct_answers}/${data.total_questions})`}
+                                        width={`${data.accuracy * 100}%`}
+                                        level={data.level === '상' ? 'high' : data.level === '중' ? 'mid' : 'low'}
+                                    />
+                                ))}
+
+                                
+                                {/* <LevelItem label="뼈대와 관절계" score="상 (4/4)" width="88%" level="high" />
                                 <LevelItem label="근육계" score="중 (2/3)" width="75%" level="mid" />
                                 <LevelItem label="심혈관계, 면역계" score="하 (0/2)" width="65%" level="low" />
                                 <LevelItem label="호흡계, 음성/발성기 관련 기관" score="중 (1/2)" width="72%" level="mid" />
                                 <LevelItem label="소화계, 섭취 관련 기관" score="중 (1/3)" width="72%" level="mid" />
                                 <LevelItem label="신경계" score="하 (0/3)" width="65%" level="low" />
                                 <LevelItem label="피부, 눈, 귀 등 감각계" score="중 (1/2)" width="72%" level="mid" />
-                                <LevelItem label="내분비계, 비뇨계, 생식계" score="하 (0/2)" width="65%" level="low" />
+                                <LevelItem label="내분비계, 비뇨계, 생식계" score="하 (0/2)" width="65%" level="low" /> */}
+
+
                                 <Legend />
                                 <FocusArea
                                     title="집중 학습 필요 영역:"
@@ -300,7 +346,7 @@ const FocusArea = ({ title, areas }) => (
         <div className="text-sm font-semibold text-red-500">{title}</div>
         <div className="text-m">{areas}</div>
         <div className="text-sm text-gray-700 mt-1">
-            해당 영역에 대한 맞춤형 학습 자료를 '학습 자료' 메뉴에서 확인하세요.
+            해당 영역에 대한 맞춤형 학습 자료를 '학습하기' 메뉴에서 확인하세요.
         </div>
     </div>
 );
