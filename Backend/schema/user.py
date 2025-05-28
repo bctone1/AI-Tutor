@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Dict, List, Any
+from datetime import datetime
 
 class StudentRegisterRequest(BaseModel):
     email : str
@@ -76,3 +77,32 @@ class UpdateScoreResponse(BaseModel):
     major: str
     grade: int
     testscore: int
+
+class UserCaseScoreRequest(BaseModel):
+    user_id: int
+    case: str
+    category: Optional[str] = None
+    total_questions: int
+    correct_answers: int
+    total_score: int
+    accuracy: float
+    level: str
+
+class UserCaseScoreResponse(BaseModel):
+    success: bool
+    user_id: int
+    case: str
+    category: Optional[str] = None
+    total_questions: int
+    correct_answers: int
+    total_score: int
+    accuracy: float
+    level: str
+    last_updated: Optional[str] = None
+
+class GetUserCaseScoresRequest(BaseModel):
+    user_id: int
+
+class GetUserCaseScoresResponse(BaseModel):
+    success: bool
+    scores: List[Dict[str, Any]]
