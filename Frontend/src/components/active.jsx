@@ -279,13 +279,19 @@ const Active = ({ userdata }) => {
 
                     {/* 입력창 */}
                     <div className="flex mt-6 pt-5 border-t">
-                        <input
-                            type="text"
+                        <textarea
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleLLMChat()}
-                            className="flex-1 px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-400 text-sm"
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && !e.shiftKey) {
+                                    e.preventDefault();
+                                    handleLLMChat();
+                                }
+                            }}
+                            className="flex-1 px-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-400 text-sm resize-none"
                             placeholder="메세지를 입력하세요..."
+                            rows={1}
+                            style={{ minHeight: '42px', maxHeight: '120px' }}
                         />
                     </div>
                 </section>
