@@ -1,13 +1,22 @@
 'use client';
 
-import React, { useState, useEffect, use } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const Active = ({ userdata }) => {
     const [selectedSubject, setSelectedSubject] = useState("");
     const [chatLog, setChatLog] = useState([]);
     const [input, setInput] = useState('');
     const [currentID, setCurrentID] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [active, setActive] = useState(true);
+    const messageEndRef = useRef(null);
+
+    const scrollToBottom = () => {
+        messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [chatLog]);
 
     const handleFetchQuestion = () => {
         if (!selectedSubject) {
@@ -37,6 +46,11 @@ const Active = ({ userdata }) => {
     }, []);
 
     const fetchInitialQuestion = async () => {
+
+        if (!active) {
+            alert("이미 문제를 풀고 있습니다.");
+            return;
+        }
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getQuestion`, {
                 method: 'POST',
@@ -48,7 +62,7 @@ const Active = ({ userdata }) => {
             if (res.ok) {
                 const { question, choices, id } = data;
                 setCurrentID(id);
-                
+
                 setChatLog(prev => [
                     ...prev,
                     {
@@ -73,6 +87,7 @@ const Active = ({ userdata }) => {
                         )
                     }
                 ]);
+                setActive(false);
             }
         } catch (e) {
             console.error(e);
@@ -80,7 +95,7 @@ const Active = ({ userdata }) => {
     };
 
     const handleSubmitAnswer = async (choiceNumber, id) => {
-        // alert(id);
+        setActive(true);
         setChatLog(prev => [
             ...prev,
             { sender: '나', content: `답: ${choiceNumber}번` },
@@ -150,7 +165,6 @@ const Active = ({ userdata }) => {
         const userMessage = input;
         setChatLog(prev => [...prev, { sender: '나', content: userMessage }]);
         setInput('');
-        setLoading(true);
 
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chatAgent`, {
@@ -186,14 +200,13 @@ const Active = ({ userdata }) => {
                         )
                     }
                 ]);
+                setActive(false);
             } else {
                 setChatLog(prev => [...prev, { sender: 'AI 튜터', content: data.message }]);
             }
 
         } catch (e) {
             console.error(e);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -248,19 +261,20 @@ const Active = ({ userdata }) => {
                                         {chat.sender}
                                     </div>
                                     <div className="text-sm text-gray-800">
-                                        {typeof chat.content === 'string' 
+                                        {typeof chat.content === 'string'
                                             ? chat.content.split('\n').map((line, i) => (
                                                 <React.Fragment key={i}>
                                                     {line}
                                                     <br />
                                                 </React.Fragment>
-                                              ))
+                                            ))
                                             : chat.content
                                         }
                                     </div>
                                 </div>
                             </div>
                         ))}
+                        <div ref={messageEndRef} />
                     </div>
 
                     {/* 입력창 */}
