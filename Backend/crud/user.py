@@ -162,7 +162,7 @@ def add_daily_record(db : Session, user_id : int, question_id : int):
     db.commit()
     db.refresh(new_daily)
     return new_daily
-
+'''
 def get_daily_record(db : Session, user_id : int):
     record = db.query(UserDaily).filter(UserDaily.user_id == user_id).all()
     result = [
@@ -174,4 +174,8 @@ def get_daily_record(db : Session, user_id : int):
         }
         for r in record
     ]
-    return result
+    return result'''
+
+def get_daily_record(db : Session, user_id : int):
+    record = db.query(UserDaily).filter(UserDaily.user_id == user_id).all()
+    return record
