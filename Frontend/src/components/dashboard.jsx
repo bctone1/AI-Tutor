@@ -1,9 +1,40 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 
 const dashboard = ({ userdata, setView }) => {
-    // console.log(userdata);
+    const [currentDate, setCurrentDate] = useState(new Date());
+    const [caseProgress, setCaseProgress] = useState(null);
 
-    const [currentDate, setCurrentDate] = useState(new Date(2025, 5, 4)); // 2025년 6월 4일
+    useEffect(() => {
+        const fetchCaseProgress = async () => {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getUserCaseProgress`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: userdata.user.id
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('유형별 학습 현황을 가져오는데 실패했습니다.');
+                }
+
+                const data = await response.json();
+                if (data.success) {
+                    console.log(data);
+                    setCaseProgress(data.progress);
+                }
+            } catch (error) {
+                console.error('유형별 학습 현황 조회 오류:', error);
+            }
+        };
+
+        if (userdata?.user?.id) {
+            fetchCaseProgress();
+        }
+    }, [userdata?.user?.id]);
 
     // 임시 예시 데이터 생성
     const sampleData = useMemo(() => {
@@ -51,8 +82,6 @@ const dashboard = ({ userdata, setView }) => {
 
     return (
         <main className="max-w-6xl mx-auto px-5">
-
-
             <div className="p-6 space-y-6">
                 {/* 사용자 정보 및 카운트다운 */}
                 <div className="flex flex-col md:flex-row gap-4">
@@ -87,25 +116,21 @@ const dashboard = ({ userdata, setView }) => {
 
                 {/* 학습 현황 및 추천 */}
                 <div className="flex flex-col md:flex-row gap-4">
+
+
                     <div className="w-full md:w-2/3 bg-white rounded shadow">
                         <div className="border-b px-6 py-4 font-bold text-lg">유형별 학습 현황</div>
                         <div className="p-6 space-y-4">
-                            {[
-                                { label: '근육계', level: '중', percent: 70, color: 'bg-green-500' },
-                                { label: '골격계', level: '상', percent: 80, color: 'bg-green-500' },
-                                { label: '신경계', level: '하', percent: 50, color: 'bg-red-500' },
-                                { label: '순환계', level: '중', percent: 60, color: 'bg-yellow-500' },
-                                { label: '내장기관', level: '중', percent: 65, color: 'bg-green-500' },
-                            ].map((item, idx) => (
-                                <div key={idx}>
+                            {caseProgress && Object.entries(caseProgress).map(([case_name, data]) => (
+                                <div key={case_name}>
                                     <div className="flex justify-between text-xs mb-1">
-                                        <span>{item.label}</span>
-                                        <span>{item.level}</span>
+                                        <span>{case_name}</span>
+                                        <span>{data.level}</span>
                                     </div>
                                     <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
                                         <div
-                                            className={`${item.color} h-full rounded-full`}
-                                            style={{ width: `${item.percent}%` }}
+                                            className={`${data.level === '상' ? 'bg-green-500' : data.level === '중' ? 'bg-yellow-500' : 'bg-red-500'} h-full rounded-full`}
+                                            style={{ width: `${data.accuracy * 100}%` }}
                                         ></div>
                                     </div>
                                 </div>
@@ -115,18 +140,32 @@ const dashboard = ({ userdata, setView }) => {
                             </div>
                         </div>
                     </div>
+
+
                     <div className="w-full md:w-1/3 bg-white rounded shadow">
                         <div className="border-b px-6 py-4 font-bold text-lg">집중 학습 추천</div>
                         <div className="p-6 space-y-2 text-sm text-indigo-800">
-                            {['신경계 - 중추신경계', '순환계 - 심장구조', '신경계 - 말초신경'].map((text, idx) => (
-                                <div key={idx} className="bg-indigo-100 p-3 rounded">{text}</div>
-                            ))}
+                            {caseProgress && Object.entries(caseProgress)
+                                .filter(([_, data]) => data.level === '하')
+                                .map(([case_name]) => (
+                                    <div key={case_name} className="bg-indigo-100 p-3 rounded">{case_name}</div>
+                                ))
+                            }
+                            {(!caseProgress || Object.entries(caseProgress).filter(([_, data]) => data.level === '하').length === 0) && (
+                                <div className="text-gray-500 text-center p-3">
+                                    현재 집중 학습이 필요한 유형이 없습니다.
+                                </div>
+                            )}
                         </div>
                     </div>
+
+                    
                 </div>
 
                 {/* 월간 및 주간 통계 */}
                 <div className="flex flex-col md:flex-row gap-4">
+
+                    
                     <div className="w-full md:w-2/3 bg-white rounded shadow">
                         <div className="border-b px-6 py-4 font-bold text-lg">월간 학습 현황</div>
                         <div className="p-6">
@@ -205,7 +244,6 @@ const dashboard = ({ userdata, setView }) => {
                         </div>
                     </div>
 
-
                     <div className="w-full md:w-2/3 bg-white rounded shadow">
                         <div className="border-b px-6 py-4 font-bold text-lg">주간 학습 현황</div>
                         <div className="p-6">
@@ -214,7 +252,7 @@ const dashboard = ({ userdata, setView }) => {
                                     <div
                                         key={idx}
                                         className={`w-8 rounded-t ${idx === 6 ? 'bg-indigo-600' : 'bg-blue-200'}`}
-                                        style={{ height: `${(height / 160) * 100}%` }}
+                                        style={{ height: `${height}px` }}
                                     ></div>
                                 ))}
                             </div>
@@ -226,11 +264,11 @@ const dashboard = ({ userdata, setView }) => {
                             <div className="text-center text-xs text-gray-500 mt-2">평균: 45문항/일</div>
                         </div>
                     </div>
-                    
-                    
+
+
+
                 </div>
             </div>
-
         </main>
     );
 };

@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 
 const Profile = ({ userdata, setView }) => {
-    
     const { data: session } = useSession();
-    // console.log(session.user);
 
     const [activeTab, setActiveTab] = useState('anatomy');
     const [department, setDepartment] = useState('');
