@@ -45,7 +45,8 @@ async def register_endpoint(request: StudentRegisterRequest, db: Session = Depen
     grade = request.grade
 
     try:
-        student_register(db = db, email = email, pw = password, name = name, department = department, grade = grade)
+        student = student_register(db = db, email = email, pw = password, name = name, department = department, grade = grade)
+        add_new_record(db = db, user_id = student.id)
         return {"message": "Register Success"}
     except Exception as e:
         return JSONResponse(content={"message": str(e)}, status_code=500)
@@ -103,6 +104,7 @@ async def login(request: GoogleLoginRequest, db : Session = Depends(get_db)):
 
         if not user:
             new_user = create_social_user(db, email, name)
+            add_new_record(db=db, user_id=new_user.id)
             return JSONResponse(
                 content={
                     "message": f"{new_user.name}님 반갑습니다!.",

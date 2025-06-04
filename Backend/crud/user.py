@@ -112,6 +112,15 @@ def update_user_score_mail(db: Session, user_email : str, score : int):
     else:
         return None
 
+def add_new_record(db : Session, user_id : int):
+    new_record = UserTotalRecord(
+        user_id=user_id
+    )
+    db.add(new_record)
+    db.commit()
+    db.refresh(new_record)
+    return new_record
+
 def save_total_correct(db : Session, user_id : int, is_correct : bool):
     record = db.query(UserTotalRecord).filter(UserTotalRecord.user_id == user_id).first()
     if not record:
