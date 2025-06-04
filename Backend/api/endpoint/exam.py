@@ -1,7 +1,7 @@
 from fastapi import APIRouter, File, UploadFile, HTTPException
 from core.config import LABELING_DATA, EXAM_DATA
 from crud.exam import *
-from crud.user import update_user_score
+from crud.user import update_user_score, save_total_correct, get_total_record
 from langchain_service.document_loader.file_loader import load_document
 from langchain_service.document_loader.read_labeling_data import excel_to_list
 from langchain_service.document_loader.extract_question import extract_questions_from_pages
@@ -14,33 +14,6 @@ import json
 from fastapi import Form
 exam_router = APIRouter()
 
-'''
-@exam_router.post("/uploadquestion")
-async def upload_question(
-        file: UploadFile = File(...),
-        userData: str = Form(...),
-        ExamID: str = Form(None)  # 선택사항
-):
-    try:
-        print("=== [UPLOAD DEBUG] ===")
-        print(f"Filename: {file.filename}")
-        print(f"Raw userData: {userData}")
-
-        user_info = json.loads(userData)
-        print(f"Parsed userData: {user_info}")
-
-        # ✅ 이메일만 추출
-        email = user_info["user"]["email"]
-        print(f"✅ Extracted Email: {email}")
-
-    except json.JSONDecodeError as e:
-        print(f"❌ JSON Decode Error: {e}")
-        raise HTTPException(status_code=400, detail="Invalid userData format")
-
-    print("======================\n")
-
-    return {"message": "DEBUG: received data"}
-'''
 
 @exam_router.post("/uploadquestion")
 async def upload_file(file: UploadFile = File(...), userData: str = Form(...), db: Session = Depends(get_db)):
@@ -129,35 +102,6 @@ async def upload_two_files(
 
 
 
-'''
-@exam_router.post("/upload/")
-async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db)):
-    file_location = os.path.join(UPLOAD_DIR, file.filename)
-
-    with open(file_location, "wb") as f:
-        contents = await file.read()
-        f.write(contents)
-
-    try:
-        documents = load_document(file_location)
-        print(f"PAGE TEXT : {documents}")
-    except ValueError as e:
-        return {"error": str(e)}
-
-    page_texts = [doc.page_content for doc in documents]
-    print(f"PAGE TEXT : {page_texts}")
-    questions = extract_questions_from_pages(page_texts)
-    exam_data = add_exam_data(db = db, department="물리치료학과", file_name = file.filename, subject="물리치료사 국가시험")
-    for i, q in enumerate(questions, start=1):
-        print(f"[문항 {i}]\n{q}\n{'-' * 40}")
-        update_knowledgebase(db = db, exam_id = exam_data, question_number=i, question = q)
-
-    return {
-        "filename": file.filename,
-        "question_count": len(questions),
-        "questions_preview": questions[:]
-    }
-'''
 
 @exam_router.post('/getTestQuestion')
 async def get_test_endpoint(db: Session = Depends(get_db)):
@@ -209,19 +153,20 @@ async def submit_test_endpoint(request: SubmitTestRequest, db: Session = Depends
 
 @exam_router.post('/getUserCaseProgress')
 async def get_user_case_progress_endpoint(request: dict, db: Session = Depends(get_db)):
-    """
-    사용자의 유형별 학습 현황을 조회하는 엔드포인트
-    """
     try:
         user_id = request.get("user_id")
         if not user_id:
             raise HTTPException(status_code=400, detail="user_id가 필요합니다.")
         
         progress = get_user_case_progress(db, user_id)
-        
+        record = get_total_record(db=db, user_id=user_id)
         return {
             "success": True,
-            "progress": progress
+            "progress": progress,
+            "total_question": record.total_question,
+            "correct_rate" : record.correct_rate,
+            "attendance": record.attendance,
+            "total_time": record.total_time
         }
         
     except Exception as e:
@@ -232,6 +177,8 @@ async def get_user_case_progress_endpoint(request: dict, db: Session = Depends(g
 async def get_explantation_endpoint(request: GetExplantationRequest, db: Session = Depends(get_db)):
     answer = request.answer
     question_id = request.question_id
+    user_id = request.userdata.user.id
+
 
     correct_answer = get_correct_answer(db = db, question_id = question_id)
     print(f"CORRECT ANSWER  {correct_answer}")
@@ -241,6 +188,8 @@ async def get_explantation_endpoint(request: GetExplantationRequest, db: Session
         is_correct = False
 
     explanation = get_explantation(db = db, question_id = question_id, correct_answer = correct_answer)
+
+    save_total_correct(db = db, user_id = user_id, is_correct = is_correct)
 
     return JSONResponse(content={
         "isCorrect": is_correct,

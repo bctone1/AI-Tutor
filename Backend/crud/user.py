@@ -1,6 +1,6 @@
 import bcrypt
 from sqlalchemy.orm import Session
-from model.user import User
+from model.user import *
 import random
 
 def hash_password(password: str) -> str:
@@ -111,4 +111,33 @@ def update_user_score_mail(db: Session, user_email : str, score : int):
         return user
     else:
         return None
+
+def save_total_correct(db : Session, user_id : int, is_correct : bool):
+    record = db.query(UserTotalRecord).filter(UserTotalRecord.user_id == user_id).first()
+    if not record:
+        new_record = UserTotalRecord(
+            user_id = user_id
+        )
+        db.add(new_record)
+        db.commit()
+        db.refresh(new_record)
+    if record:
+        if is_correct:
+            print(is_correct)
+            record.total_question += 1
+            record.total_correct += 1
+            record.correct_rate = record.total_correct/record.total_question
+            db.commit()
+            db.refresh(record)
+        if not is_correct:
+            print(is_correct)
+            record.total_question += 1
+            record.total_correct = record.total_correct / record.total_question
+            db.commit()
+            db.refresh(record)
+        return record
+
+def get_total_record(db : Session, user_id : int):
+    record = db.query(UserTotalRecord).filter(UserTotalRecord.user_id == user_id).first()
+    return record
 

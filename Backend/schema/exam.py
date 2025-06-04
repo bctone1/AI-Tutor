@@ -19,6 +19,7 @@ class SubmitTestRequest(BaseModel):
 class GetExplantationRequest(BaseModel):
     answer : int
     question_id : int
+    userdata: UserData
 
 class GetExplantationResponse(BaseModel):
     isCorrect: bool
@@ -55,3 +56,7 @@ class CaseProgressDetail(BaseModel):
 class UserCaseProgressResponse(BaseModel):
     success: bool
     progress: Dict[str, CaseProgressDetail]
+    total_question: int
+    correct_rate:float
+    attendace : int
+    total_time : int
