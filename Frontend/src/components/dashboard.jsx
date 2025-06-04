@@ -1,7 +1,53 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 
 const dashboard = ({ userdata, setView }) => {
     // console.log(userdata);
+
+    const [currentDate, setCurrentDate] = useState(new Date(2025, 5, 4)); // 2025년 6월 4일
+
+    // 임시 예시 데이터 생성
+    const sampleData = useMemo(() => {
+        const data = {};
+        
+        // 2025년 6월 1일, 2일, 3일에 대해 고정된 데이터 설정
+        data['2025-06-01'] = 1;  // 1문제
+        data['2025-06-02'] = 2;  // 2문제
+        data['2025-06-03'] = 3;  // 3문제
+        data['2025-05-04'] = 18;  // 4문제
+        
+        return data;
+    }, [currentDate]);
+
+    const calendarDays = useMemo(() => {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        
+        // 해당 월의 첫 날
+        const firstDay = new Date(year, month, 1);
+        // 해당 월의 마지막 날
+        const lastDay = new Date(year, month + 1, 0);
+        
+        // 달력에 표시할 날짜들 계산
+        const days = [];
+        
+        // 첫 주의 이전 달 날짜들
+        for (let i = firstDay.getDay(); i > 0; i--) {
+            days.push(new Date(year, month, 1 - i));
+        }
+        
+        // 현재 달의 날짜들
+        for (let i = 1; i <= lastDay.getDate(); i++) {
+            days.push(new Date(year, month, i));
+        }
+        
+        // 마지막 주의 다음 달 날짜들
+        const remainingDays = 42 - days.length; // 6주 x 7일 = 42
+        for (let i = 1; i <= remainingDays; i++) {
+            days.push(new Date(year, month + 1, i));
+        }
+        
+        return days;
+    }, [currentDate]);
 
     return (
         <main className="max-w-6xl mx-auto px-5">
@@ -13,21 +59,25 @@ const dashboard = ({ userdata, setView }) => {
                     <div className="w-full md:w-1/3 bg-white rounded shadow p-6">
                         <h2 className="text-lg font-bold">{userdata.user.name}님, 안녕하세요!</h2>
                         <p className="text-sm text-gray-600">
-                            {userdata.user.major && userdata.user.grade
-                                ? `${userdata.user.major} ${userdata.user.grade}학년 | 종합 레벨: ${userdata.user.testscore >= 80
-                                    ? '상'
-                                    : userdata.user.testscore >= 50
-                                        ? '중'
-                                        : '하'
-                                }`
+                            {userdata.user.major
+                                ? `${userdata.user.major} ${userdata.user.grade}학년`
                                 : "프로필을 완성해주세요"
                             }
                         </p>
                     </div>
                     <div className="w-full md:w-2/3 bg-white rounded shadow p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
-                            <h3 className="text-base font-bold">국가고시 D-120</h3>
-                            <p className="text-sm text-gray-600">오늘의 학습: 3/5 완료 | 주간 목표: 65% 달성</p>
+                            <h3 className="text-base font-bold">
+                                {userdata.user.grade
+                                    ? `종합 레벨: ${userdata.user.testscore >= 80
+                                        ? '상'
+                                        : userdata.user.testscore >= 50
+                                            ? '중'
+                                            : '하'
+                                    }`
+                                    : "프로필을 완성해주세요"
+                                }</h3>
+                            {/* <p className="text-sm text-gray-600">오늘의 학습: 3/5 완료 | 주간 목표: 65% 달성</p> */}
                         </div>
                         <button className="bg-green-500 text-white px-4 py-2 rounded-full font-semibold cursor-pointer" onClick={() => setView('active')}>
                             오늘의 학습 계속하기
@@ -75,64 +125,96 @@ const dashboard = ({ userdata, setView }) => {
                     </div>
                 </div>
 
-                {/* 일정 및 주간 통계 */}
+                {/* 월간 및 주간 통계 */}
                 <div className="flex flex-col md:flex-row gap-4">
                     <div className="w-full md:w-2/3 bg-white rounded shadow">
-                        <div className="border-b px-6 py-4 font-bold text-lg">오늘의 학습 일정</div>
-                        <div className="p-6 space-y-3">
-                            {[
-                                {
-                                    title: '골격계 응용 문제 (15문항)',
-                                    status: '완료',
-                                    action: '복습',
-                                    color: 'bg-gray-300',
-                                    text: 'text-gray-800',
-                                },
-                                {
-                                    title: '내장기관 기초 문제 (20문항)',
-                                    status: '완료',
-                                    action: '복습',
-                                    color: 'bg-gray-300',
-                                    text: 'text-gray-800',
-                                },
-                                {
-                                    title: '신경계 취약점 집중 (25문항)',
-                                    status: '진행중',
-                                    action: '계속',
-                                    color: 'bg-green-500',
-                                    text: 'text-white',
-                                    highlight: true,
-                                },
-                            ].map((item, idx) => (
-                                <div
-                                    key={idx}
-                                    className={`flex justify-between items-center p-3 rounded relative ${item.highlight ? 'bg-yellow-100' : 'bg-gray-100'
-                                        }`}
-                                >
-                                    <div
-                                        className="w-1 absolute left-0 top-0 bottom-0 rounded-l"
-                                        style={{ backgroundColor: item.highlight ? '#f59e0b' : '#4caf50' }}
-                                    ></div>
-                                    <div className="pl-4">
-                                        <div className="text-sm font-medium text-gray-800">{item.title}</div>
-                                        <div className="text-xs text-gray-600">{item.status}</div>
+                        <div className="border-b px-6 py-4 font-bold text-lg">월간 학습 현황</div>
+                        <div className="p-6">
+                            {/* 캘린더 섹션 */}
+                            <div className="mb-6">
+                                {/* 월 선택기 */}
+                                <div className="flex justify-between items-center mb-4">
+                                    <button 
+                                        className="text-gray-600 hover:text-gray-800"
+                                        onClick={() => setCurrentDate(prev => {
+                                            const newDate = new Date(prev);
+                                            newDate.setMonth(prev.getMonth() - 1);
+                                            return newDate;
+                                        })}
+                                    >
+                                        ◀
+                                    </button>
+                                    <div className="text-lg font-medium">
+                                        {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월
                                     </div>
-                                    <button className={`ml-4 px-3 py-1 rounded-full text-sm font-bold ${item.color} ${item.text}`}>
-                                        {item.action}
+                                    <button 
+                                        className="text-gray-600 hover:text-gray-800"
+                                        onClick={() => setCurrentDate(prev => {
+                                            const newDate = new Date(prev);
+                                            newDate.setMonth(prev.getMonth() + 1);
+                                            return newDate;
+                                        })}
+                                    >
+                                        ▶
                                     </button>
                                 </div>
-                            ))}
+
+                                <div className="grid grid-cols-7 gap-1 text-center mb-2">
+                                    {['일', '월', '화', '수', '목', '금', '토'].map((day) => (
+                                        <div key={day} className="text-sm font-medium text-gray-600">
+                                            {day}
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="grid grid-cols-7 gap-1">
+                                    {calendarDays.map((day, idx) => {
+                                        const isCurrentMonth = day.getMonth() === currentDate.getMonth();
+                                        const isToday = day.toDateString() === new Date().toDateString();
+                                        const dateKey = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
+                                        const problemCount = sampleData[dateKey];
+
+                                        return (
+                                            <div
+                                                key={idx}
+                                                className={`aspect-square p-1 rounded ${
+                                                    isToday 
+                                                        ? 'bg-blue-100 hover:bg-blue-200'
+                                                        : isCurrentMonth
+                                                            ? 'bg-gray-100 hover:bg-gray-200 cursor-pointer'
+                                                            : 'bg-gray-50'
+                                                }`}
+                                                title={problemCount ? `${problemCount}문제 학습` : '학습 기록 없음'}
+                                            >
+                                                <div className={`text-xs ${
+                                                    isToday 
+                                                        ? 'text-blue-600 font-bold' 
+                                                        : 'text-gray-600'
+                                                }`}>
+                                                    {day.getDate()}
+                                                </div>
+                                                {isCurrentMonth && problemCount && (
+                                                    <div className="text-xs font-medium text-green-600">
+                                                        {problemCount}문제
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div className="w-full md:w-1/3 bg-white rounded shadow">
+
+
+                    <div className="w-full md:w-2/3 bg-white rounded shadow">
                         <div className="border-b px-6 py-4 font-bold text-lg">주간 학습 현황</div>
                         <div className="p-6">
-                            <div className="flex justify-around items-end h-24">
-                                {[20, 40, 60, 30, 70, 50, 80].map((height, idx) => (
+                            <div className="flex justify-around items-end h-[450px]">
+                                {[40, 80, 120, 60, 140, 100, 160].map((height, idx) => (
                                     <div
                                         key={idx}
-                                        className={`w-4 rounded-t ${idx === 6 ? 'bg-indigo-600' : 'bg-blue-200'}`}
-                                        style={{ height: `${height}px` }}
+                                        className={`w-8 rounded-t ${idx === 6 ? 'bg-indigo-600' : 'bg-blue-200'}`}
+                                        style={{ height: `${(height / 160) * 100}%` }}
                                     ></div>
                                 ))}
                             </div>
@@ -144,6 +226,8 @@ const dashboard = ({ userdata, setView }) => {
                             <div className="text-center text-xs text-gray-500 mt-2">평균: 45문항/일</div>
                         </div>
                     </div>
+                    
+                    
                 </div>
             </div>
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 
 const Profile = ({ userdata, setView }) => {
+    
     const { data: session } = useSession();
     // console.log(session.user);
 
@@ -9,6 +10,13 @@ const Profile = ({ userdata, setView }) => {
     const [department, setDepartment] = useState('');
     const [grade, setGrade] = useState('');
     const [caseProgress, setCaseProgress] = useState(null);
+    const [test, settest] = useState({
+        attendance: 0,
+        correct_rate: 0,
+        total_questions: 0,
+        total_time: 0
+    });
+    
 
     useEffect(() => {
         const fetchCaseProgress = async () => {
@@ -29,14 +37,21 @@ const Profile = ({ userdata, setView }) => {
 
                 const data = await response.json();
                 if (data.success) {
-                    console.log(userdata.user.id);
+                    // console.log(userdata.user.id);
                     console.log(data);
+                    settest({
+                        attendance: data.attendance,
+                        correct_rate: data.correct_rate,
+                        total_questions: data.total_question,
+                        total_time: data.total_time
+                    });
                     setCaseProgress(data.progress);
                 }
             } catch (error) {
                 console.error('유형별 학습 현황 조회 오류:', error);
             }
         };
+
 
         if (userdata?.user?.id) {
             fetchCaseProgress();
@@ -55,7 +70,7 @@ const Profile = ({ userdata, setView }) => {
         }
         await signIn("credentials2", {
             redirect: false,
-            email: session.user.email,
+            email: userdata.user.email,
             major: department,
             grade: grade,
             // password: 123456789111,
@@ -205,10 +220,10 @@ const Profile = ({ userdata, setView }) => {
                     )}
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
-                        <StatCard label="총 풀이 문제" value="-" />
-                        <StatCard label="평균 정답률" value="-" />
-                        <StatCard label="연속 학습" value="-" />
-                        <StatCard label="총 학습 시간" value="-" />
+                        <StatCard label="총 풀이 문제" value={test.total_questions+"문제"} />
+                        <StatCard label="평균 정답률" value={test.correct_rate+"%"} />
+                        <StatCard label="연속 학습" value={test.attendance+"일"} />
+                        <StatCard label="총 학습 시간" value={test.total_time+"시간"} />
 
                         {/* <StatCard label="총 풀이 문제" value="427" />
                         <StatCard label="평균 정답률" value="72%" />
@@ -349,6 +364,7 @@ const FocusArea = ({ title, areas }) => (
 
 
 const StatCard = ({ label, value }) => {
+    // console.log(value);
     return (
         <div className="bg-white-100 p-4 rounded-md text-center border border-gray-300">
             <div className="text-xl font-bold text-[#3f51b5]">{value}</div>
