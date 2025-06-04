@@ -105,7 +105,7 @@ const Active = ({ userdata }) => {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getExplanation`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ answer: choiceNumber, question_id: id })
+                body: JSON.stringify({ answer: choiceNumber, question_id: id, userdata: userdata })
             });
 
             const data = await res.json();
