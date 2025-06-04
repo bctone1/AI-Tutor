@@ -18,6 +18,7 @@ class User(Base):
     case_scores = relationship("UserCaseScore", back_populates="user", cascade="all, delete-orphan")
     user_record = relationship("UserTotalRecord", back_populates="user", cascade="all, delete-orphan")
     user_daily = relationship("UserDaily", back_populates="user", cascade="all, delete-orphan")
+    current_score = relationship("UserCurrentScore", back_populates="user", cascade="all, delete-orphan")
 
 class UserCaseScore(Base):
     __tablename__ = "user_case_scores"
@@ -60,13 +61,12 @@ class UserDaily(Base):
     user = relationship("User", back_populates="user_daily")
 
 
-'''class UserTotalScore(Base):
-    __tablename__ = "user_"
+class UserCurrentScore(Base):
+    __tablename__ = "user_current_score"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("user_table.id"), nullable=False)
     case = Column(String(100), nullable=False)
-    category = Column(String(100), nullable=True)  # 유형 카테고리 (근육계, 신경계 등)
     total_questions = Column(Integer, default=0)
     correct_answers = Column(Integer, default=0)
     total_score = Column(Integer, default=0)
@@ -74,4 +74,4 @@ class UserDaily(Base):
     level = Column(String(50), default="하")
     last_updated = Column(DateTime, default=func.now(), onupdate=func.now())
 
-    user = relationship("User", back_populates="case_scores")'''
+    user = relationship("User", back_populates="current_score")

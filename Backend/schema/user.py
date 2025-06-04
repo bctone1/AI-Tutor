@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional, Dict, List, Any
-from datetime import datetime
+from datetime import datetime, date
 
 class StudentRegisterRequest(BaseModel):
     email : str
@@ -109,3 +109,4 @@ class GetUserCaseScoresResponse(BaseModel):
 
 class GetDailyRecordRequest(BaseModel):
     user_id : int
+
