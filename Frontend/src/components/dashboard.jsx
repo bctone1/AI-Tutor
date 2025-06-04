@@ -31,7 +31,35 @@ const dashboard = ({ userdata, setView }) => {
             }
         };
 
+
+        const fetchDailyRecord = async () => {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getDailyRecord`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: 39
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('일일 학습 기록을 가져오는데 실패했습니다.');
+                }
+
+                const data = await response.json();
+                if (data.success) {
+                    console.log("일일 학습 기록");
+                    console.log(data);
+                }
+            } catch (error) {
+                console.error('일일 학습 기록 조회 오류:', error);
+            }
+        };
+
         if (userdata?.user?.id) {
+            fetchDailyRecord();
             fetchCaseProgress();
         }
     }, [userdata?.user?.id]);
@@ -39,44 +67,44 @@ const dashboard = ({ userdata, setView }) => {
     // 임시 예시 데이터 생성
     const sampleData = useMemo(() => {
         const data = {};
-        
+
         // 2025년 6월 1일, 2일, 3일에 대해 고정된 데이터 설정
         data['2025-06-01'] = 1;  // 1문제
         data['2025-06-02'] = 2;  // 2문제
         data['2025-06-03'] = 3;  // 3문제
         data['2025-05-04'] = 18;  // 4문제
-        
+
         return data;
     }, [currentDate]);
 
     const calendarDays = useMemo(() => {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
-        
+
         // 해당 월의 첫 날
         const firstDay = new Date(year, month, 1);
         // 해당 월의 마지막 날
         const lastDay = new Date(year, month + 1, 0);
-        
+
         // 달력에 표시할 날짜들 계산
         const days = [];
-        
+
         // 첫 주의 이전 달 날짜들
         for (let i = firstDay.getDay(); i > 0; i--) {
             days.push(new Date(year, month, 1 - i));
         }
-        
+
         // 현재 달의 날짜들
         for (let i = 1; i <= lastDay.getDate(); i++) {
             days.push(new Date(year, month, i));
         }
-        
+
         // 마지막 주의 다음 달 날짜들
         const remainingDays = 42 - days.length; // 6주 x 7일 = 42
         for (let i = 1; i <= remainingDays; i++) {
             days.push(new Date(year, month + 1, i));
         }
-        
+
         return days;
     }, [currentDate]);
 
@@ -159,13 +187,13 @@ const dashboard = ({ userdata, setView }) => {
                         </div>
                     </div>
 
-                    
+
                 </div>
 
                 {/* 월간 및 주간 통계 */}
                 <div className="flex flex-col md:flex-row gap-4">
 
-                    
+
                     <div className="w-full md:w-2/3 bg-white rounded shadow">
                         <div className="border-b px-6 py-4 font-bold text-lg">월간 학습 현황</div>
                         <div className="p-6">
@@ -173,7 +201,7 @@ const dashboard = ({ userdata, setView }) => {
                             <div className="mb-6">
                                 {/* 월 선택기 */}
                                 <div className="flex justify-between items-center mb-4">
-                                    <button 
+                                    <button
                                         className="text-gray-600 hover:text-gray-800"
                                         onClick={() => setCurrentDate(prev => {
                                             const newDate = new Date(prev);
@@ -186,7 +214,7 @@ const dashboard = ({ userdata, setView }) => {
                                     <div className="text-lg font-medium">
                                         {currentDate.getFullYear()}년 {currentDate.getMonth() + 1}월
                                     </div>
-                                    <button 
+                                    <button
                                         className="text-gray-600 hover:text-gray-800"
                                         onClick={() => setCurrentDate(prev => {
                                             const newDate = new Date(prev);
@@ -215,20 +243,18 @@ const dashboard = ({ userdata, setView }) => {
                                         return (
                                             <div
                                                 key={idx}
-                                                className={`aspect-square p-1 rounded ${
-                                                    isToday 
-                                                        ? 'bg-blue-100 hover:bg-blue-200'
-                                                        : isCurrentMonth
-                                                            ? 'bg-gray-100 hover:bg-gray-200 cursor-pointer'
-                                                            : 'bg-gray-50'
-                                                }`}
+                                                className={`aspect-square p-1 rounded ${isToday
+                                                    ? 'bg-blue-100 hover:bg-blue-200'
+                                                    : isCurrentMonth
+                                                        ? 'bg-gray-100 hover:bg-gray-200 cursor-pointer'
+                                                        : 'bg-gray-50'
+                                                    }`}
                                                 title={problemCount ? `${problemCount}문제 학습` : '학습 기록 없음'}
                                             >
-                                                <div className={`text-xs ${
-                                                    isToday 
-                                                        ? 'text-blue-600 font-bold' 
-                                                        : 'text-gray-600'
-                                                }`}>
+                                                <div className={`text-xs ${isToday
+                                                    ? 'text-blue-600 font-bold'
+                                                    : 'text-gray-600'
+                                                    }`}>
                                                     {day.getDate()}
                                                 </div>
                                                 {isCurrentMonth && problemCount && (
