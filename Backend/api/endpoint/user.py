@@ -208,3 +208,9 @@ async def update_profile_endpoint(request: UpdateScoreRequest, db : Session = De
         )
     except Exception as e:
         return JSONResponse(content={'message': f'서버 오류 : {str(e)}'}, status_code=500)
+
+@user_router.post("/getDailyRecord")
+async def update_profile_endpoint(request: GetDailyRecordRequest, db : Session = Depends(get_db)):
+    user_id = request.user_id
+    record = get_daily_record(db = db, user_id=user_id)
+    return record

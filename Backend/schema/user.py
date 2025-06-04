@@ -106,3 +106,6 @@ class GetUserCaseScoresRequest(BaseModel):
 class GetUserCaseScoresResponse(BaseModel):
     success: bool
     scores: List[Dict[str, Any]]
+
+class GetDailyRecordRequest(BaseModel):
+    user_id : int

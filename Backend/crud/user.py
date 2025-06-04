@@ -2,6 +2,7 @@ import bcrypt
 from sqlalchemy.orm import Session
 from model.user import *
 import random
+from datetime import datetime
 
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -150,3 +151,18 @@ def get_total_record(db : Session, user_id : int):
     record = db.query(UserTotalRecord).filter(UserTotalRecord.user_id == user_id).first()
     return record
 
+def add_daily_record(db : Session, user_id : int, question_id : int):
+    today_date = datetime.utcnow().date()
+    new_daily = UserDaily(
+        user_id=user_id,
+        question_id = question_id,
+        date=today_date
+    )
+    db.add(new_daily)
+    db.commit()
+    db.refresh(new_daily)
+    return new_daily
+
+def get_daily_record(db : Session, user_id : int):
+    record = db.query(UserDaily).filter(UserDaily.user_id == user_id).all()
+    return record
