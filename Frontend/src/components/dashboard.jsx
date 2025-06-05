@@ -42,7 +42,7 @@ const dashboard = ({ userdata, setView }) => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        user_id: 39
+                        user_id: userdata.user.id
                     })
                 });
 
