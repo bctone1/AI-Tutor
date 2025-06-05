@@ -407,3 +407,6 @@ def get_unique_filename(path: Path) -> tuple[Path, str]:
         if not new_path.exists():
             return new_path, new_name  # 경로 전체 + 파일명만 분리해서 리턴
         counter += 1
+'''
+def generate_current_score_status(db : Session, user_email : str):
+'''

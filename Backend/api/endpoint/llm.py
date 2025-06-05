@@ -58,17 +58,14 @@ async def chat_agent(request: ChatAgentRequest, db: Session = Depends(get_db)):
 
 @llm_router.post("/getQuestion")
 async def get_question_endpoint(request: GetQuestRequest, db: Session = Depends(get_db)):
-    user_prompt = request.selectedSubject
+    subject = request.selectedSubject
 
-    vector_response = convert_to_vector(user_prompt)
-    similar_example = get_similar_questions(db=db, embedding=vector_response, top_k=10)
-    selected_row = random.choice(similar_example)
-    question_text = selected_row._mapping["question"]
-    question_id = selected_row._mapping["id"]
-    parsed = parse_question_block(question_text)
+    question = get_question_sub(db = db, subject = subject)
 
+    print(f"QUESTION : {question}")
+    parsed = parse_question_block(question.question)
     return JSONResponse(content={
         "question": parsed["question"],
         "choices": parsed["choices"],
-        "id": question_id,
+        "id": question.id
     })
