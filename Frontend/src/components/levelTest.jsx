@@ -17,7 +17,7 @@ const LevelTest = ({ setView, userdata }) => {
 
     useEffect(() => {
         const submitTest = async () => {
-            console.log(answers);
+            // console.log(answers);
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/submitTest`, {
                     method: "POST",
@@ -94,7 +94,7 @@ const LevelTest = ({ setView, userdata }) => {
             const data = await response.json();
             if (response.ok) {
                 setTestQuestions(data);
-                // console.log(data);
+                console.log(data);
             } else {
                 console.error("공급자 오류발생");
             }
@@ -218,7 +218,7 @@ const LevelTest = ({ setView, userdata }) => {
                             <>
                                 {/* 유형/과목 정보 */}
                                 <div className="bg-purple-100 text-purple-700 p-4 rounded mb-5 text-base">
-                                    현재 과목: {currentQuestion.subject} / 전공: {currentQuestion.major}
+                                    현재 과목: {currentQuestion.subject} / 유형: {currentQuestion.cases}
                                 </div>
 
                                 <div className="bg-white rounded shadow p-5 mb-5">
