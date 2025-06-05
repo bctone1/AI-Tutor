@@ -217,17 +217,65 @@ const Active = ({ userdata }) => {
                 <aside className="w-64 bg-white rounded-md shadow-md p-6 border border-gray-200 h-fit sticky top-6 flex flex-col justify-between min-h-[300px]">
                     <div>
                         <h2 className="text-lg font-semibold text-gray-800 mb-4">과목 선택</h2>
-                        <select
-                            id="subjectSelect"
-                            className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            value={selectedSubject}
-                            onChange={(e) => setSelectedSubject(e.target.value)}
-                        >
-                            <option value="">과목을 선택하세요</option>
-                            <option value="중추신경계">중추신경계</option>
-                            <option value="말초신경계">말초신경계</option>
-                            <option value="자율신경계">자율신경계</option>
-                        </select>
+
+                        {userdata.user.major == "직업치료학과" ? (
+                            <select
+                                id="subjectSelect"
+                                className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                value={selectedSubject}
+                                onChange={(e) => setSelectedSubject(e.target.value)}
+                            >
+                                <option value="">과목을 선택하세요</option>
+                                <optgroup label="해부학">
+                                    <option value="인체의 체계">중추신경계</option>
+                                    <option value="뼈대와 관절계(통)">뼈대와 관절계(통)</option>
+                                    <option value="근육계(통)">근육계(통)</option>
+                                    <option value="심혈관계(통), 면역계(통)">심혈관계(통), 면역계(통)</option>
+                                    <option value="호흡계(통), 음성·말하기기관">호흡계(통), 음성·말하기기관</option>
+                                    <option value="소화계(통), 삼킴기관">소화계(통), 삼킴기관</option>
+                                    <option value="신경계(통)">신경계(통)</option>
+                                    <option value="피부·눈·귀 등 감각계(통)">피부·눈·귀 등 감각계(통)</option>
+                                    <option value="내분비계(통), 비뇨계(통), 생식계(통)">내분비계(통), 비뇨계(통), 생식계(통)</option>
+                                </optgroup>
+                                <optgroup label="생리학">
+                                    <option value="혈액순환·면역 기능">혈액순환·면역 기능</option>
+                                    <option value="호흡·음성·말하기 기능">호흡·음성·말하기 기능</option>
+                                    <option value="삼킴·소화·대사 기능">삼킴·소화·대사 기능</option>
+                                    <option value="내분비·배설·생식 기능">내분비·배설·생식 기능</option>
+                                    <option value="감각기능">감각기능</option>
+                                    <option value="신경계 기능">신경계 기능</option>
+                                    <option value="근육계 기능">근육계 기능</option>
+                                </optgroup>
+                            </select>
+
+                        ) : (
+                            <select
+                                id="subjectSelect"
+                                className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                value={selectedSubject}
+                                onChange={(e) => setSelectedSubject(e.target.value)}
+                            >
+                                <option value="">과목을 선택하세요</option>
+                                <optgroup label="해부생리">
+                                    <option value="인체의 구분과 조직">인체의 구분과 조직</option>
+                                    <option value="뼈대계통">뼈대계통</option>
+                                    <option value="관절계통">관절계통</option>
+                                    <option value="근육계통">근육계통</option>
+                                    <option value="순환계통">순환계통</option>
+                                    <option value="호흡계통">호흡계통</option>
+                                    <option value="소화계통">소화계통</option>
+                                    <option value="비뇨계통 및 내분비계통">비뇨계통 및 내분비계통</option>
+                                    <option value="피부계통 및 특수감각계통">피부계통 및 특수감각계통</option>
+                                    <option value="신경계통">신경계통</option>
+                                </optgroup>
+                            </select>
+                        )}
+
+
+
+
+
+
 
                         <p className="text-sm text-gray-600 mt-4">
                             {userdata.user.major} | {userdata.user.grade}학년
