@@ -106,7 +106,7 @@ async def upload_two_files(
 @exam_router.post('/getTestQuestion')
 async def get_test_endpoint(db: Session = Depends(get_db)):
     subject = "물리치료 기초"
-    question_ids, question_texts, levels = generate_level_test(db, subject)
+    question_ids, question_texts, levels, subjects, cases = generate_level_test(db, subject)
 
     if not question_ids:
         return JSONResponse(content={"error": "No questions found."}, status_code=404)
@@ -115,9 +115,11 @@ async def get_test_endpoint(db: Session = Depends(get_db)):
         {
             "id": qid,
             "level" : level,
-            "question": json.dumps(qtext, ensure_ascii=False)
+            "question": json.dumps(qtext, ensure_ascii=False),
+            "subject" : subjects,
+            "cases" : cases
         }
-        for qid, level, qtext in zip(question_ids, levels, question_texts)
+        for qid, level, qtext, subjects, cases in zip(question_ids, levels, question_texts, subjects, cases)
     ]
 
     return formatted_questions

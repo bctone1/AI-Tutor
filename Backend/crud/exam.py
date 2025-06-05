@@ -77,34 +77,8 @@ def update_labelingdata(db : Session, subject : str, question_id : int, correct_
     db.commit()
     db.refresh(new_label)
     return new_label.id
-'''
-def generate_level_test(db: Session, subject: str):
-    # 1. 해당 과목의 라벨링 데이터 모두 조회
-    labels = db.query(LabelingData).filter(LabelingData.subject == subject).all()
-
-    # 2. case별로 level 분류
-    case_level_map = defaultdict(lambda: defaultdict(list))
-    for label in labels:
-        case_level_map[label.case][label.level].append(label.question_id)
-
-    selected_question_ids = []
-
-    for case, level_dict in case_level_map.items():
-        for level in ['상', '중', '하']:
-            question_ids = level_dict.get(level, [])
-            if question_ids:
-                selected_question_ids.append(random.choice(question_ids))
-
-    questions = db.query(KnowledgeBase).filter(KnowledgeBase.id.in_(selected_question_ids)).all()
-    question_texts = [parse_question_block(q.question) for q in questions]
-
-    id_to_level = {label.question_id: label.level for label in labels}
-    levels = [id_to_level[q.id] for q in questions]
-
-    return selected_question_ids, question_texts, levels
 
 '''
-
 def generate_level_test(db: Session, subject: str):
     labels = db.query(LabelingData).filter(LabelingData.subject == subject).all()
 
@@ -142,6 +116,46 @@ def generate_level_test(db: Session, subject: str):
     levels = [id_to_level.get(q.id, '미정') for q in questions]
 
     return selected_question_ids, question_texts, levels
+'''
+
+def generate_level_test(db: Session, subject: str):
+    labels = db.query(LabelingData).filter(LabelingData.subject == subject).all()
+
+    case_level_map = defaultdict(lambda: defaultdict(list))
+    for label in labels:
+        case_level_map[label.case][label.level].append(label.question_id)
+
+    selected_question_ids = []
+
+    for case, level_dict in case_level_map.items():
+        selected_ids_for_case = []
+
+        for level in ['상', '중', '하']:
+            question_ids = level_dict.get(level, [])
+            if question_ids:
+                selected_ids_for_case.append(random.choice(question_ids))
+
+        remaining = 3 - len(selected_ids_for_case)
+        if remaining > 0:
+            all_question_ids = sum(level_dict.values(), [])
+            remaining_ids = list(set(all_question_ids) - set(selected_ids_for_case))
+            if remaining_ids:
+                additional_ids = random.sample(remaining_ids, min(remaining, len(remaining_ids)))
+                selected_ids_for_case.extend(additional_ids)
+
+        selected_question_ids.extend(selected_ids_for_case)
+
+    # 문제 본문 조회
+    questions = db.query(KnowledgeBase).filter(KnowledgeBase.id.in_(selected_question_ids)).all()
+    question_texts = [parse_question_block(q.question) for q in questions]
+
+    # 레벨, subject, case 매핑
+    id_to_label = {label.question_id: label for label in labels}
+    levels = [id_to_label.get(q.id).level if id_to_label.get(q.id) else "미정" for q in questions]
+    subjects = [id_to_label.get(q.id).subject if id_to_label.get(q.id) else "미정" for q in questions]
+    cases = [id_to_label.get(q.id).case if id_to_label.get(q.id) else "미정" for q in questions]
+
+    return selected_question_ids, question_texts, levels, subjects, cases
 
 def grading_test(db: Session, answers: Dict[str, int]):
     score = 0
@@ -407,6 +421,4 @@ def get_unique_filename(path: Path) -> tuple[Path, str]:
         if not new_path.exists():
             return new_path, new_name  # 경로 전체 + 파일명만 분리해서 리턴
         counter += 1
-'''
-def generate_current_score_status(db : Session, user_email : str):
-'''
+

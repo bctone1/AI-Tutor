@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from model.user import *
 import random
 from datetime import datetime
+from core.util import *
 
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -183,3 +184,15 @@ def get_daily_record(db : Session, user_id : int):
     return record
 
 '''
+
+
+def generate_current_score_status(db: Session, user_email: str, major: str):
+    user = db.query(User).filter(User.email == user_email).first()
+    if major == "물리치료학과":
+        for case in PHYSICAL_THERAPY_CASES:
+            new_status = UserCurrentScore(
+                user_id=user.id,
+                case=case
+            )
+            db.add(new_status)
+        db.commit()
