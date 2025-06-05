@@ -214,4 +214,5 @@ async def get_daily_endpoint(request: GetDailyRecordRequest, db : Session = Depe
     user_id = request.user_id
     record = get_daily_record(db = db, user_id=user_id)
     print(f"RECORD : {record}")
-    return record
+    #return record
+    return JSONResponse(content=record, status_code=200)
