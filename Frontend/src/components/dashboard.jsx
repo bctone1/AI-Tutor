@@ -3,6 +3,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 const dashboard = ({ userdata, setView }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [caseProgress, setCaseProgress] = useState(null);
+    const [dailyRecord, setDailyRecord] = useState(null);
 
     useEffect(() => {
         const fetchCaseProgress = async () => {
@@ -33,6 +34,7 @@ const dashboard = ({ userdata, setView }) => {
 
 
         const fetchDailyRecord = async () => {
+            // alert("fetchDailyRecord");
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getDailyRecord`, {
                     method: 'POST',
@@ -49,9 +51,10 @@ const dashboard = ({ userdata, setView }) => {
                 }
 
                 const data = await response.json();
-                if (data.success) {
-                    console.log("일일 학습 기록");
+                // console.log(data);
+                if (data) {
                     console.log(data);
+                    setDailyRecord(data);
                 }
             } catch (error) {
                 console.error('일일 학습 기록 조회 오류:', error);
@@ -64,18 +67,22 @@ const dashboard = ({ userdata, setView }) => {
         }
     }, [userdata?.user?.id]);
 
-    // 임시 예시 데이터 생성
+    // 데이터 생성
     const sampleData = useMemo(() => {
         const data = {};
-
-        // 2025년 6월 1일, 2일, 3일에 대해 고정된 데이터 설정
-        data['2025-06-01'] = 1;  // 1문제
-        data['2025-06-02'] = 2;  // 2문제
-        data['2025-06-03'] = 3;  // 3문제
-        data['2025-05-04'] = 18;  // 4문제
-
+        if (dailyRecord) {
+            dailyRecord.forEach(record => {
+                const date = record.date;
+                if (data[date]) {
+                    data[date] += 1;
+                } else {
+                    data[date] = 1;
+                }
+            });
+        }
         return data;
-    }, [currentDate]);
+    }, [dailyRecord]);
+
 
     const calendarDays = useMemo(() => {
         const year = currentDate.getFullYear();
