@@ -80,6 +80,8 @@ const dashboard = ({ userdata, setView }) => {
                 }
             });
         }
+        // data['2025-06-06'] = "현충일";
+        
         return data;
     }, [dailyRecord]);
 
@@ -114,6 +116,35 @@ const dashboard = ({ userdata, setView }) => {
 
         return days;
     }, [currentDate]);
+
+    const weeklyData = useMemo(() => {
+        if (!dailyRecord) return Array(7).fill(0);
+
+        const today = new Date();
+        const dayOfWeek = today.getDay();
+        const monday = new Date(today);
+        monday.setDate(today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1));
+        monday.setHours(0, 0, 0, 0);
+
+        const weekData = Array(7).fill(0);
+        
+        if (dailyRecord) {
+            dailyRecord.forEach(record => {
+                // YYYY-MM-DD 형식의 날짜를 로컬 시간대로 파싱
+                const [year, month, day] = record.date.split('-').map(Number);
+                const recordDate = new Date(year, month - 1, day);
+                recordDate.setHours(0, 0, 0, 0);
+                
+                const diffDays = Math.floor((recordDate - monday) / (1000 * 60 * 60 * 24));
+                
+                if (diffDays >= 0 && diffDays < 7) {
+                    weekData[diffDays]++;
+                }
+            });
+        }
+
+        return weekData;
+    }, [dailyRecord]);
 
     return (
         <main className="max-w-6xl mx-auto px-5">
@@ -279,22 +310,32 @@ const dashboard = ({ userdata, setView }) => {
 
                     <div className="w-full md:w-2/3 bg-white rounded shadow">
                         <div className="border-b px-6 py-4 font-bold text-lg">주간 학습 현황</div>
+                        
                         <div className="p-6">
                             <div className="flex justify-around items-end h-[450px]">
-                                {[40, 80, 120, 60, 140, 100, 160].map((height, idx) => (
-                                    <div
-                                        key={idx}
-                                        className={`w-8 rounded-t ${idx === 6 ? 'bg-indigo-600' : 'bg-blue-200'}`}
-                                        style={{ height: `${height}px` }}
-                                    ></div>
-                                ))}
+                                {weeklyData.map((count, idx) => {
+                                    const height = count === 0 ? 0 : Math.max(50, count * 30);
+                                    return (
+                                        <div
+                                            key={idx}
+                                            className={`w-8 rounded-t ${idx === new Date().getDay() - 1 ? 'bg-blue-300' : 'bg-blue-200'}`}
+                                            style={{ height: `${height}px` }}
+                                        >
+                                            {count > 0 && <div className="text-xs text-center mt-2">{count}문제</div>}
+                                        </div>
+                                    );
+                                })}
                             </div>
                             <div className="flex justify-around text-xs text-gray-500 mt-2">
                                 {['월', '화', '수', '목', '금', '토', '일'].map((d, i) => (
-                                    <span key={i}>{d}</span>
+                                    <span key={i} className={i === new Date().getDay() - 1 ? 'font-bold text-indigo-600' : ''}>
+                                        {d}
+                                    </span>
                                 ))}
                             </div>
-                            <div className="text-center text-xs text-gray-500 mt-2">평균: 45문항/일</div>
+                            <div className="text-center text-xs text-gray-500 mt-2">
+                                이번 주 총 {weeklyData.reduce((a, b) => a + b, 0)}문제 학습
+                            </div>
                         </div>
                     </div>
 
