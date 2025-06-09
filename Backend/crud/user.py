@@ -93,6 +93,22 @@ def change_user_info(db: Session, email : str, major : str, grade : int):
     else:
         return None
 
+def generate_user_current_score(db: Session, email : str, major : str):
+    user = db.query(User).filter(User.email == email).first()
+    if user:
+        if major == "물리치료학과":
+            for case in PHYSICAL_THERAPY_CASES:
+                new_score = UserCurrentScore(
+                    user_id = user.id,
+                    case = case,
+                )
+                db.add(new_score)
+                db.commit()
+                db.refresh(new_score)
+            return user
+    else:
+        return None
+
 def update_user_score(db: Session, user_id : int, score : int):
     user = db.query(User).filter(User.id == user_id).first()
     if user:
@@ -102,6 +118,7 @@ def update_user_score(db: Session, user_id : int, score : int):
         return user
     else:
         return None
+
 
 
 def update_user_score_mail(db: Session, user_email : str, score : int):

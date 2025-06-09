@@ -4,28 +4,37 @@ from typing import List, Dict
 
 def extract_questions_from_pages(page_texts: List[str]) -> List[str]:
     """
-    PDF에서 추출한 page_texts 리스트를 받아서,
-    숫자. 패턴을 기준으로 문제 단위로 분리한 리스트를 반환합니다.
+    PDF 텍스트에서 숫자. 패턴을 기준으로 문제 단위로 분리하되,
+    숫자. 다음이 공백 또는 특수문자 (특히 소괄호 등)만 오는 경우는 무시.
     """
     full_text = "\n".join(page_texts)
 
-    # 숫자 + '.' + 공백 위치 찾기
-    split_matches = list(re.finditer(r'(\d+\.)\s+', full_text))
-    if not split_matches:
+    # 후보 split 포인트 찾기: 숫자 + 마침표
+    matches = list(re.finditer(r'(?<!\d)(\d{1,3})\.', full_text))
+    if not matches:
         return []
 
-    # 시작 인덱스 리스트
-    starts = [m.start() for m in split_matches]
-    starts.append(len(full_text))  # 마지막까지 자르기 위해
+    starts = []
+    for m in matches:
+        num_end = m.end()  # 마침표 뒤 인덱스
+        if num_end >= len(full_text):  # 끝났으면 무시
+            continue
 
-    # 문제 덩어리 추출
+        # 숫자. 다음 문자가 유효한 문제 시작인지 확인
+        next_char = full_text[num_end]
+
+        # 유효한 경우: 공백 또는 한글/영문/숫자 시작이어야 함
+        if re.match(r'[\s]*[가-힣a-zA-Z0-9]', full_text[num_end:num_end + 3]):
+            starts.append(m.start())
+
+    starts.append(len(full_text))  # 마지막 인덱스 추가
+
     questions = [
         full_text[starts[i]:starts[i + 1]].strip()
         for i in range(len(starts) - 1)
     ]
 
     return questions
-
 
 def parse_question_block(question_block: str) -> Dict:
     """

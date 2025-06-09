@@ -192,7 +192,7 @@ async def get_explantation_endpoint(request: GetExplantationRequest, db: Session
     explanation = get_explantation(db = db, question_id = question_id, correct_answer = correct_answer)
 
     save_total_correct(db = db, user_id = user_id, is_correct = is_correct)
-
+    update_current_score(db = db, question_id = question_id, correct_answer = is_correct)
     add_daily_record(db=db, user_id=user_id, question_id=question_id)
 
     return JSONResponse(content={

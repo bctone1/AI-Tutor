@@ -1,5 +1,5 @@
 from model.exam import *
-from model.user import UserCaseScore
+from model.user import UserCaseScore, UserCurrentScore
 from langchain_service.document_loader.extract_question import parse_question_block
 from langchain_openai import OpenAIEmbeddings
 from core.config import CHATGPT_API_KEY
@@ -422,3 +422,23 @@ def get_unique_filename(path: Path) -> tuple[Path, str]:
             return new_path, new_name  # 경로 전체 + 파일명만 분리해서 리턴
         counter += 1
 
+def update_current_score(db : Session, question_id : int, correct_answer : bool):
+    question = db.query(LabelingData).filter(LabelingData.question_id == question_id).first()
+    user_status = db.query(UserCurrentScore).filter(UserCurrentScore.case == question.case).first()
+    user_status.total_questions += 1
+    if correct_answer is True:
+        user_status.correct_answers += 1
+        if question.level == "하":
+            user_status.total_score += 2
+        elif question.level == "중":
+            user_status.total_score += 3
+        elif question.level == "상":
+            user_status.total_score += 5
+        db.add(user_status)
+        db.commit()
+        db.refresh(user_status)
+    user_status.accuracy = user_status.correct_answers/user_status.total_questions
+    db.add(user_status)
+    db.commit()
+    db.refresh(user_status)
+    return user_status
