@@ -4,6 +4,8 @@ from model.user import *
 import random
 from datetime import datetime
 from core.util import *
+from typing import Dict, Tuple
+
 
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -213,3 +215,32 @@ def generate_current_score_status(db: Session, user_email: str, major: str):
             )
             db.add(new_status)
         db.commit()
+
+
+def get_user_case_current(db: Session, user_id: int) -> Dict[str, Dict]:
+    case_scores = db.query(UserCurrentScore).filter(UserCurrentScore.user_id == user_id).all()
+
+    progress = {}
+    for score in case_scores:
+        progress[score.case] = {
+            'total_questions': score.total_questions,
+            'correct_answers': score.correct_answers,
+            'total_score': score.total_score,
+            'accuracy': score.accuracy,
+            'level': score.level,
+            'last_updated': score.last_updated.isoformat() if score.last_updated else None
+        }
+
+    # 아직 시도하지 않은 유형들도 포함
+    for case in PHYSICAL_THERAPY_CASES:
+        if case not in progress:
+            progress[case] = {
+                'total_questions': 0,
+                'correct_answers': 0,
+                'total_score': 0,
+                'accuracy': 0.0,
+                'level': '미시도',
+                'last_updated': None
+            }
+
+    return progress

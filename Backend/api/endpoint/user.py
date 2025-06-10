@@ -216,3 +216,26 @@ async def get_daily_endpoint(request: GetDailyRecordRequest, db : Session = Depe
     print(f"RECORD : {record}")
     #return record
     return JSONResponse(content=record, status_code=200)
+
+
+@user_router.post('/getUserCaseScore')
+async def get_user_case_progress_endpoint(request: dict, db: Session = Depends(get_db)):
+    try:
+        user_id = request.get("user_id")
+        if not user_id:
+            raise HTTPException(status_code=400, detail="user_id가 필요합니다.")
+
+        progress = get_user_case_current(db, user_id)
+        record = get_total_record(db=db, user_id=user_id)
+        return {
+            "success": True,
+            "progress": progress,
+            "total_question": record.total_question,
+            "correct_rate": record.correct_rate,
+            "attendance": record.attendance,
+            "total_time": record.total_time
+        }
+
+    except Exception as e:
+        print(f"유형별 학습 현황 조회 오류: {str(e)}")
+        raise HTTPException(status_code=500, detail="학습 현황 조회 중 오류가 발생했습니다.")
