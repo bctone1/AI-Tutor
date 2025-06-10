@@ -53,7 +53,7 @@ const dashboard = ({ userdata, setView }) => {
                 const data = await response.json();
                 // console.log(data);
                 if (data) {
-                    console.log(data);
+                    // console.log(data);
                     setDailyRecord(data);
                 }
             } catch (error) {
@@ -81,7 +81,7 @@ const dashboard = ({ userdata, setView }) => {
             });
         }
         // data['2025-06-06'] = "현충일";
-        
+
         return data;
     }, [dailyRecord]);
 
@@ -127,16 +127,16 @@ const dashboard = ({ userdata, setView }) => {
         monday.setHours(0, 0, 0, 0);
 
         const weekData = Array(7).fill(0);
-        
+
         if (dailyRecord) {
             dailyRecord.forEach(record => {
                 // YYYY-MM-DD 형식의 날짜를 로컬 시간대로 파싱
                 const [year, month, day] = record.date.split('-').map(Number);
                 const recordDate = new Date(year, month - 1, day);
                 recordDate.setHours(0, 0, 0, 0);
-                
+
                 const diffDays = Math.floor((recordDate - monday) / (1000 * 60 * 60 * 24));
-                
+
                 if (diffDays >= 0 && diffDays < 7) {
                     weekData[diffDays]++;
                 }
@@ -145,6 +145,9 @@ const dashboard = ({ userdata, setView }) => {
 
         return weekData;
     }, [dailyRecord]);
+
+    const maxCount = Math.max(...weeklyData, 1); // 0으로 나누는 것 방지
+    const maxBarHeight = 300; // px, 원하는 최대 막대 높이
 
     return (
         <main className="max-w-6xl mx-auto px-5">
@@ -310,11 +313,12 @@ const dashboard = ({ userdata, setView }) => {
 
                     <div className="w-full md:w-2/3 bg-white rounded shadow">
                         <div className="border-b px-6 py-4 font-bold text-lg">주간 학습 현황</div>
-                        
+
                         <div className="p-6">
                             <div className="flex justify-around items-end h-[450px]">
+
                                 {weeklyData.map((count, idx) => {
-                                    const height = count === 0 ? 0 : Math.max(50, count * 30);
+                                    const height = count === 0 ? 0 : (count / maxCount) * maxBarHeight;
                                     return (
                                         <div
                                             key={idx}
