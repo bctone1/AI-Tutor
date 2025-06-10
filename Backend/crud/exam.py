@@ -438,6 +438,13 @@ def update_current_score(db : Session, question_id : int, correct_answer : bool)
         db.commit()
         db.refresh(user_status)
     user_status.accuracy = user_status.correct_answers/user_status.total_questions
+    if user_status.accuracy >= 0.8:
+        user_status.level = "상"
+    elif user_status.accuracy >= 0.5:
+        user_status.level = "중"
+    else:
+        user_status.level = "하"
+
     db.add(user_status)
     db.commit()
     db.refresh(user_status)
