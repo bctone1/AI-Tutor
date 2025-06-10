@@ -8,7 +8,7 @@ const dashboard = ({ userdata, setView }) => {
     useEffect(() => {
         const fetchCaseProgress = async () => {
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getUserCaseProgress`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getUserCaseScore`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
