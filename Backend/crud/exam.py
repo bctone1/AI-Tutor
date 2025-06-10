@@ -25,6 +25,7 @@ PHYSICAL_THERAPY_CASES = [
     "신경계통"
 ]
 
+
 embedding_model = OpenAIEmbeddings(
     model="text-embedding-3-small",
     openai_api_key=CHATGPT_API_KEY
