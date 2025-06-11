@@ -9,6 +9,8 @@ const Active = ({ userdata }) => {
     const [currentID, setCurrentID] = useState('');
     const [active, setActive] = useState(true);
     const messageEndRef = useRef(null);
+    const [solvedProblemIds, setSolvedProblemIds] = useState([]);
+
 
     const scrollToBottom = () => {
         messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -46,6 +48,7 @@ const Active = ({ userdata }) => {
     // }, []);
 
     const fetchInitialQuestion = async () => {
+        console.log(solvedProblemIds);
 
         if (!active) {
             alert("이미 문제를 풀고 있습니다.");
@@ -55,13 +58,14 @@ const Active = ({ userdata }) => {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getQuestion`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userdata: userdata, selectedSubject: selectedSubject })
+                body: JSON.stringify({ userdata: userdata, selectedSubject: selectedSubject, solvedProblemIds:solvedProblemIds })
             });
 
             const data = await res.json();
             if (res.ok) {
                 const { question, choices, id } = data;
                 setCurrentID(id);
+                setSolvedProblemIds(prevIds => [...prevIds, id]);
 
                 setChatLog(prev => [
                     ...prev,
@@ -170,12 +174,13 @@ const Active = ({ userdata }) => {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chatAgent`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMessage, userdata: userdata, selectedSubject: selectedSubject })
+                body: JSON.stringify({ message: userMessage, userdata: userdata, selectedSubject: selectedSubject, solvedProblemIds:solvedProblemIds })
             });
             const data = await res.json();
             if (data.method) {
                 const { question, choices, id } = data;
                 setCurrentID(id);
+                setSolvedProblemIds(prevIds => [...prevIds, id]);
                 setChatLog(prev => [
                     ...prev,
                     {
