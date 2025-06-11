@@ -5,6 +5,7 @@ from crud.user import update_user_score, save_total_correct, get_total_record, a
 from langchain_service.document_loader.file_loader import load_document
 from langchain_service.document_loader.read_labeling_data import excel_to_list
 from langchain_service.document_loader.extract_question import extract_questions_from_pages
+from langchain_service.document_loader.read_excel import extract_questions_from_excel
 from fastapi.responses import JSONResponse
 import os
 from database.session import get_db
@@ -33,22 +34,61 @@ async def upload_file(file: UploadFile = File(...), userData: str = Form(...), d
         contents = await file.read()
         f.write(contents)
 
+    ext = os.path.splitext(file.filename)[1].lower()
 
-    try:
-        documents = load_document(unique_file_location)
-        print(f"PAGE TEXT : {documents}")
-    except ValueError as e:
-        return {"error": str(e)}
+    file_lower = file.filename.lower()
+    if "작업치료" in file_lower:
+        department = "작업치료학과"
+        subject = "작업치료기초"
+    elif "물리치료" in file_lower:
+        department = "물리치료학과"
+        subject = "물리치료기초"
+    else:
+        department = "학과 미지정"
+        subject = "과목 미지정"
 
-    page_texts = [doc.page_content for doc in documents]
-    print(f"PAGE TEXT : {page_texts}")
-    questions = extract_questions_from_pages(page_texts)
-    exam_data = add_exam_data(db = db, department="물리치료학과", file_name = file.filename, subject="물리치료 기초", email = email)
-    for i, q in enumerate(questions, start=1):
-        print(f"[문항 {i}]\n{q}\n{'-' * 40}")
-        update_knowledgebase(db = db, exam_id = exam_data.id, question_number=i, question = q)
+    exam_data = add_exam_data(
+        db=db,
+        department=department,
+        file_name=file.filename,
+        subject=subject,
+        email=email
+    )
 
-    return exam_data
+    if ext == ".pdf":
+        try:
+            documents = load_document(unique_file_location)
+            print(f"PAGE TEXT : {documents}")
+        except ValueError as e:
+            return {"error": str(e)}
+
+        page_texts = [doc.page_content for doc in documents]
+        print(f"PAGE TEXT : {page_texts}")
+        questions = extract_questions_from_pages(page_texts)
+
+
+        for i, q in enumerate(questions, start=1):
+            print(f"[문항 {i}]\n{q}\n{'-' * 40}")
+            update_knowledgebase(db=db, exam_id=exam_data.id, question_number=i, question=q)
+
+        return exam_data
+
+    elif ext == ".xlsx":
+        excel_dictionary = extract_questions_from_excel(unique_file_location)
+        for number, content in excel_dictionary.items():
+            try:
+                qnum = int(number)
+            except ValueError:
+                qnum = number  # 'A1', '1-a' 같은 경우
+            update_knowledgebase(db=db, exam_id=exam_data.id, question_number=qnum, question=content)
+
+        return exam_data
+
+    elif ext == ".txt":
+        return {"message": "TXT 파일 업로드는 준비 중입니다."}
+
+    else:
+        raise HTTPException(status_code=400, detail="지원하지 않는 파일 형식입니다.")
 
 
 
@@ -68,8 +108,9 @@ async def upload_two_files(
         contents = await file.read()
         f.write(contents)
 
-
-    label = excel_to_list(label_location)
+    sheet_number = get_sheet_number(db = db, exam_id = ExamID)
+    print(f"SHEET NUMBER : {sheet_number}")
+    label = excel_to_list(file_path = label_location, sheet_number=sheet_number)
 
     question_ids = sorted(pick_question_ids(db, ExamID))
 
@@ -82,7 +123,7 @@ async def upload_two_files(
                 break  # question_id가 부족할 경우 방지
 
             question_id = question_ids[i]
-            _, subject_name, _, correct_answer, level, case = row
+            _, subject_name, _, correct_answer, _, _, _, case, level= row
 
             # DB 저장 함수 호출
             update_labelingdata(

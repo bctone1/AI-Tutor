@@ -25,6 +25,7 @@ PHYSICAL_THERAPY_CASES = [
     "신경계통"
 ]
 
+
 embedding_model = OpenAIEmbeddings(
     model="text-embedding-3-small",
     openai_api_key=CHATGPT_API_KEY
@@ -449,3 +450,24 @@ def update_current_score(db : Session, question_id : int, correct_answer : bool)
     db.commit()
     db.refresh(user_status)
     return user_status
+
+def get_sheet_number(db: Session, exam_id: int):
+    result = db.query(Exam.file_name).filter(Exam.id == exam_id).first()
+
+    if not result:
+        return 0
+
+    exam_name = result[0]
+
+    if "2024" in exam_name:
+        return 0
+    elif "2023" in exam_name:
+        return 1
+    elif "2022" in exam_name:
+        return 2
+    elif "2021" in exam_name:
+        return 3
+    elif "2020" in exam_name:
+        return 4
+    else:
+        return 0
