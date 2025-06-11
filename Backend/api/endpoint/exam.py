@@ -146,7 +146,7 @@ async def upload_two_files(
 
 @exam_router.post('/getTestQuestion')
 async def get_test_endpoint(db: Session = Depends(get_db)):
-    subject = "물리치료 기초"
+    subject = "물리치료학기초_해부생리학"
     question_ids, question_texts, levels, subjects, cases = generate_level_test(db, subject)
 
     if not question_ids:

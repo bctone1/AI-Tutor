@@ -59,8 +59,14 @@ async def chat_agent(request: ChatAgentRequest, db: Session = Depends(get_db)):
 @llm_router.post("/getQuestion")
 async def get_question_endpoint(request: GetQuestRequest, db: Session = Depends(get_db)):
     subject = request.selectedSubject
+    solved = request.solvedProblemIds
+    question = get_question_sub(db = db, subject = subject, solved = solved)
 
-    question = get_question_sub(db = db, subject = subject)
+    if not question:
+        return JSONResponse(content={
+            "message" : "해당 과목의 문제를 전부 학습하셨습니다! 더 이상 풀 문제가 없습니다.",
+            "status" : True
+        })
 
     print(f"QUESTION : {question}")
     parsed = parse_question_block(question.question)

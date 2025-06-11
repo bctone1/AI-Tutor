@@ -26,19 +26,18 @@ def get_similar_questions(db: Session, embedding: list[float], top_k: int = 5):
     return result.fetchall()
 
 
-def get_question_sub(db: Session, subject: str):
-    # 튜플이 아닌 값만 추출
-    question_id_row = (
-        db.query(LabelingData.question_id)
-        .filter(LabelingData.case == subject)
-        .order_by(func.random())
-        .first()
-    )
+def get_question_sub(db: Session, subject: str, solved: list[int]):
+    query = db.query(LabelingData.question_id).filter(LabelingData.case == subject)
+
+    if solved:
+        query = query.filter(~LabelingData.question_id.in_(solved))  # solved에 없는 문제만
+
+    question_id_row = query.order_by(func.random()).first()
 
     if question_id_row is None:
-        return None  # 혹은 raise HTTPException(status_code=404, detail="No question found")
+        return None  # 혹은 HTTPException 발생
 
-    question_id = question_id_row[0]  # 튜플에서 값만 추출
+    question_id = question_id_row[0]
     print(f"QUESTION ID : {question_id}")
 
     question = db.query(KnowledgeBase).filter(KnowledgeBase.id == question_id).first()
