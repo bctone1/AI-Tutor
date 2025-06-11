@@ -1,23 +1,18 @@
 import pandas as pd
 
-def excel_to_list(file_path):
-    # 엑셀 파일에서 첫 번째 시트 이름 가져오기
+def excel_to_list(file_path, sheet_number):
     xls = pd.ExcelFile(file_path)
-    first_sheet_name = xls.sheet_names[0]
+    first_sheet_name = xls.sheet_names[sheet_number]
 
     # 첫 번째 시트 데이터 읽기 (첫 두 행은 헤더로 사용하지 않음)
-    df = pd.read_excel(file_path, sheet_name=first_sheet_name, header=None, skiprows=2)
+    df = pd.read_excel(file_path, sheet_name=first_sheet_name, header=None, skiprows=1)
 
-    # 열 이름 지정
-    df.columns = ['교시', '과목', '문제번호', '가답안', '난이도', '유형']
+    df.columns = ['교시', '과목', '문제번호', '답안', '분야번호', '분야이름', '영역번호', '영역이름', '난이도']
 
-    # NaN 값 제거
     df = df.dropna()
 
-    # 데이터프레임을 리스트로 변환
     data_list = df.values.tolist()
 
-    # 딕셔너리에 첫 시트 이름을 키로 추가
     return {first_sheet_name: data_list}
 
 '''

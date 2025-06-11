@@ -3,7 +3,7 @@ import pytesseract
 from PIL import Image
 
 # Tesseract 실행 경로 설정 (Windows의 경우만 필요)
-# pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 # 1. PDF를 이미지로 변환
 images = convert_from_path('test2.pdf', dpi=300)
