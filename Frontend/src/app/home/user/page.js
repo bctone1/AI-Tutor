@@ -40,7 +40,7 @@ export default function AnatomyTestPage() {
       }
     }
   }, [session, status, view]);
-
+  
 
   return (
     <div className="min-h-screen bg-gray-100">

@@ -27,23 +27,23 @@ const Active = ({ userdata }) => {
         fetchInitialQuestion();
     };
 
-    useEffect(() => {
-        // 페이지 진입 시 안내 메시지를 먼저 표시
-        setChatLog([
-            {
-                sender: 'AI 튜터',
-                content: (
-                    <div className="text-sm text-gray-800">
-                        안녕하세요! 저는 여러분의 AI 튜터입니다. 😊<br /><br />
-                        지금부터 기출문제를 함께 풀어보며 학습할 거예요.
-                        각 문항에 대해 정답을 선택하면, 해설과 함께 피드백을 드릴게요.<br /><br />
-                        궁금한 내용이 있다면 언제든 채팅창에 입력해 주세요. 또한 오른쪽 하단의 <strong>힌트</strong> 버튼을 통해 도움을 받을 수 있습니다.<br /><br />
-                        준비되셨다면, 오른쪽 하단의 <strong>기출문제</strong> 버튼을 눌러 첫 문제를 시작해볼까요?
-                    </div>
-                )
-            }
-        ]);
-    }, []);
+    // useEffect(() => {
+    //     // 페이지 진입 시 안내 메시지를 먼저 표시
+    //     setChatLog([
+    //         {
+    //             sender: 'AI 튜터',
+    //             content: (
+    //                 <div className="text-sm text-gray-800">
+    //                     안녕하세요! 저는 여러분의 AI 튜터입니다. 😊<br /><br />
+    //                     지금부터 기출문제를 함께 풀어보며 학습할 거예요.
+    //                     각 문항에 대해 정답을 선택하면, 해설과 함께 피드백을 드릴게요.<br /><br />
+    //                     궁금한 내용이 있다면 언제든 채팅창에 입력해 주세요. 또한 오른쪽 하단의 <strong>힌트</strong> 버튼을 통해 도움을 받을 수 있습니다.<br /><br />
+    //                     준비되셨다면, 오른쪽 하단의 <strong>기출문제</strong> 버튼을 눌러 첫 문제를 시작해볼까요?
+    //                 </div>
+    //             )
+    //         }
+    //     ]);
+    // }, []);
 
     const fetchInitialQuestion = async () => {
 
@@ -297,7 +297,12 @@ const Active = ({ userdata }) => {
                             기출문제
                         </button>
                     </div>
+
+
+
+
                 </aside>
+
 
                 {/* 본문 영역: 채팅 UI 또는 문제 풀이 영역 */}
                 <section className="flex-1 bg-white rounded-md shadow-md p-6 border border-gray-200">
@@ -343,7 +348,18 @@ const Active = ({ userdata }) => {
                         />
                     </div>
                 </section>
+
             </div>
+
+            <div className="text-sm text-gray-800 absolute bottom-0 left-0 bg-white p-4 rounded shadow-md w-72 z-50">
+                안녕하세요! 저는 여러분의 AI 튜터입니다. 😊<br /><br />
+                지금부터 기출문제를 함께 풀어보며 학습할 거예요.
+                각 문항에 대해 정답을 선택하면, 해설과 함께 피드백을 드릴게요.<br /><br />
+                궁금한 내용이 있다면 언제든 채팅창에 입력해 주세요. 또한 오른쪽 하단의 <strong>힌트</strong> 버튼을 통해 도움을 받을 수 있습니다.<br /><br />
+                준비되셨다면, 오른쪽 하단의 <strong>기출문제</strong> 버튼을 눌러 첫 문제를 시작해볼까요?
+            </div>
+
+
         </main>
     );
 };
