@@ -63,6 +63,15 @@ const Active = ({ userdata }) => {
 
             const data = await res.json();
             if (res.ok) {
+                console.log(data);
+                if(data.status){
+                    setChatLog(prev => [
+                        ...prev,
+                        { sender: 'AI 튜터', content: data.message }
+                    ]);
+                    return;
+                }
+
                 const { question, choices, id } = data;
                 setCurrentID(id);
                 setSolvedProblemIds(prevIds => [...prevIds, id]);
