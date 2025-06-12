@@ -13,6 +13,7 @@ const LevelTest = ({ setView, userdata }) => {
     const [remainingTime, setRemainingTime] = useState(1800);
     const fiveMinuteWarnedRef = useRef(false);
     const submittedRef = useRef(false);
+    console.log(userdata);
 
 
     useEffect(() => {
@@ -84,12 +85,14 @@ const LevelTest = ({ setView, userdata }) => {
     }, [currentQuestionIndex]);
 
     useEffect(() => {
+        
         const getQuestion = async () => {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getTestQuestion`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
+                body: JSON.stringify({ major: userdata.user.major }),
             });
             const data = await response.json();
             if (response.ok) {
