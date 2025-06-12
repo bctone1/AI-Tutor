@@ -46,7 +46,7 @@ const Profile = ({ userdata, setView }) => {
                     setCaseProgress(data.progress);
                 }
             } catch (error) {
-                console.error('유형별 학습 현황 조회 오류:', error);
+                // console.error('유형별 학습 현황 조회 오류:', error);
             }
         };
 
