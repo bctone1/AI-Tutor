@@ -22,6 +22,7 @@ const Active = ({ userdata }) => {
 
     const handleFetchQuestion = () => {
         if (!selectedSubject) {
+            // console.log(userdata);
             alert("과목을 선택해주세요.");
             return;
         }
@@ -232,7 +233,7 @@ const Active = ({ userdata }) => {
                     <div>
                         <h2 className="text-lg font-semibold text-gray-800 mb-4">과목 선택</h2>
 
-                        {userdata.user.major == "직업치료학과" ? (
+                        {userdata.user.major == "작업치료학과" ? (
                             <select
                                 id="subjectSelect"
                                 className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
