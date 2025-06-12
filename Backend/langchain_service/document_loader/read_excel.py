@@ -18,8 +18,3 @@ def extract_questions_from_excel(file_location):
         print(f"오류 발생: {e}")
         return {}
 
-file_path = '물리치료학과_21.xlsx'
-questions = extract_questions_from_excel(file_path)
-
-for num, content in questions.items():
-    print(f"{num}\n{content}\n\n")
