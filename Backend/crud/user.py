@@ -214,7 +214,15 @@ def generate_current_score_status(db: Session, user_email: str, major: str):
                 case=case
             )
             db.add(new_status)
-        db.commit()
+    elif major == "작업치료학과":
+        for case in Occupational_Therapy:
+            new_status = UserCurrentScore(
+                user_id=user.id,
+                case=case
+            )
+            db.add(new_status)
+
+    db.commit()
 
 
 def get_user_case_current(db: Session, user_id: int) -> Dict[str, Dict]:
