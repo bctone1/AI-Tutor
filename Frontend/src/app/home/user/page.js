@@ -9,28 +9,20 @@ import Dashboard from '@/components/dashboard';
 import Active from '@/components/active';
 import Profile from '@/components/profile';
 
+
+
 export default function AnatomyTestPage() {
-  const [view, setView] = useState(undefined);
+  const [view, setView] = useState();
   const { data: session, status } = useSession();
+  // console.log(session);
+  // const [userInfo, setUserInfo] = useState(null);
 
-  // localStorage에서 view 불러오기
   useEffect(() => {
-    const savedView = localStorage.getItem("anatomy_view");
-    if (savedView) {
-      setView(savedView);
-    }
-  }, []);
+    // if (status === "authenticated") {
+    //   setUserInfo(session);
+    // }
 
-  // view 상태가 바뀔 때 localStorage에 저장
-  useEffect(() => {
-    if (view) {
-      localStorage.setItem("anatomy_view", view);
-    }
-  }, [view]);
-
-  // 세션 상태에 따라 초기 view 설정
-  useEffect(() => {
-    if (status !== "loading" && session && !view) {
+    if (status !== "loading") {
       if (!session?.user?.grade) {
         setView("profile");
       } else if (session?.user?.grade && !session?.user?.testscore) {
@@ -39,17 +31,18 @@ export default function AnatomyTestPage() {
         setView("dashboard");
       }
     }
-  }, [session, status, view]);
-  
+  }, [session, status]);
 
   return (
     <div className="min-h-screen bg-gray-100">
+      {/* 헤더 */}
       <Navigation
         view={view}
         setView={setView}
         userdata={session}
       />
 
+      {/* 메인 컨텐츠 */}
       {view === 'leveltest' && (
         <LevelTest
           setView={setView}
@@ -74,6 +67,7 @@ export default function AnatomyTestPage() {
         <Profile
           userdata={session}
           setView={setView}
+        // setUserInfo={setUserInfo}
         />
       )}
     </div>
