@@ -4,7 +4,13 @@ import { signIn, useSession } from 'next-auth/react';
 const Profile = ({ userdata, setView }) => {
     const { data: session } = useSession();
 
-    const [activeTab, setActiveTab] = useState('anatomy');
+    // const [activeTab, setActiveTab] = useState('');
+    const [activeTab, setActiveTab] = useState(
+        userdata?.user?.major === '작업치료학과' ? 'anatomy2' :
+            userdata?.user?.major === '물리치료학과' ? 'anatomy' : ''
+    );
+
+
     const [department, setDepartment] = useState('');
     const [grade, setGrade] = useState('');
     const [caseProgress, setCaseProgress] = useState(null);
@@ -14,7 +20,7 @@ const Profile = ({ userdata, setView }) => {
         total_questions: 0,
         total_time: 0
     });
-    
+
 
     useEffect(() => {
         const fetchCaseProgress = async () => {
@@ -36,7 +42,7 @@ const Profile = ({ userdata, setView }) => {
                 const data = await response.json();
                 if (data.success) {
                     // console.log(userdata.user.id);
-                    // console.log(data);
+                    console.log(data);
                     settest({
                         attendance: data.attendance,
                         correct_rate: data.correct_rate,
@@ -78,6 +84,28 @@ const Profile = ({ userdata, setView }) => {
     const handleLevelTestClick = () => {
         setView('leveltest');
     };
+
+    const targetCases = [
+        "인체의 체계",
+        "뼈대와 관절계",
+        "근육계",
+        "심혈관계, 면역계",
+        "호흡계, 음성, 말하기 관련 기관",
+        "소화계, 삼킴관련 기관",
+        "신경계",
+        "피부, 눈, 귀 등 감각계",
+        "내분비계, 비뇨계, 생식계"
+    ];
+
+    const targetCases2 = [
+        "혈액순환, 면역기능",
+        "호흡, 음성, 말하기 기능",
+        "삼킴, 소화, 대사 기능",
+        "내분비, 배설, 생식기능",
+        "감각기능",
+        "신경계의 기능",
+        "근육계의 기능"
+    ]
 
 
 
@@ -218,10 +246,10 @@ const Profile = ({ userdata, setView }) => {
                     )}
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
-                        <StatCard label="총 풀이 문제" value={test.total_questions+"문제"} />
-                        <StatCard label="평균 정답률" value={test.correct_rate+"%"} />
-                        <StatCard label="연속 학습" value={test.attendance+"일"} />
-                        <StatCard label="총 학습 시간" value={test.total_time+"시간"} />
+                        <StatCard label="총 풀이 문제" value={test.total_questions + "문제"} />
+                        <StatCard label="평균 정답률" value={test.correct_rate + "%"} />
+                        <StatCard label="연속 학습" value={test.attendance + "일"} />
+                        <StatCard label="총 학습 시간" value={test.total_time + "시간"} />
 
                         {/* <StatCard label="총 풀이 문제" value="427" />
                         <StatCard label="평균 정답률" value="72%" />
@@ -235,20 +263,35 @@ const Profile = ({ userdata, setView }) => {
                         <h2 className="text-2xl font-semibold mb-6 text-gray-800">레벨테스트 결과</h2>
 
                         <div className="flex mb-4 gap-2">
-                            <button
-                                className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer ${activeTab === 'anatomy' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
-                                    }`}
-                                onClick={() => handleTabClick('anatomy')}
-                            >
-                                해부생리 (10개 유형)
-                            </button>
-                            {/* <button
-                                className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer ${activeTab === 'physiology' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
-                                    }`}
-                                onClick={() => handleTabClick('physiology')}
-                            >
-                                생리학 (7개 유형)
-                            </button> */}
+                            {userdata.user.major == "작업치료학과" ? (
+                                <div>
+                                    <button
+                                        className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer mr-3 ${activeTab === 'anatomy2' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
+                                            }`}
+                                        onClick={() => handleTabClick('anatomy2')}
+                                    >
+                                        해부학 (9개 유형)
+                                    </button>
+                                    <button
+                                        className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer ${activeTab === 'anatomy3' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
+                                            }`}
+                                        onClick={() => handleTabClick('anatomy3')}
+                                    >
+                                        생리학 (7개 유형)
+                                    </button>
+                                </div>
+
+                            ) : (
+                                <button
+                                    className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer ${activeTab === 'anatomy' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
+                                        }`}
+                                    onClick={() => handleTabClick('anatomy')}
+                                >
+                                    해부생리 (10개 유형)
+                                </button>
+
+                            )}
+
                         </div>
 
                         {activeTab === 'anatomy' && (
@@ -267,12 +310,78 @@ const Profile = ({ userdata, setView }) => {
                                 <FocusArea
                                     title="집중 학습 필요 영역:"
                                     areas={
-                                        caseProgress ? 
-                                        Object.entries(caseProgress)
-                                            .filter(([_, data]) => data.level === '하')
-                                            .map(([case_name]) => case_name)
-                                            .join(', ') 
-                                        : ''
+                                        caseProgress ?
+                                            Object.entries(caseProgress)
+                                                .filter(([_, data]) => data.level === '하')
+                                                .map(([case_name]) => case_name)
+                                                .join(', ')
+                                            : ''
+                                    }
+                                />
+                            </div>
+                        )}
+
+                        {activeTab === 'anatomy2' && (
+                            <div>
+                                {caseProgress &&
+                                    Object.entries(caseProgress)
+                                        .filter(([case_name]) => targetCases.includes(case_name)) // ✅ 필터 추가
+                                        .map(([case_name, data]) => (
+                                            <LevelItem
+                                                key={case_name}
+                                                label={case_name}
+                                                score={`${data.level} (${data.correct_answers}/${data.total_questions})`}
+                                                width={`${data.accuracy * 100}%`}
+                                                level={data.level === '상' ? 'high' : data.level === '중' ? 'mid' : 'low'}
+                                            />
+                                        ))}
+
+                                <Legend />
+                                <FocusArea
+                                    title="집중 학습 필요 영역:"
+                                    areas={
+                                        caseProgress
+                                            ? Object.entries(caseProgress)
+                                                .filter(
+                                                    ([case_name, data]) =>
+                                                        data.level === '하' && targetCases.includes(case_name) // ✅ 여기에도 필터 추가
+                                                )
+                                                .map(([case_name]) => case_name)
+                                                .join(', ')
+                                            : ''
+                                    }
+                                />
+                            </div>
+                        )}
+
+                        {activeTab === 'anatomy3' && (
+                            <div>
+                                {caseProgress &&
+                                    Object.entries(caseProgress)
+                                        .filter(([case_name]) => targetCases2.includes(case_name)) // ✅ 필터 추가
+                                        .map(([case_name, data]) => (
+                                            <LevelItem
+                                                key={case_name}
+                                                label={case_name}
+                                                score={`${data.level} (${data.correct_answers}/${data.total_questions})`}
+                                                width={`${data.accuracy * 100}%`}
+                                                level={data.level === '상' ? 'high' : data.level === '중' ? 'mid' : 'low'}
+                                            />
+                                        ))}
+
+                                <Legend />
+                                <FocusArea
+                                    title="집중 학습 필요 영역:"
+                                    areas={
+                                        caseProgress
+                                            ? Object.entries(caseProgress)
+                                                .filter(
+                                                    ([case_name, data]) =>
+                                                        data.level === '하' && targetCases2.includes(case_name) // ✅ 여기에도 필터 추가
+                                                )
+                                                .map(([case_name]) => case_name)
+                                                .join(', ')
+                                            : ''
                                     }
                                 />
                             </div>
