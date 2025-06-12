@@ -242,24 +242,24 @@ const Active = ({ userdata }) => {
                             >
                                 <option value="">과목을 선택하세요</option>
                                 <optgroup label="해부학">
-                                    <option value="인체의 체계">중추신경계</option>
-                                    <option value="뼈대와 관절계(통)">뼈대와 관절계(통)</option>
-                                    <option value="근육계(통)">근육계(통)</option>
-                                    <option value="심혈관계(통), 면역계(통)">심혈관계(통), 면역계(통)</option>
-                                    <option value="호흡계(통), 음성·말하기기관">호흡계(통), 음성·말하기기관</option>
-                                    <option value="소화계(통), 삼킴기관">소화계(통), 삼킴기관</option>
-                                    <option value="신경계(통)">신경계(통)</option>
-                                    <option value="피부·눈·귀 등 감각계(통)">피부·눈·귀 등 감각계(통)</option>
-                                    <option value="내분비계(통), 비뇨계(통), 생식계(통)">내분비계(통), 비뇨계(통), 생식계(통)</option>
+                                    <option value="인체의 체계">인체의 체계</option>
+                                    <option value="뼈대와 관절계">뼈대와 관절계(통)</option>
+                                    <option value="근육계">근육계(통)</option>
+                                    <option value="심혈관계, 면역계">심혈관계(통), 면역계(통)</option>
+                                    <option value="호흡계, 음성, 말하기 관련 기관">호흡계(통), 음성·말하기기관</option>
+                                    <option value="소화계, 삼킴관련 기관">소화계(통), 삼킴기관</option>
+                                    <option value="신경계">신경계(통)</option>
+                                    <option value="피부, 눈, 귀 등 감각계">피부·눈·귀 등 감각계(통)</option>
+                                    <option value="내분비계, 비뇨계, 생식계">내분비계(통), 비뇨계(통), 생식계(통)</option>
                                 </optgroup>
                                 <optgroup label="생리학">
-                                    <option value="혈액순환·면역 기능">혈액순환·면역 기능</option>
-                                    <option value="호흡·음성·말하기 기능">호흡·음성·말하기 기능</option>
+                                    <option value="혈액순환, 면역기능">혈액순환·면역 기능</option>
+                                    <option value="호흡, 음성, 말하기 기능">호흡·음성·말하기 기능</option>
                                     <option value="삼킴·소화·대사 기능">삼킴·소화·대사 기능</option>
-                                    <option value="내분비·배설·생식 기능">내분비·배설·생식 기능</option>
+                                    <option value="내분비, 배설, 생식기능">내분비·배설·생식 기능</option>
                                     <option value="감각기능">감각기능</option>
-                                    <option value="신경계 기능">신경계 기능</option>
-                                    <option value="근육계 기능">근육계 기능</option>
+                                    <option value="신경계의 기능">신경계 기능</option>
+                                    <option value="근육계의 기능">근육계 기능</option>
                                 </optgroup>
                             </select>
 
