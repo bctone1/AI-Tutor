@@ -60,3 +60,6 @@ class UserCaseProgressResponse(BaseModel):
     correct_rate:float
     attendace : int
     total_time : int
+
+class GetTestQuestionRequest(BaseModel):
+    major : str

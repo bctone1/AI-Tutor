@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from database.session import get_db
 from langchain_service import get_conversational_chain
 from schema.llm import *
@@ -57,9 +57,12 @@ async def chat_agent(request: ChatAgentRequest, db: Session = Depends(get_db)):
         return JSONResponse(content={"message": response}, status_code=200)
 
 @llm_router.post("/getQuestion")
-async def get_question_endpoint(request: GetQuestRequest, db: Session = Depends(get_db)):
-    subject = request.selectedSubject
-    solved = request.solvedProblemIds
+async def get_question_endpoint(request: Request, db: Session = Depends(get_db)):
+    data = await request.json()  # ⬅️ 비동기로 JSON 파싱
+    subject = data.get("selectedSubject")
+    solved = data.get("solvedProblemIds")
+    print(f"SUBJECT : {subject}")
+
     question = get_question_sub(db = db, subject = subject, solved = solved)
 
     if not question:
@@ -74,4 +77,5 @@ async def get_question_endpoint(request: GetQuestRequest, db: Session = Depends(
         "question": parsed["question"],
         "choices": parsed["choices"],
         "id": question.id
+        
     })
