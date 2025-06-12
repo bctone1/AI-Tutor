@@ -77,10 +77,10 @@ def extract_questions_from_pages(page_texts: List[str]) -> List[str]:
 
 def parse_question_block(question_block: str) -> Dict:
     """
-    하나의 문항 블록에서 질문과 보기를 분리하여 반환합니다.
+    보기 기호(① ~ ⑩)가 공백 없이 이어진 경우도 포함해 문제와 보기를 분리합니다.
     """
-    # 질문 부분 추출 (①, ② 등의 첫 등장 이전까지)
-    match = re.search(r'(?P<question>.*?)(?=[①-⑩])', question_block, re.DOTALL)
+    # 질문 추출: 보기 기호가 처음 등장하기 전까지
+    match = re.search(r'(?P<question>.*?)(?=[①②③④⑤⑥⑦⑧⑨⑩])', question_block, re.DOTALL)
     if not match:
         return {
             "question": question_block.strip(),
@@ -89,8 +89,10 @@ def parse_question_block(question_block: str) -> Dict:
 
     question_text = match.group("question").strip()
 
-    # 보기들 추출 (① ~ ⑩)
-    choices = re.findall(r'[①②③④⑤⑥⑦⑧⑨⑩]\s*(.*)', question_block)
+    # 보기 추출: 기호 기준으로 split
+    raw_choices = re.split(r'(?:[①②③④⑤⑥⑦⑧⑨⑩])', question_block)
+    # 첫 항목은 질문이므로 제거
+    choices = [c.strip() for c in raw_choices[1:] if c.strip()]
 
     return {
         "question": question_text,
