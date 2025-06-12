@@ -225,7 +225,7 @@ export default function Register() {
                                 >
                                     <option>학과을 선택하세요</option>
                                     <option value="물리치료학과">물리치료학과</option>
-                                    <option value="직업치료학과">직업치료학과</option>
+                                    <option value="작업치료학과">작업치료학과</option>
                                 </select>
                             </div>
 

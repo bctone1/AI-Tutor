@@ -36,7 +36,7 @@ const Profile = ({ userdata, setView }) => {
                 const data = await response.json();
                 if (data.success) {
                     // console.log(userdata.user.id);
-                    console.log(data);
+                    // console.log(data);
                     settest({
                         attendance: data.attendance,
                         correct_rate: data.correct_rate,
@@ -46,7 +46,7 @@ const Profile = ({ userdata, setView }) => {
                     setCaseProgress(data.progress);
                 }
             } catch (error) {
-                console.error('유형별 학습 현황 조회 오류:', error);
+                // console.error('유형별 학습 현황 조회 오류:', error);
             }
         };
 
@@ -180,7 +180,7 @@ const Profile = ({ userdata, setView }) => {
                                                 required
                                             >
                                                 <option value="" disabled>학과를 선택하세요</option>
-                                                <option value="직업치료학과">직업치료학과</option>
+                                                <option value="작업치료학과">작업치료학과</option>
                                                 <option value="물리치료학과">물리치료학과</option>
                                             </select>
                                         </div>
@@ -240,7 +240,7 @@ const Profile = ({ userdata, setView }) => {
                                     }`}
                                 onClick={() => handleTabClick('anatomy')}
                             >
-                                해부학 (9개 유형)
+                                해부생리 (10개 유형)
                             </button>
                             {/* <button
                                 className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer ${activeTab === 'physiology' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
@@ -274,23 +274,6 @@ const Profile = ({ userdata, setView }) => {
                                             .join(', ') 
                                         : ''
                                     }
-                                />
-                            </div>
-                        )}
-
-                        {activeTab === 'physiology' && (
-                            <div>
-                                <LevelItem label="혈액순환, 면역 기능" score="하 (0/2)" width="60%" level="low" />
-                                <LevelItem label="호흡, 음성, 말하기 기능" score="중 (1/2)" width="70%" level="mid" />
-                                <LevelItem label="삼킴, 소화, 대사 기능" score="중 (2/3)" width="75%" level="mid" />
-                                <LevelItem label="내분비, 배설, 생식 기능" score="하 (0/2)" width="55%" level="low" />
-                                <LevelItem label="감각기능" score="상 (3/3)" width="85%" level="high" />
-                                <LevelItem label="신경계(통)의 기능" score="하 (0/3)" width="58%" level="low" />
-                                <LevelItem label="근육계(통)의 기능" score="중 (1/2)" width="68%" level="mid" />
-                                <Legend />
-                                <FocusArea
-                                    title="집중 학습 필요 영역:"
-                                    areas="혈액순환/면역 기능, 내분비/배설/생식 기능, 신경계(통)의 기능"
                                 />
                             </div>
                         )}

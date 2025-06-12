@@ -19,7 +19,7 @@ const dashboard = ({ userdata, setView }) => {
                 });
 
                 if (!response.ok) {
-                    throw new Error('유형별 학습 현황을 가져오는데 실패했습니다.');
+                    // throw new Error('유형별 학습 현황을 가져오는데 실패했습니다.');
                 }
 
                 const data = await response.json();
