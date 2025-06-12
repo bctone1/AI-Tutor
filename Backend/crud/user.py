@@ -225,9 +225,11 @@ def generate_current_score_status(db: Session, user_email: str, major: str):
     db.commit()
 
 
+
+
 def get_user_case_current(db: Session, user_id: int) -> Dict[str, Dict]:
     case_scores = db.query(UserCurrentScore).filter(UserCurrentScore.user_id == user_id).all()
-
+    department = db.query(User.department).filter(User.id == user_id).first()
     progress = {}
     for score in case_scores:
         progress[score.case] = {
@@ -238,9 +240,13 @@ def get_user_case_current(db: Session, user_id: int) -> Dict[str, Dict]:
             'level': score.level,
             'last_updated': score.last_updated.isoformat() if score.last_updated else None
         }
+    cases_list = PHYSICAL_THERAPY_CASES
+    if department == "물리치료학과":
+        cases_list = PHYSICAL_THERAPY_CASES
+    elif department == "작업치료학과":
+        cases_list = Occupational_Therapy
 
-    # 아직 시도하지 않은 유형들도 포함
-    for case in PHYSICAL_THERAPY_CASES:
+    for case in cases_list:
         if case not in progress:
             progress[case] = {
                 'total_questions': 0,
