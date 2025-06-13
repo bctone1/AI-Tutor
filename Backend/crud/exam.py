@@ -488,7 +488,7 @@ def get_commentary(db: Session):
             "answer": label.correct_answer,
             "difficulty": label.level,
             "topic": label.case,
-            "explantation": label.commentary
+            "explanation": label.commentary
         }
         output.append(item)
 
