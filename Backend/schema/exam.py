@@ -63,3 +63,8 @@ class UserCaseProgressResponse(BaseModel):
 
 class GetTestQuestionRequest(BaseModel):
     major : str
+
+class SaveCommentRequest(BaseModel):
+    answer : int
+    explanation : str
+    id : int

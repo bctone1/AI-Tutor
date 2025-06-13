@@ -506,3 +506,11 @@ def save_new_commentary(db : Session, question_id, commentary):
     db.add(label)
     db.commit()
     db.refresh(label)
+
+def save_comment(db : Session, label_id, commentary, answer):
+    label = db.query(LabelingData).filter(LabelingData.id==label_id).first()
+    label.commentary = commentary
+    label.answer = answer
+    db.add(label)
+    db.commit()
+    db.refresh(label)

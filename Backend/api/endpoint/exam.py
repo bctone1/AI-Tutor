@@ -260,18 +260,7 @@ async def get_explantation_endpoint(request: GetExplantationRequest, db: Session
 
 @exam_router.get("/getHint/{question_id}")
 async def get_hint_endpoint(question_id: int, db: Session = Depends(get_db)):
-    """
-    문제 ID를 URL 경로에서 받아서 해당 문제에 대한 단계별 힌트를 제공합니다.
-    스키마 없이 Path Parameter를 사용하여 더 간단하게 구현합니다.
-    
-    Args:
-        question_id (int): URL 경로의 문제 ID
-        db (Session): 데이터베이스 세션
-        
-    Returns:
-        JSONResponse: 생성된 힌트가 포함된 응답
-    """
-    
+
     try:
         hint = get_hint(db=db, question_id=question_id)
         
@@ -297,3 +286,12 @@ async def get_commentary_endpoint(db: Session = Depends(get_db)):
     data = get_commentary(db = db)
 
     return data
+
+@exam_router.post("/saveCommentary")
+async def save_commentary_endpoint(request: SaveCommentRequest, db: Session = Depends(get_db)):
+    label_id = request.id
+    new_answer = request.answer
+    new_explanation = request.explanation
+    save_comment(db = db, label_id = label_id, commentary = new_explanation, answer = new_answer)
+    return JSONResponse(content={
+        "message": "등록이 완료되었습니다."})
