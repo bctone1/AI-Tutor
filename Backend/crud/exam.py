@@ -475,7 +475,6 @@ def get_commentary(db: Session):
     results = (
         db.query(LabelingData, KnowledgeBase.question)
         .join(KnowledgeBase, LabelingData.question_id == KnowledgeBase.id)
-        .filter(LabelingData.commentary.isnot(None))
         .all()
     )
 
