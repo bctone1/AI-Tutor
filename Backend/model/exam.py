@@ -39,5 +39,6 @@ class LabelingData(Base):
     correct_answer = Column(Integer)
     level = Column(String(50))
     case = Column(String(100))
+    commentary = Column(Text, nullable=True)
 
     knowledge_base = relationship("KnowledgeBase", back_populates="labeling_data")

@@ -15,4 +15,3 @@ def load_document(file_path):
 
     return loader.load()
 
-
