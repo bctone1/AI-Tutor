@@ -99,7 +99,7 @@ const Commantry = () => {
                                 {filteredProblems.map((problem) => (
                                     <tr key={problem.id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{problem.subject}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-900">{problem.problem}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-900" dangerouslySetInnerHTML={{ __html: problem.problem.replace(/\n/g, '<br />') }} />
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{problem.answer}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{problem.difficulty}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{problem.topic}</td>
