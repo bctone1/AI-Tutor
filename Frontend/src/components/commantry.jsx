@@ -46,17 +46,30 @@ const Commantry = () => {
     };
 
     const handleSave = async (updatedProblem) => {
+        console.log(updatedProblem);
         try {
-            // TODO: API 연동
-            const updatedProblems = problems.map(p =>
-                p.id === updatedProblem.id ? updatedProblem : p
-            );
-            setProblems(updatedProblems);
-            setFilteredProblems(updatedProblems.filter(problem =>
-                problem.subject.toLowerCase().includes(searchTerm) ||
-                problem.problem.toLowerCase().includes(searchTerm)
-            ));
-            setIsEditDialogOpen(false);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/saveCommentary`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: updatedProblem.id, answer: updatedProblem.answer, explanation: updatedProblem.explanation })
+            });
+
+            if (res.ok) {
+                const updatedProblems = problems.map(p =>
+                    p.id === updatedProblem.id ? updatedProblem : p
+                );
+                setProblems(updatedProblems);
+                setFilteredProblems(updatedProblems.filter(problem =>
+                    problem.subject.toLowerCase().includes(searchTerm) ||
+                    problem.problem.toLowerCase().includes(searchTerm)
+                ));
+                setIsEditDialogOpen(false);
+
+            } else {
+                alert("해설 저장 중 오류가 발생했습니다.");
+            }
+
+
         } catch (error) {
             console.error('문제 업데이트 중 오류 발생:', error);
         }
@@ -64,7 +77,7 @@ const Commantry = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 py-8">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className=" mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="bg-white rounded-lg shadow-sm p-6">
                     <div className="flex justify-between items-center mb-6">
                         <h1 className="text-2xl font-bold text-gray-900">문제 관리</h1>
@@ -87,24 +100,24 @@ const Commantry = () => {
                             <thead className="bg-gray-50">
                                 <tr>
                                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">과목</th>
-                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">문제</th>
-                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">정답</th>
-                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">난이도</th>
                                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">주제</th>
-                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">해설</th>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">난이도</th>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">정답</th>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[600px]">문제</th>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[700px]">해설</th>
                                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">관리</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
                                 {filteredProblems.map((problem) => (
                                     <tr key={problem.id} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{problem.subject}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">{problem.subject}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-900  whitespace-nowrap">{problem.topic}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-900">{problem.difficulty}</td>
+                                        <td className="px-6 py-4 text-sm text-gray-900">{problem.answer}</td>
                                         <td className="px-6 py-4 text-sm text-gray-900" dangerouslySetInnerHTML={{ __html: problem.problem.replace(/\n/g, '<br />') }} />
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{problem.answer}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{problem.difficulty}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{problem.topic}</td>
                                         <td className="px-6 py-4 text-sm text-gray-900">{problem.explanation || '-'}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <td className="px-6 py-4 text-sm text-gray-900 whitespace-nowrap">
                                             <button
                                                 className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                                                 onClick={() => handleEdit(problem)}
@@ -143,11 +156,12 @@ const Commantry = () => {
                                 <label className="block text-sm font-medium text-gray-700 mb-1">해설</label>
                                 <textarea
                                     className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    value={selectedProblem.explanation}
+                                    value={selectedProblem.explanation || ''}
                                     onChange={(e) => setSelectedProblem({
                                         ...selectedProblem,
                                         explanation: e.target.value
                                     })}
+                                    placeholder="해설을 작성해주세요."
                                     rows={4}
                                 />
                             </div>
