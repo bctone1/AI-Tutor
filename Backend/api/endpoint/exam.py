@@ -280,3 +280,9 @@ async def get_hint_endpoint(question_id: int, db: Session = Depends(get_db)):
 async def get_qeuestion_data_endpoint(db: Session = Depends(get_db)):
     exams = get_all_exam(db)
     return exams
+
+@exam_router.post("/getCommentary")
+async def get_commentary_endpoint(db: Session = Depends(get_db)):
+    data = get_commentary(db = db)
+
+    return data

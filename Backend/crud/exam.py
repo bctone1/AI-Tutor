@@ -470,3 +470,27 @@ def get_sheet_number(db: Session, exam_id: int):
         return 4
     else:
         return 0
+
+def get_commentary(db: Session):
+    results = (
+        db.query(LabelingData, KnowledgeBase.question)
+        .join(KnowledgeBase, LabelingData.question_id == KnowledgeBase.id)
+        .filter(LabelingData.commentary.isnot(None))
+        .all()
+    )
+
+    output = []
+    for label, question_text in results:
+        item = {
+            "id": label.id,
+            "subject": label.subject,
+            "problemId": label.question_id,
+            "problem": question_text,
+            "answer": label.correct_answer,
+            "difficulty": label.level,
+            "topic": label.case,
+            "explantation": label.commentary
+        }
+        output.append(item)
+
+    return output
