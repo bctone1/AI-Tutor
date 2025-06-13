@@ -8,6 +8,8 @@ import Hearder from '@/components/professorHeader';
 import ProfessorDashboard from '@/components/professorDashboard';
 import Upload from '@/components/ProfessorUploadPage';
 import Analysis from '@/components/analysis';
+import Data from '@/components/upload_data';
+import Commantry from '@/components/commantry';
 
 export default function Main() {
     const [view, setView] = useState('dashboard');
@@ -55,6 +57,18 @@ export default function Main() {
 
             {view === 'analysis' && session && (
                 <Analysis
+                    userdata={session}
+                />
+            )}
+
+            {view === 'upload_data' && session && (
+                <Data
+                    userdata={session}
+                />
+            )}
+
+            {view === 'commantry' && session && (
+                <Commantry
                     userdata={session}
                 />
             )}

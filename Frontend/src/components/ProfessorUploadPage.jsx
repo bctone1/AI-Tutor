@@ -138,16 +138,16 @@ const UploadPage = ({ userdata }) => {
 
             {/* Content */}
             <main className="container mx-auto px-5 py-8">
-                <h2 className="text-2xl font-bold text-gray-700 mb-6">문제 RAG 지식베이스 업로드</h2>
+                <h2 className="text-2xl font-bold text-gray-700 mb-6">기출문제 업로드</h2>
 
                 {/* Tabs */}
-                <div className="flex border-b border-gray-300 mb-6">
+                {/* <div className="flex border-b border-gray-300 mb-6">
                     <div
                         className='px-5 py-3 cursor-pointer font-bold text-indigo-700 border-b-2 border-indigo-700'
                     >
                         문제 업로드
                     </div>
-                </div>
+                </div> */}
 
 
 
