@@ -108,6 +108,16 @@ def generate_user_current_score(db: Session, email : str, major : str):
                 db.commit()
                 db.refresh(new_score)
             return user
+        elif major == "작업치료학과":
+            for case in Occupational_Therapy:
+                new_score = UserCurrentScore(
+                    user_id = user.id,
+                    case = case,
+                )
+                db.add(new_score)
+                db.commit()
+                db.refresh(new_score)
+            return user
     else:
         return None
 
