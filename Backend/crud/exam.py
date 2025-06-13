@@ -453,7 +453,6 @@ def update_current_score(db : Session, question_id : int, correct_answer : bool)
 
 def get_sheet_number(db: Session, exam_id: int):
     result = db.query(Exam.file_name).filter(Exam.id == exam_id).first()
-
     if not result:
         return 0
 
