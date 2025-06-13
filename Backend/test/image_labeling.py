@@ -6,7 +6,7 @@ from PIL import Image
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 # 1. PDF를 이미지로 변환
-images = convert_from_path('test2.pdf', dpi=300)
+images = convert_from_path('01장.pdf', dpi=300)
 
 # 2. OCR로 각 이미지에서 텍스트 추출
 all_text = ""
