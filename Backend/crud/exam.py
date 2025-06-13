@@ -493,3 +493,16 @@ def get_commentary(db: Session):
         output.append(item)
 
     return output
+
+def get_exist_commentary(db : Session, question_id):
+    result = (db.query(LabelingData).
+              filter(LabelingData.question_id == question_id and LabelingData.commentary.isnot(None))
+              .first())
+    return result.commentary
+
+def save_new_commentary(db : Session, question_id, commentary):
+    label = db.query(LabelingData).filter(LabelingData.question_id==question_id).first()
+    label.commentary = commentary
+    db.add(label)
+    db.commit()
+    db.refresh(label)

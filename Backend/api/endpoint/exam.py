@@ -227,6 +227,8 @@ async def get_explantation_endpoint(request: GetExplantationRequest, db: Session
     answer = request.answer
     question_id = request.question_id
     user_id = request.userdata.user.id
+    exist = get_exist_commentary(db = db, question_id = question_id)
+
 
 
     correct_answer = get_correct_answer(db = db, question_id = question_id)
@@ -236,16 +238,25 @@ async def get_explantation_endpoint(request: GetExplantationRequest, db: Session
     else:
         is_correct = False
 
-    explanation = get_explantation(db = db, question_id = question_id, correct_answer = correct_answer)
+    if exist:
+        save_total_correct(db=db, user_id=user_id, is_correct=is_correct)
+        update_current_score(db=db, question_id=question_id, correct_answer=is_correct)
+        add_daily_record(db=db, user_id=user_id, question_id=question_id)
+        return JSONResponse(content={
+            "isCorrect" : is_correct,
+            "explanation" : exist
+        })
+    else:
+        explanation = get_explantation(db=db, question_id=question_id, correct_answer=correct_answer)
+        save_new_commentary(db = db, question_id = question_id, commentary = explanation)
+        save_total_correct(db=db, user_id=user_id, is_correct=is_correct)
+        update_current_score(db=db, question_id=question_id, correct_answer=is_correct)
+        add_daily_record(db=db, user_id=user_id, question_id=question_id)
 
-    save_total_correct(db = db, user_id = user_id, is_correct = is_correct)
-    update_current_score(db = db, question_id = question_id, correct_answer = is_correct)
-    add_daily_record(db=db, user_id=user_id, question_id=question_id)
-
-    return JSONResponse(content={
-        "isCorrect": is_correct,
-        "explanation": explanation,
-    })
+        return JSONResponse(content={
+            "isCorrect": is_correct,
+            "explanation": explanation,
+        })
 
 @exam_router.get("/getHint/{question_id}")
 async def get_hint_endpoint(question_id: int, db: Session = Depends(get_db)):
