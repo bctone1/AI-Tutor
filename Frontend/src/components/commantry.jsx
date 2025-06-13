@@ -12,7 +12,7 @@ const Commantry = () => {
 
     useEffect(() => {
         const getCommantry = async () => {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getCommantry`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getCommentary`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
