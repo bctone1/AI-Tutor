@@ -24,7 +24,7 @@ const dashboard = ({ userdata, setView }) => {
 
                 const data = await response.json();
                 if (data.success) {
-                    console.log(data);
+                    // console.log(data);
                     setCaseProgress(data.progress);
                 }
             } catch (error) {
