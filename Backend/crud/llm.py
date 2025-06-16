@@ -3,6 +3,7 @@ from core.config import CHATGPT_API_KEY
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from model.exam import *
+from model.llm import *
 from sqlalchemy.sql.expression import func
 
 embedding_model = OpenAIEmbeddings(
@@ -42,3 +43,17 @@ def get_question_sub(db: Session, subject: str, solved: list[int]):
 
     question = db.query(KnowledgeBase).filter(KnowledgeBase.id == question_id).first()
     return question
+
+def save_reference_data(db : Session, file_name : str, file_size : int, subject : str, file_content : str):
+    embedding_vector = convert_to_vector(file_content)
+    new_reference = Reference(
+        file_name = file_name,
+        file_size = file_size,
+        subject = subject,
+        file_content = file_content,
+        vector_memory = embedding_vector
+    )
+    db.add(new_reference)
+    db.commit()
+    db.refresh(new_reference)
+    return new_reference

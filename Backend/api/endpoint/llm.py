@@ -1,12 +1,17 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, UploadFile, File, Form
 from database.session import get_db
 from langchain_service import get_conversational_chain
 from schema.llm import *
+from core.util import REFERENCE_LOCATION
 from crud.llm import *
+from crud.exam import get_unique_filename
 from fastapi.responses import JSONResponse
 from langchain_service.document_loader.extract_question import parse_question_block
 from langchain_service.chain.discrimination import discrimination
+from langchain_service.document_loader.file_loader import load_document
 import random
+import os
+
 llm_router = APIRouter()
 
 @llm_router.post("/chatLLM2", response_model=MessageResponse)
@@ -80,3 +85,26 @@ async def get_question_endpoint(request: Request, db: Session = Depends(get_db))
         
     })
 
+
+@llm_router.post("/uploadReferenceData")
+async def upload_reference_data(
+        db: Session = Depends(get_db),
+        file: UploadFile = File(...),
+        department: str = Form(...)
+):
+    content = await file.read()
+    filename = file.filename
+
+    file_location = os.path.join(REFERENCE_LOCATION, file.filename)
+    unique_file_location, unique_name = get_unique_filename(file_location)
+    with open(unique_file_location, "wb") as f:
+        f.write(content)
+    docs = load_document(file_path = unique_file_location)
+    content_text = "\n".join([doc.page_content for doc in docs])
+
+    reference = save_reference_data(db = db, file_name=filename, file_size = len(content),
+                        subject = department, file_content=content_text)
+
+    return JSONResponse(content={
+        "message" : "정상적으로 업로드 되었습니다."
+    })

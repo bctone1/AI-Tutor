@@ -1,3 +1,5 @@
+from pathlib import Path
+
 PHYSICAL_THERAPY_CASES = [
     "인체의 구분과 조직",
     "뼈대계통",
@@ -30,3 +32,5 @@ Occupational_Therapy = [
     "신경계의 기능",
     "근육계의 기능"
 ]
+
+REFERENCE_LOCATION = Path("files/reference")

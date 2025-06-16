@@ -12,7 +12,7 @@ def load_document(file_path):
         loader = PyPDFLoader(file_path, )
         print(f"FULL TEXT : {loader}")
     elif ext == '.txt':
-        loader = TextLoader(file_path)
+        loader = TextLoader(file_path, encoding='utf-8')
         print(f"FULL TEXT : {loader}")
     else:
         raise ValueError(f"지원되지 않는 파일 형식: {ext}")
