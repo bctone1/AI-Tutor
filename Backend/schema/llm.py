@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from datetime import datetime
 from typing import List
+from typing import Optional
 
 class MessageRequest(BaseModel):
     session_id: str
@@ -29,6 +30,7 @@ class ChatAgentRequest(BaseModel):
     message: str
     userdata: UserData
     selectedSubject : str
+    solvedProblemIds: Optional[List[int]] = None
 
 
 class GetQuestRequest(BaseModel):

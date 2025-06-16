@@ -38,11 +38,19 @@ async def chat_agent(request: ChatAgentRequest, db: Session = Depends(get_db)):
     user_prompt = request.message
     session_id = str(request.userdata.user.id)
     selected_subject = request.selectedSubject
+    solved_problems = request.solvedProblemIds
+    id_list = get_id_by_case(db = db, case = selected_subject)
+    
     case = discrimination(user_prompt)
     if case == 1:
         prompt = f"{selected_subject} | {user_prompt}"
         vector_response = convert_to_vector(prompt)
-        similar_example = get_similar_questions(db=db, embedding=vector_response, top_k=10)
+        similar_example = get_similar_questions(db=db, embedding=vector_response, exclude_ids = solved_problems, id_list = id_list, top_k=10)
+        if not similar_example:
+            return JSONResponse(content={
+                "message": "해당 과목의 문제를 전부 학습하셨습니다! 더 이상 풀 문제가 없습니다.",
+                "status": True
+            })
         selected_row = random.choice(similar_example)
         question_text = selected_row._mapping["question"]
         question_id = selected_row._mapping["id"]
@@ -60,6 +68,8 @@ async def chat_agent(request: ChatAgentRequest, db: Session = Depends(get_db)):
         response = chain.run(user_prompt)
 
         return JSONResponse(content={"message": response}, status_code=200)
+
+
 
 @llm_router.post("/getQuestion")
 async def get_question_endpoint(request: Request, db: Session = Depends(get_db)):

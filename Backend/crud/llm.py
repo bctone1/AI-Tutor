@@ -16,16 +16,39 @@ def convert_to_vector(user_prompt : str):
     return vector
 
 # RAG 기반 검색 : 유사성 있는 데이터 여러 개 조회
-def get_similar_questions(db: Session, embedding: list[float], top_k: int = 5):
+def get_similar_questions(
+    db: Session,
+    embedding: list[float],
+    exclude_ids: list[int],
+    id_list: list[int],
+    top_k: int = 5
+):
     vector_str = "[" + ",".join(map(str, embedding)) + "]"
-    query = text("""
+    conditions = []
+    if id_list:
+        id_list_str = ",".join(map(str, id_list))
+        conditions.append(f"id IN ({id_list_str})")
+
+    if exclude_ids:
+        exclude_ids_str = ",".join(map(str, exclude_ids))
+        conditions.append(f"id NOT IN ({exclude_ids_str})")
+
+    where_clause = ""
+    if conditions:
+        where_clause = "WHERE " + " AND ".join(conditions)
+
+
+    query = text(f"""
         SELECT *, vector_memory <-> CAST(:embedding AS vector) AS distance
         FROM knowledge_base
+        {where_clause}
         ORDER BY distance ASC
         LIMIT :top_k;
     """)
-    result = db.execute(query, {"embedding": vector_str, "top_k": top_k})
-    return result.fetchall()
+    result = db.execute(query, {"embedding": vector_str, "top_k": top_k}).fetchall()
+    if not result:
+        return None
+    return result
 
 # RAG 기반 검색 : 가장 유사도가 높은 단 하나의 데이터 조회
 def get_most_similar_question(db: Session, embedding: list[float], id_list: list[int]):
@@ -103,5 +126,10 @@ def get_reference_data(db : Session):
 def get_id_by_subject(db : Session, question_id : int):
     label = db.query(LabelingData).filter(LabelingData.question_id == question_id).first()
     ids = db.query(Reference.id).filter(Reference.subject == label.subject).all()
+    id_list = [id_tuple[0] for id_tuple in ids]
+    return id_list
+
+def get_id_by_case(db : Session, case : str):
+    ids = db.query(LabelingData.question_id).filter(LabelingData.case == case).all()
     id_list = [id_tuple[0] for id_tuple in ids]
     return id_list
