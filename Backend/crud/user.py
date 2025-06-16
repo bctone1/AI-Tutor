@@ -5,7 +5,7 @@ import random
 from datetime import datetime
 from core.util import *
 from typing import Dict, Tuple
-
+from sqlalchemy import not_, or_
 
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -269,3 +269,8 @@ def get_user_case_current(db: Session, user_id: int) -> Dict[str, Dict]:
             }
 
     return progress
+
+
+def get_student_data(db: Session):
+    exclude_roles: list[str] = ['professor', 'admin']
+    return db.query(User).filter(not_(User.role.in_(exclude_roles))).all()

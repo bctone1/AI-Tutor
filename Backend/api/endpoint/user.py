@@ -239,3 +239,8 @@ async def get_user_case_progress_endpoint(request: dict, db: Session = Depends(g
     except Exception as e:
         print(f"유형별 학습 현황 조회 오류: {str(e)}")
         raise HTTPException(status_code=500, detail="학습 현황 조회 중 오류가 발생했습니다.")
+
+@user_router.post('/getStudentData')
+async def get_student_data_endpoint(db: Session = Depends(get_db)):
+    student_data = get_student_data(db = db)
+    return student_data
