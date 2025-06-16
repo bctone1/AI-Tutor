@@ -8,7 +8,7 @@ from crud.exam import get_unique_filename
 from fastapi.responses import JSONResponse
 from langchain_service.document_loader.extract_question import parse_question_block
 from langchain_service.chain.discrimination import discrimination
-from langchain_service.document_loader.file_loader import load_document
+from langchain_service.document_loader.file_loader import load_document, split_text_into_chunks
 import random
 import os
 
@@ -102,8 +102,12 @@ async def upload_reference_data(
     docs = load_document(file_path = unique_file_location)
     content_text = "\n".join([doc.page_content for doc in docs])
 
-    save_reference_data(db = db, file_name=filename, file_size = len(content),
+    reference = save_reference_data(db = db, file_name=filename, file_size = len(content),
                         subject = department, file_content=content_text)
+
+    chunks = split_text_into_chunks(content_text)
+    for chunk in chunks:
+        save_reference_chunk(db = db, reference_id = reference.id, chunk = chunk)
 
     return JSONResponse(content={
         "message" : "정상적으로 업로드 되었습니다."

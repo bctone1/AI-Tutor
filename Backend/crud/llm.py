@@ -28,16 +28,20 @@ def get_similar_questions(db: Session, embedding: list[float], top_k: int = 5):
     return result.fetchall()
 
 # RAG 기반 검색 : 가장 유사도가 높은 단 하나의 데이터 조회
-def get_most_similar_question(db: Session, embedding: list[float]):
+def get_most_similar_question(db: Session, embedding: list[float], id_list: list[int]):
+    if not id_list:
+        return None
     vector_str = "[" + ",".join(map(str, embedding)) + "]"
-    query = text("""
+    id_list_str = ",".join(map(str, id_list))
+    query = text(f"""
         SELECT *, vector_memory <-> CAST(:embedding AS vector) AS distance
-        FROM reference
+        FROM reference_chunk
+        WHERE reference_id IN ({id_list_str})
         ORDER BY distance ASC
         LIMIT 1;
     """)
     result = db.execute(query, {"embedding": vector_str}).mappings().fetchone()
-    return result["file_content"] if result else None
+    return result["content"] if result else None
 
 
 def get_question_sub(db: Session, subject: str, solved: list[int]):
@@ -71,6 +75,18 @@ def save_reference_data(db : Session, file_name : str, file_size : int, subject 
     db.refresh(new_reference)
     return new_reference
 
+def save_reference_chunk(db : Session, reference_id : int, chunk : str):
+    embedding_vector = convert_to_vector(chunk)
+    new_chunk = ReferenceChunk(
+        reference_id = reference_id,
+        content = chunk,
+        vector_memory = embedding_vector
+    )
+    db.add(new_chunk)
+    db.commit()
+    db.refresh(new_chunk)
+    return new_chunk
+
 def get_reference_data(db : Session):
     references = db.query(Reference).all()
     return [
@@ -83,3 +99,9 @@ def get_reference_data(db : Session):
         }
         for r in references
     ]
+
+def get_id_by_subject(db : Session, question_id : int):
+    label = db.query(LabelingData).filter(LabelingData.question_id == question_id).first()
+    ids = db.query(Reference.id).filter(Reference.subject == label.subject).all()
+    id_list = [id_tuple[0] for id_tuple in ids]
+    return id_list

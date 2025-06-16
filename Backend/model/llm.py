@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey
 from database.base import Base
 from pgvector.sqlalchemy import Vector
+from sqlalchemy.orm import relationship
 
 class Session(Base):
     __tablename__ = "session_log"
@@ -20,3 +21,20 @@ class Reference(Base):
     subject = Column(Text, nullable=False)
     file_content = Column(Text)
     vector_memory = Column(Vector(1536))
+
+    chunks = relationship(
+        "ReferenceChunk",
+        back_populates="reference",
+        cascade="all, delete",
+        passive_deletes=True
+    )
+
+class ReferenceChunk(Base):
+    __tablename__ = "reference_chunk"
+
+    id = Column(Integer, primary_key = True, autoincrement=True)
+    reference_id = Column(Integer, ForeignKey("reference.id"), nullable=False)
+    content = Column(Text)
+    vector_memory = Column(Vector(1536))
+
+    reference = relationship("Reference", back_populates="chunks")
