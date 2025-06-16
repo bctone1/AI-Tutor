@@ -7,23 +7,38 @@ const UploadData = ({ userdata }) => {
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [selectedDepartment, setSelectedDepartment] = useState('');
+  // const [isLoading, setIsLoading] = useState(true);
+
+  const fetchFiles = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getReferenceData`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        // 선택된 학과에 따라 파일 필터링
+        const filteredFiles = selectedDepartment 
+          ? data.filter(file => file.subject === selectedDepartment)
+          : [];
+        setFiles(filteredFiles);
+      }
+      console.log(data);
+    } catch (err) {
+      // Handle error
+    }
+  };
 
   useEffect(() => {
-    const fetchFiles = async () => {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getReferenceData`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-        });
-        const data = await response.json();
-        if (response.ok) setFiles(data);
-      } catch (err) {
-        // Handle error
-      }
-    };
     fetchFiles();
-  }, []);
+  }, [selectedDepartment]); // selectedDepartment가 변경될 때마다 실행
 
+
+
+
+
+
+  
   const handleFileChange = async (event) => {
     const selectedFile = event.target.files[0];
     console.log(selectedFile);
@@ -44,7 +59,9 @@ const UploadData = ({ userdata }) => {
       });
       const data = await res.json();
       if (res.ok) {
-        setFiles(prev => [...prev, data]);
+        alert("파일이 업로드 되었습니다!");
+        // 파일 업로드 성공 후 파일 목록 업데이트
+        await fetchFiles();
       } else {
         alert('업로드 실패: 서버 오류');
       }
@@ -124,11 +141,10 @@ const UploadData = ({ userdata }) => {
           )}
           <button
             onClick={() => fileInputRef.current.click()}
-            className={`px-6 py-2 rounded font-semibold cursor-pointer ${
-              selectedDepartment 
-                ? 'bg-indigo-700 text-white hover:bg-indigo-800' 
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            }`}
+            className={`px-6 py-2 rounded font-semibold cursor-pointer ${selectedDepartment
+              ? 'bg-indigo-700 text-white hover:bg-indigo-800'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
             disabled={uploading || !selectedDepartment}
           >
             {uploading ? '업로드 중...' : '파일 선택'}
@@ -145,10 +161,11 @@ const UploadData = ({ userdata }) => {
         {/* File List */}
         <div className="bg-white shadow rounded">
           <div className="flex px-5 py-3 border-b bg-gray-50 font-bold text-gray-700">
+            <div className="flex-1">id</div>
             <div className="flex-1">파일명</div>
             <div className="flex-1">학과</div>
-            <div className="flex-1">업로더</div>
-            <div className="flex-1">업로드 날짜</div>
+            <div className="flex-1">파일 크기</div>
+            {/* <div className="flex-1">업로드 날짜</div> */}
             <div className="flex-1 text-center">작업</div>
           </div>
           {files.length === 0 ? (
@@ -158,25 +175,30 @@ const UploadData = ({ userdata }) => {
           ) : (
             files.map((file, idx) => (
               <div key={idx} className="flex px-5 py-3 border-b last:border-b-0 items-center">
+                <div className="flex-1">{file.id}</div>
                 <div className="flex-1 flex items-center gap-2">
                   <FileText className="text-indigo-600" size={18} />
                   <span>{file.file_name || file.name}</span>
                 </div>
                 <div className="flex-1 text-gray-600">
-                  {file.department === '물리치료학기초_해부생리학' ? '물리치료학과' : 
-                   file.department === '작업치료학기초_해부생리학' ? '작업치료학과' : '-'}
+                  {file.subject === '물리치료학기초_해부생리학' || file.subject === '물리치료학과' ? '물리치료학과' :
+                    file.subject === '작업치료학과기초_해부생리학' || file.subject === '작업치료학과' ? '작업치료학과' : '-'}
                 </div>
-                <div className="flex-1 text-gray-600">{file.uploader || (file.user && file.user.name)}</div>
-                <div className="flex-1 text-gray-600">{file.uploaded_at ? new Date(file.uploaded_at).toLocaleString() : '-'}</div>
+                <div className="flex-1 text-gray-600">
+                  {formatFileSize(file.file_size)}
+                </div>
+                {/* <div className="flex-1 text-gray-600">{file.uploaded_at ? new Date(file.uploaded_at).toLocaleString() : '-'}</div> */}
                 <div className="flex-1 text-center">
                   <a
                     href={`${process.env.NEXT_PUBLIC_API_URL}/files/reference/${file.file_name}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 underline"
+                    className="text-blue-600 underline mr-2"
                   >
                     다운로드
                   </a>
+                  ||
+                  <a className="text-red-600 underline ml-2" onClick={() => handleDelete(file.id)}>삭제</a>
                 </div>
               </div>
             ))
@@ -185,6 +207,16 @@ const UploadData = ({ userdata }) => {
       </main>
     </div>
   );
+
+  function formatFileSize(bytes) {
+    if (bytes < 1024) return `${bytes} B`;
+    const kb = bytes / 1024;
+    if (kb < 1024) return `${kb.toFixed(1)} KB`;
+    const mb = kb / 1024;
+    if (mb < 1024) return `${mb.toFixed(1)} MB`;
+    const gb = mb / 1024;
+    return `${gb.toFixed(1)} GB`;
+  }
 };
 
 export default UploadData; 
