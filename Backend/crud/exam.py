@@ -514,3 +514,7 @@ def save_comment(db : Session, label_id, commentary, answer):
     db.add(label)
     db.commit()
     db.refresh(label)
+
+def get_question_by_id(db : Session, question_id):
+    question = db.query(KnowledgeBase).filter(KnowledgeBase.id == question_id).first()
+    return question.question

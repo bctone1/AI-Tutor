@@ -9,8 +9,9 @@ os.environ["OPENAI_API_KEY"] = CHATGPT_API_KEY
 template = """
 다음은 두 개의 입력값을 바탕으로 작성된 질문입니다.
 
-입력 1 (시험 문제 내용 ) : {input_1}
-입력 2 (시험 문제의 정답 ): {input_2}
+입력 1 ( 시험 문제 내용 ) : {input_1}
+입력 2 ( 해당 시험 문제의 정답 ): {input_2}
+입력 3 ( 답변 생성시 참고할만한 자료 모음 ) : {input_3}
 
 위 정보를 바탕으로 왜 해당 문제에 대한 해설을 적어주세요.
 각 보기의 내용에 대한 구체적인 해설이 필요합니다.
@@ -36,7 +37,7 @@ hint_template = """
 """
 
 prompt = PromptTemplate(
-    input_variables=["input_1", "input_2"],
+    input_variables=["input_1", "input_2", "input_3"],
     template=template
 )
 
@@ -52,10 +53,11 @@ chain = LLMChain(llm=llm, prompt=prompt)
 # 힌트용 체인 추가
 hint_chain = LLMChain(llm=llm, prompt=hint_prompt)
 
-def generate_explantation(input_1: str, input_2: int) -> str:
+def generate_explantation(input_1: str, input_2: int, input_3 : str) -> str:
     response = chain.run({
         "input_1": input_1,
-        "input_2": input_2
+        "input_2": input_2,
+        "input_3": input_3
     })
     return response
 

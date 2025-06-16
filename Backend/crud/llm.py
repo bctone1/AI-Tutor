@@ -15,6 +15,7 @@ def convert_to_vector(user_prompt : str):
     vector = embedding_model.embed_query(user_prompt)
     return vector
 
+# RAG 기반 검색 : 유사성 있는 데이터 여러 개 조회
 def get_similar_questions(db: Session, embedding: list[float], top_k: int = 5):
     vector_str = "[" + ",".join(map(str, embedding)) + "]"
     query = text("""
@@ -25,6 +26,18 @@ def get_similar_questions(db: Session, embedding: list[float], top_k: int = 5):
     """)
     result = db.execute(query, {"embedding": vector_str, "top_k": top_k})
     return result.fetchall()
+
+# RAG 기반 검색 : 가장 유사도가 높은 단 하나의 데이터 조회
+def get_most_similar_question(db: Session, embedding: list[float]):
+    vector_str = "[" + ",".join(map(str, embedding)) + "]"
+    query = text("""
+        SELECT *, vector_memory <-> CAST(:embedding AS vector) AS distance
+        FROM reference
+        ORDER BY distance ASC
+        LIMIT 1;
+    """)
+    result = db.execute(query, {"embedding": vector_str})
+    return result.fetchone()
 
 
 def get_question_sub(db: Session, subject: str, solved: list[int]):
@@ -57,3 +70,16 @@ def save_reference_data(db : Session, file_name : str, file_size : int, subject 
     db.commit()
     db.refresh(new_reference)
     return new_reference
+
+def get_reference_data(db : Session):
+    references = db.query(Reference).all()
+    return [
+        {
+            "id" : r.id,
+            "file_name" : r.file_name,
+            "file_size" : r.file_size,
+            "subject" : r.subject,
+            "file_content" : r.file_content
+        }
+        for r in references
+    ]

@@ -7,6 +7,7 @@ from langchain_service.document_loader.read_labeling_data import excel_to_list
 from langchain_service.document_loader.extract_question import extract_questions_from_pages
 from langchain_service.document_loader.read_excel import extract_questions_from_excel
 from fastapi.responses import JSONResponse
+from crud.llm import convert_to_vector, get_most_similar_question
 import os
 from database.session import get_db
 from fastapi import Depends
@@ -228,6 +229,11 @@ async def get_explantation_endpoint(request: GetExplantationRequest, db: Session
     question_id = request.question_id
     user_id = request.userdata.user.id
     exist = get_exist_commentary(db = db, question_id = question_id)
+    question = get_question_by_id(db = db, question_id = question_id)
+    embedding_vector = convert_to_vector(question)
+
+    reference = get_most_similar_question(db = db, embedding = embedding_vector)
+    print("REFERENCE : {")
 
 
 
@@ -284,7 +290,6 @@ async def get_qeuestion_data_endpoint(db: Session = Depends(get_db)):
 @exam_router.post("/getCommentary")
 async def get_commentary_endpoint(db: Session = Depends(get_db)):
     data = get_commentary(db = db)
-
     return data
 
 @exam_router.post("/saveCommentary")

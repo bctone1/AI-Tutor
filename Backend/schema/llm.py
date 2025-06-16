@@ -35,3 +35,10 @@ class GetQuestRequest(BaseModel):
     userdata: UserData
     selectedSubject : str
     solvedProblemIds: List[int]
+
+class ReferenceSchema(BaseModel):
+    id : int
+    file_name : str
+    file_size : int
+    subject : str
+    file_content : str

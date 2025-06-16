@@ -102,9 +102,14 @@ async def upload_reference_data(
     docs = load_document(file_path = unique_file_location)
     content_text = "\n".join([doc.page_content for doc in docs])
 
-    reference = save_reference_data(db = db, file_name=filename, file_size = len(content),
+    save_reference_data(db = db, file_name=filename, file_size = len(content),
                         subject = department, file_content=content_text)
 
     return JSONResponse(content={
         "message" : "정상적으로 업로드 되었습니다."
     })
+
+@llm_router.post("/getReferenceData", response_model=List[ReferenceSchema])
+async def get_reference_data_endpoint(db: Session = Depends(get_db)):
+    references = get_reference_data(db = db)
+    return references
