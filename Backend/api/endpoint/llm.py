@@ -102,6 +102,9 @@ async def upload_reference_data(
         file: UploadFile = File(...),
         department: str = Form(...)
 ):
+    if not os.path.exists(REFERENCE_LOCATION):
+        os.makedirs(REFERENCE_LOCATION)
+
     content = await file.read()
     filename = file.filename
 
