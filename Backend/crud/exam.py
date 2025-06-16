@@ -370,9 +370,9 @@ def get_correct_answer(db: Session, question_id : int):
     else:
         return 0
 
-def get_explantation(db : Session, question_id : int, correct_answer : int):
+def get_explantation(db : Session, question_id : int, correct_answer : int, reference : str):
     question = db.query(KnowledgeBase).filter(KnowledgeBase.id == question_id).first()
-    explantation = generate_explantation(question.question, correct_answer)
+    explantation = generate_explantation(question.question, correct_answer, reference)
     return explantation
 
 def get_hint(db: Session, question_id: int):

@@ -36,8 +36,8 @@ def get_most_similar_question(db: Session, embedding: list[float]):
         ORDER BY distance ASC
         LIMIT 1;
     """)
-    result = db.execute(query, {"embedding": vector_str})
-    return result.fetchone()
+    result = db.execute(query, {"embedding": vector_str}).mappings().fetchone()
+    return result["file_content"] if result else None
 
 
 def get_question_sub(db: Session, subject: str, solved: list[int]):
