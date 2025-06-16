@@ -6,11 +6,11 @@ const Analysis = ({ userdata }) => {
 
     // 임시 학생 데이터
     const students = [
-        { 
-            id: 1, 
-            name: "김학생", 
-            major: "물리치료학과", 
-            grade: 3, 
+        {
+            id: 1,
+            name: "김학생",
+            major: "물리치료학과",
+            grade: 3,
             testscore: 85,
             studyTime: 32.5,
             studyTimeChange: 15,
@@ -44,11 +44,11 @@ const Analysis = ({ userdata }) => {
                 weeklyDistribution: [65, 75, 45, 80, 70, 55, 85]
             }
         },
-        { 
-            id: 2, 
-            name: "이학생", 
-            major: "물리치료학과", 
-            grade: 3, 
+        {
+            id: 2,
+            name: "이학생",
+            major: "물리치료학과",
+            grade: 3,
             testscore: 72,
             studyTime: 28.5,
             studyTimeChange: 10,
@@ -82,11 +82,11 @@ const Analysis = ({ userdata }) => {
                 weeklyDistribution: [60, 70, 55, 75, 65, 50, 80]
             }
         },
-        { 
-            id: 3, 
-            name: "박학생", 
-            major: "물리치료학과", 
-            grade: 3, 
+        {
+            id: 3,
+            name: "박학생",
+            major: "물리치료학과",
+            grade: 3,
             testscore: 68,
             studyTime: 25.5,
             studyTimeChange: -5,
@@ -176,6 +176,24 @@ const Analysis = ({ userdata }) => {
                                 </div>
                             </div>
                         ))}
+
+                        {/* <select
+                            className="w-full p-3 border rounded-md mb-4"
+                            onChange={(e) => {
+                                const selectedId = e.target.value;
+                                const selected = students.find((student) => student.id.toString() === selectedId);
+                                setSelectedStudent(selected);
+                            }}
+                            value={selectedStudent?.id || ""}
+                        >
+                            <option value="" disabled>학생을 선택하세요</option>
+                            {students.map((student) => (
+                                <option key={student.id} value={student.id}>
+                                    {student.name} ({student.major} {student.grade}학년) - {student.testscore}점
+                                </option>
+                            ))}
+                        </select> */}
+
                     </div>
                 </div>
 
