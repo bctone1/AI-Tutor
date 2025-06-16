@@ -165,6 +165,7 @@ const Active = ({ userdata }) => {
     };
 
     const handleLLMChat = async () => {
+        console.log(solvedProblemIds);
         if (!selectedSubject) {
             setChatLog((prev) => [
                 ...prev,
@@ -370,8 +371,8 @@ const Active = ({ userdata }) => {
                 안녕하세요! 저는 여러분의 AI 튜터입니다. 😊<br /><br />
                 지금부터 기출문제를 함께 풀어보며 학습할 거예요.
                 각 문항에 대해 정답을 선택하면, 해설과 함께 피드백을 드릴게요.<br /><br />
-                궁금한 내용이 있다면 언제든 채팅창에 입력해 주세요. 또한 오른쪽 하단의 <strong>힌트</strong> 버튼을 통해 도움을 받을 수 있습니다.<br /><br />
-                준비되셨다면, 오른쪽 하단의 <strong>기출문제</strong> 버튼을 눌러 첫 문제를 시작해볼까요?
+                궁금한 내용이 있다면 언제든 채팅창에 입력해 주세요. 또한 오른쪽 상단의 <strong>힌트</strong> 버튼을 통해 도움을 받을 수 있습니다.<br /><br />
+                준비되셨다면, 오른쪽 상단의 <strong>기출문제</strong> 버튼을 눌러 첫 문제를 시작해볼까요?
             </div>
 
 

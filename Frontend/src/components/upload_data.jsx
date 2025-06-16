@@ -6,6 +6,7 @@ const UploadData = ({ userdata }) => {
   const [files, setFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  const [selectedDepartment, setSelectedDepartment] = useState('');
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -13,7 +14,6 @@ const UploadData = ({ userdata }) => {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getReferenceData`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userData: userdata })
         });
         const data = await response.json();
         if (response.ok) setFiles(data);
@@ -22,15 +22,21 @@ const UploadData = ({ userdata }) => {
       }
     };
     fetchFiles();
-  }, [userdata]);
+  }, []);
 
   const handleFileChange = async (event) => {
     const selectedFile = event.target.files[0];
+    console.log(selectedFile);
     if (!selectedFile) return;
+    if (!selectedDepartment) {
+      alert('학과를 선택해주세요.');
+      return;
+    }
     setUploading(true);
     const formData = new FormData();
     formData.append('file', selectedFile);
-    formData.append('userData', JSON.stringify(userdata));
+    // formData.append('userData', JSON.stringify(userdata));
+    formData.append('department', selectedDepartment);
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/uploadReferenceData`, {
         method: 'POST',
@@ -85,6 +91,22 @@ const UploadData = ({ userdata }) => {
       <main className="container mx-auto px-5 py-8">
         <h2 className="text-2xl font-bold text-gray-700 mb-6">참고 데이터 업로드 (교과서, 학습지 등)</h2>
 
+        {/* Department Selection */}
+        <div className="mb-6">
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            학과 선택
+          </label>
+          <select
+            value={selectedDepartment}
+            onChange={(e) => setSelectedDepartment(e.target.value)}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          >
+            <option value="">학과를 선택하세요</option>
+            <option value="물리치료학기초_해부생리학">물리치료학과</option>
+            <option value="작업치료학기초_해부생리학">작업치료학과</option>
+          </select>
+        </div>
+
         {/* Upload Box */}
         <div
           className={`border border-dashed border-gray-300 bg-white rounded-lg p-10 text-center mb-8 transition ${dragActive ? 'border-indigo-500 bg-indigo-50' : ''}`}
@@ -96,11 +118,18 @@ const UploadData = ({ userdata }) => {
             <Upload size={24} />
           </div>
           <p className="text-lg text-gray-700 mb-2">파일을 여기에 끌어다 놓거나 선택하세요</p>
-          <p className="text-sm text-gray-500 mb-5">Excel(.xlsx), CSV(.csv) 또는 Word(.docx) 파일을 업로드할 수 있습니다.</p>
+          <p className="text-sm text-gray-500 mb-5">PDF(.pdf) 또는 TXT(.txt) 파일을 업로드할 수 있습니다.</p>
+          {!selectedDepartment && (
+            <p className="text-sm text-red-500 mb-3">* 파일 업로드를 위해 학과를 선택해주세요</p>
+          )}
           <button
             onClick={() => fileInputRef.current.click()}
-            className="bg-indigo-700 text-white px-6 py-2 rounded font-semibold cursor-pointer"
-            disabled={uploading}
+            className={`px-6 py-2 rounded font-semibold cursor-pointer ${
+              selectedDepartment 
+                ? 'bg-indigo-700 text-white hover:bg-indigo-800' 
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+            disabled={uploading || !selectedDepartment}
           >
             {uploading ? '업로드 중...' : '파일 선택'}
           </button>
@@ -109,7 +138,7 @@ const UploadData = ({ userdata }) => {
             ref={fileInputRef}
             onChange={handleFileChange}
             className="hidden"
-            accept=".docx,.xlsx,.csv,.pdf"
+            accept=".txt,.pdf"
           />
         </div>
 
@@ -117,6 +146,7 @@ const UploadData = ({ userdata }) => {
         <div className="bg-white shadow rounded">
           <div className="flex px-5 py-3 border-b bg-gray-50 font-bold text-gray-700">
             <div className="flex-1">파일명</div>
+            <div className="flex-1">학과</div>
             <div className="flex-1">업로더</div>
             <div className="flex-1">업로드 날짜</div>
             <div className="flex-1 text-center">작업</div>
@@ -131,6 +161,10 @@ const UploadData = ({ userdata }) => {
                 <div className="flex-1 flex items-center gap-2">
                   <FileText className="text-indigo-600" size={18} />
                   <span>{file.file_name || file.name}</span>
+                </div>
+                <div className="flex-1 text-gray-600">
+                  {file.department === '물리치료학기초_해부생리학' ? '물리치료학과' : 
+                   file.department === '작업치료학기초_해부생리학' ? '작업치료학과' : '-'}
                 </div>
                 <div className="flex-1 text-gray-600">{file.uploader || (file.user && file.user.name)}</div>
                 <div className="flex-1 text-gray-600">{file.uploaded_at ? new Date(file.uploaded_at).toLocaleString() : '-'}</div>

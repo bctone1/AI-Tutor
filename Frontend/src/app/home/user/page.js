@@ -1,5 +1,4 @@
-"use client";
-
+"use client"
 import React, { useState, useEffect } from 'react';
 import { useSession } from "next-auth/react";
 
@@ -9,20 +8,28 @@ import Dashboard from '@/components/dashboard';
 import Active from '@/components/active';
 import Profile from '@/components/profile';
 
-
-
 export default function AnatomyTestPage() {
-  const [view, setView] = useState();
+  const [view, setView] = useState(); // ✅ JS 문법: 타입 제거
   const { data: session, status } = useSession();
-  // console.log(session);
-  // const [userInfo, setUserInfo] = useState(null);
 
+  // 💾 localStorage에서 view 복원
   useEffect(() => {
-    // if (status === "authenticated") {
-    //   setUserInfo(session);
-    // }
+    const savedView = localStorage.getItem("currentView");
+    if (savedView) {
+      setView(savedView);
+    }
+  }, []);
 
-    if (status !== "loading") {
+  // 🔁 view가 바뀔 때 localStorage에도 저장
+  useEffect(() => {
+    if (view) {
+      localStorage.setItem("currentView", view);
+    }
+  }, [view]);
+
+  // 🧠 세션에 따라 초기값 설정 (한 번만)
+  useEffect(() => {
+    if (status !== "loading" && !view) {
       if (!session?.user?.grade) {
         setView("profile");
       } else if (session?.user?.grade && !session?.user?.testscore) {
@@ -31,44 +38,23 @@ export default function AnatomyTestPage() {
         setView("dashboard");
       }
     }
-  }, [session, status]);
+  }, [session, status, view]);
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* 헤더 */}
-      <Navigation
-        view={view}
-        setView={setView}
-        userdata={session}
-      />
+      <Navigation view={view} setView={setView} userdata={session} />
 
-      {/* 메인 컨텐츠 */}
       {view === 'leveltest' && (
-        <LevelTest
-          setView={setView}
-          userdata={session}
-        />
+        <LevelTest setView={setView} userdata={session} />
       )}
-
       {view === 'dashboard' && (
-        <Dashboard
-          userdata={session}
-          setView={setView}
-        />
+        <Dashboard setView={setView} userdata={session} />
       )}
-
       {view === 'active' && (
-        <Active
-          userdata={session}
-        />
+        <Active userdata={session} />
       )}
-
       {view === 'profile' && (
-        <Profile
-          userdata={session}
-          setView={setView}
-        // setUserInfo={setUserInfo}
-        />
+        <Profile setView={setView} userdata={session} />
       )}
     </div>
   );
