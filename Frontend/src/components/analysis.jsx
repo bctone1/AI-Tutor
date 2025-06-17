@@ -28,7 +28,7 @@ const Analysis = ({ userdata }) => {
             });
             const data = await response.json();
             if (response.ok) {
-                console.log(data);
+                // console.log(data);
                 setStudents(data);
             } else {
                 console.error("지식베이스 오류");
@@ -42,7 +42,7 @@ const Analysis = ({ userdata }) => {
 
         const getUserCaseProgress = async () => {
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getUserCaseProgress`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getUserCaseProgress`, {//레벨테스트 결과
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ user_id: selectedStudent.id })
@@ -65,7 +65,7 @@ const Analysis = ({ userdata }) => {
 
         const getUserCaseScore = async () => {
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getUserCaseScore`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getUserCaseScore`, {//학습결과
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ user_id: selectedStudent.id })
