@@ -169,7 +169,19 @@ async def get_test_endpoint(request : GetTestQuestionRequest, db: Session = Depe
         }
         for qid, level, qtext, subjects, cases in zip(question_ids, levels, question_texts, subjects, cases)
     ]
+    print("================= 생성된 시험 문제 ======================")
 
+    for idx, q in enumerate(formatted_questions, 1):
+        print(f"\n문제 {idx} (ID: {q['id']}, 난이도: {q['level']}, 과목: {q['subject']}, 주제: {q['cases']})")
+
+        # JSON 문자열로 되어 있는 'question' 필드를 파싱
+        question_data = json.loads(q['question'])
+        question_text = question_data['question']
+        choices = question_data['choices']
+
+        print(f"Q. {question_text}")
+        for i, choice in enumerate(choices, start=1):
+            print(f"   {i}) {choice}")
     return formatted_questions
 
 @exam_router.post('/submitTest')

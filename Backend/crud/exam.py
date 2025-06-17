@@ -67,46 +67,8 @@ def update_labelingdata(db : Session, subject : str, question_id : int, correct_
     db.refresh(new_label)
     return new_label.id
 
+
 '''
-def generate_level_test(db: Session, subject: str):
-    labels = db.query(LabelingData).filter(LabelingData.subject == subject).all()
-
-    case_level_map = defaultdict(lambda: defaultdict(list))
-    for label in labels:
-        case_level_map[label.case][label.level].append(label.question_id)
-
-    selected_question_ids = []
-
-    for case, level_dict in case_level_map.items():
-        selected_ids_for_case = []
-
-        # 1. 우선 각 레벨에서 1개씩 뽑기
-        for level in ['상', '중', '하']:
-            question_ids = level_dict.get(level, [])
-            if question_ids:
-                selected_ids_for_case.append(random.choice(question_ids))
-
-        # 2. 부족한 개수만큼 아무 레벨에서 추가로 뽑기 (중복 제외)
-        remaining = 3 - len(selected_ids_for_case)
-        if remaining > 0:
-            all_question_ids = sum(level_dict.values(), [])  # 모든 레벨의 ID 평탄화
-            remaining_ids = list(set(all_question_ids) - set(selected_ids_for_case))
-            if remaining_ids:
-                additional_ids = random.sample(remaining_ids, min(remaining, len(remaining_ids)))
-                selected_ids_for_case.extend(additional_ids)
-
-        selected_question_ids.extend(selected_ids_for_case)
-
-    # 최종 문제 조회 및 정리
-    questions = db.query(KnowledgeBase).filter(KnowledgeBase.id.in_(selected_question_ids)).all()
-    question_texts = [parse_question_block(q.question) for q in questions]
-
-    id_to_level = {label.question_id: label.level for label in labels}
-    levels = [id_to_level.get(q.id, '미정') for q in questions]
-
-    return selected_question_ids, question_texts, levels
-'''
-
 def generate_level_test(db: Session, subject: str):
     labels = db.query(LabelingData).filter(LabelingData.subject == subject).all()
 
@@ -146,6 +108,59 @@ def generate_level_test(db: Session, subject: str):
 
     return selected_question_ids, question_texts, levels, subjects, cases
 
+'''
+
+def generate_level_test(db: Session, subject: str):
+    # 라벨 데이터 수집 (subject 기준)
+    labels = db.query(LabelingData).filter(LabelingData.subject == subject).all()
+
+    # case → level → [question_id] 구조로 정리
+    case_level_map = defaultdict(lambda: defaultdict(list))
+    for label in labels:
+        case_level_map[label.case][label.level].append(label.question_id)
+
+    selected_question_ids = []
+
+    # 각 case별로 상/중/하 난이도에서 최소 1개씩 선택, 부족하면 추가
+    for case, level_dict in case_level_map.items():
+        selected_ids_for_case = []
+
+        for level in ['상', '중', '하']:
+            question_ids = level_dict.get(level, [])
+            if question_ids:
+                selected_ids_for_case.append(random.choice(question_ids))
+
+        # 부족한 수만큼 추가 선택
+        remaining = 3 - len(selected_ids_for_case)
+        if remaining > 0:
+            all_question_ids = sum(level_dict.values(), [])
+            remaining_ids = list(set(all_question_ids) - set(selected_ids_for_case))
+            if remaining_ids:
+                additional_ids = random.sample(remaining_ids, min(remaining, len(remaining_ids)))
+                selected_ids_for_case.extend(additional_ids)
+
+        selected_question_ids.extend(selected_ids_for_case)
+
+    # 문제 본문 조회
+    questions = db.query(KnowledgeBase).filter(KnowledgeBase.id.in_(selected_question_ids)).all()
+
+    # 🔧 수정 1: questions를 selected_question_ids 순서대로 재정렬
+    questions_dict = {q.id: q for q in questions}
+    questions_sorted = [questions_dict[qid] for qid in selected_question_ids if qid in questions_dict]
+
+    # 🔧 수정 2: 정렬된 questions 기준으로 모든 데이터 생성
+    question_texts = [parse_question_block(q.question) for q in questions_sorted]
+
+    id_to_label = {label.question_id: label for label in labels}
+    levels = [id_to_label[q.id].level if q.id in id_to_label else "미정" for q in questions_sorted]
+    subjects = [id_to_label[q.id].subject if q.id in id_to_label else "미정" for q in questions_sorted]
+    cases = [id_to_label[q.id].case if q.id in id_to_label else "미정" for q in questions_sorted]
+
+    # 🔁 selected_question_ids도 정렬 기준에 맞춰 반환
+    ordered_question_ids = [q.id for q in questions_sorted]
+
+    return ordered_question_ids, question_texts, levels, subjects, cases
+
 def grading_test(db: Session, answers: Dict[str, int]):
     score = 0
     case_set = set()
@@ -170,6 +185,9 @@ def grading_test(db: Session, answers: Dict[str, int]):
             print("오답")
     num_cases = len(case_set)
     return score, num_cases
+
+
+
 
 def grading_test_by_case(db: Session, answers: Dict[str, int]) -> Tuple[int, int, Dict[str, Dict]]:
     """
