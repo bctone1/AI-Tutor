@@ -226,14 +226,9 @@ async def get_user_case_progress_endpoint(request: dict, db: Session = Depends(g
             raise HTTPException(status_code=400, detail="user_id가 필요합니다.")
 
         progress = get_user_case_current(db, user_id)
-        record = get_total_record(db=db, user_id=user_id)
         return {
             "success": True,
-            "progress": progress,
-            "total_question": record.total_question,
-            "correct_rate": record.correct_rate,
-            "attendance": record.attendance,
-            "total_time": record.total_time
+            "progress": progress
         }
 
     except Exception as e:

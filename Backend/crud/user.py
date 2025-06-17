@@ -181,6 +181,7 @@ def get_total_record(db : Session, user_id : int):
     record = db.query(UserTotalRecord).filter(UserTotalRecord.user_id == user_id).first()
     return record
 
+
 def add_daily_record(db : Session, user_id : int, question_id : int):
     today_date = datetime.utcnow().date()
     new_daily = UserDaily(
@@ -250,6 +251,7 @@ def get_user_case_current(db: Session, user_id: int) -> Dict[str, Dict]:
             'level': score.level,
             'last_updated': score.last_updated.isoformat() if score.last_updated else None
         }
+        print(f"PROGRESS : {score.case}")
     cases_list = Occupational_Therapy
     print(f"DEPARTMENT : {department}")
     if department == "물리치료학과":
