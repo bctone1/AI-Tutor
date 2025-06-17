@@ -15,8 +15,7 @@ const Analysis = ({ userdata }) => {
         total_time: 0
     });
 
-
-
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const getStudentData = async () => {
@@ -97,9 +96,18 @@ const Analysis = ({ userdata }) => {
             }
         };
 
-        getUserCaseProgress();
-        getUserCaseScore();
-        getDailyRecord();
+        const fetchAllData = async () => {
+            setIsLoading(true); // 로딩 시작
+            await getUserCaseProgress();
+            await getUserCaseScore();
+            await getDailyRecord();
+            setTimeout(() => {
+                setIsLoading(false); // 로딩 끝    
+                console.log(dailyRecord);
+            }, 2000);
+        };
+
+        fetchAllData();
     }, [selectedStudent]);
 
     return (
@@ -165,140 +173,145 @@ const Analysis = ({ userdata }) => {
                     </div>
                 </div>
 
-                {selectedStudent && (
-                    <>
-                        {/* 주요 통계 */}
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div className="bg-white rounded-lg shadow p-6">
-                                <h3 className="text-gray-500">총 학습 시간</h3>
-                                <p className="text-2xl font-bold">{selectedStudent.studyTime} 시간</p>
-                                <p className={`text-sm ${selectedStudent.studyTimeChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                    {selectedStudent.studyTimeChange >= 0 ? '▲' : '▼'} 전주 대비 {Math.abs(selectedStudent.studyTimeChange)}% {selectedStudent.studyTimeChange >= 0 ? '증가' : '감소'}
-                                </p>
-                            </div>
-                            <div className="bg-white rounded-lg shadow p-6">
-                                <h3 className="text-gray-500">문제 풀이 수</h3>
-                                <p className="text-2xl font-bold">{selectedStudent.solvedProblems} 문제</p>
-                                <p className={`text-sm ${selectedStudent.solvedProblemsChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                    {selectedStudent.solvedProblemsChange >= 0 ? '▲' : '▼'} 전주 대비 {Math.abs(selectedStudent.solvedProblemsChange)}% {selectedStudent.solvedProblemsChange >= 0 ? '증가' : '감소'}
-                                </p>
-                            </div>
-                            <div className="bg-white rounded-lg shadow p-6">
-                                <h3 className="text-gray-500">평균 정답률</h3>
-                                <p className="text-2xl font-bold">{selectedStudent.accuracy}%</p>
-                                <p className={`text-sm ${selectedStudent.accuracyChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                    {selectedStudent.accuracyChange >= 0 ? '▲' : '▼'} 전주 대비 {Math.abs(selectedStudent.accuracyChange)}% {selectedStudent.accuracyChange >= 0 ? '증가' : '감소'}
-                                </p>
-                            </div>
-                            <div className="bg-white rounded-lg shadow p-6">
-                                <h3 className="text-gray-500">학습 달성률</h3>
-                                <p className="text-2xl font-bold">{selectedStudent.achievement}%</p>
-                                <p className={`text-sm ${selectedStudent.achievementChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                    {selectedStudent.achievementChange >= 0 ? '▲' : '▼'} 목표 대비 {Math.abs(selectedStudent.achievementChange)}% {selectedStudent.achievementChange >= 0 ? '초과' : '미달'}
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* 과목별 성취도 */}
-                        <div className="bg-white rounded-lg shadow p-6">
-                            <h3 className="text-xl font-bold mb-4">과목별 성취도</h3>
-                            <div className="space-y-4">
-                                {[
-                                    { subject: '중추신경계', score: 85, improvement: 5 },
-                                    { subject: '말초신경계', score: 72, improvement: -2 },
-                                    { subject: '자율신경계', score: 68, improvement: 3 },
-                                ].map((item, index) => (
-                                    <div key={index} className="space-y-2">
-                                        <div className="flex justify-between">
-                                            <span className="font-medium">{item.subject}</span>
-                                            <span className={item.improvement > 0 ? 'text-green-500' : 'text-red-500'}>
-                                                {item.improvement > 0 ? '▲' : '▼'} {Math.abs(item.improvement)}%
-                                            </span>
-                                        </div>
-                                        <div className="h-2 bg-gray-200 rounded-full">
-                                            <div
-                                                className="h-full bg-blue-500 rounded-full"
-                                                style={{ width: `${item.score}%` }}
-                                            ></div>
-                                        </div>
-                                        <div className="text-sm text-gray-500 text-right">{item.score}%</div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* 취약 부분 분석 */}
-                        <div className="bg-white rounded-lg shadow p-6">
-                            <div className="flex justify-between items-center mb-4">
-                                <h3 className="text-xl font-bold">취약 부분 분석</h3>
-                                <button className="text-blue-500 hover:text-blue-700">
-                                    피드백 보내기
-                                </button>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {[
-                                    {
-                                        topic: '말초신경계 - 척수신경',
-                                        problems: 15,
-                                        accuracy: 45,
-                                        recommendation: '기본 개념 복습 필요'
-                                    },
-                                    {
-                                        topic: '자율신경계 - 교감신경',
-                                        problems: 12,
-                                        accuracy: 52,
-                                        recommendation: '문제 풀이 연습 필요'
-                                    },
-                                ].map((item, index) => (
-                                    <div key={index} className="border rounded-lg p-4">
-                                        <h4 className="font-bold text-red-500">{item.topic}</h4>
-                                        <p className="text-sm text-gray-600 mt-2">
-                                            풀이 문제 수: {item.problems}문제<br />
-                                            정답률: {item.accuracy}%<br />
-                                            추천: {item.recommendation}
+                {isLoading ? (
+                    <div className="text-center py-10 text-lg font-bold">데이터를 가져오고 있습니다...</div>
+                ) : (
+                    selectedStudent && (
+                        <>
+                            {dailyRecord && (
+                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                    <div className="bg-white rounded-lg shadow p-6">
+                                        <h3 className="text-gray-500">총 학습 시간</h3>
+                                        <p className="text-2xl font-bold">{selectedStudent.studyTime} 시간</p>
+                                        <p className={`text-sm ${selectedStudent.studyTimeChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                            {selectedStudent.studyTimeChange >= 0 ? '▲' : '▼'} 전주 대비 {Math.abs(selectedStudent.studyTimeChange)}% {selectedStudent.studyTimeChange >= 0 ? '증가' : '감소'}
                                         </p>
                                     </div>
-                                ))}
-                            </div>
-                        </div>
+                                    <div className="bg-white rounded-lg shadow p-6">
+                                        <h3 className="text-gray-500">문제 풀이 수</h3>
+                                        <p className="text-2xl font-bold">{dailyProgress.total_questions} 문제</p>
+                                        <p className={`text-sm ${selectedStudent.solvedProblemsChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                            {selectedStudent.solvedProblemsChange >= 0 ? '▲' : '▼'} 전주 대비 {Math.abs(selectedStudent.solvedProblemsChange)}% {selectedStudent.solvedProblemsChange >= 0 ? '증가' : '감소'}
+                                        </p>
+                                    </div>
+                                    <div className="bg-white rounded-lg shadow p-6">
+                                        <h3 className="text-gray-500">평균 정답률</h3>
+                                        <p className="text-2xl font-bold">{selectedStudent.accuracy}%</p>
+                                        <p className={`text-sm ${selectedStudent.accuracyChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                            {selectedStudent.accuracyChange >= 0 ? '▲' : '▼'} 전주 대비 {Math.abs(selectedStudent.accuracyChange)}% {selectedStudent.accuracyChange >= 0 ? '증가' : '감소'}
+                                        </p>
+                                    </div>
+                                    <div className="bg-white rounded-lg shadow p-6">
+                                        <h3 className="text-gray-500">학습 달성률</h3>
+                                        <p className="text-2xl font-bold">{selectedStudent.achievement}%</p>
+                                        <p className={`text-sm ${selectedStudent.achievementChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                            {selectedStudent.achievementChange >= 0 ? '▲' : '▼'} 목표 대비 {Math.abs(selectedStudent.achievementChange)}% {selectedStudent.achievementChange >= 0 ? '초과' : '미달'}
+                                        </p>
+                                    </div>
+                                </div>
+                            )}
 
-                        {/* 학습 패턴 분석 */}
-                        <div className="bg-white rounded-lg shadow p-6">
-                            <h3 className="text-xl font-bold mb-4">학습 패턴 분석</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <h4 className="font-medium mb-2">시간대별 학습 분포</h4>
-                                    <div className="h-40 flex items-end justify-between">
-                                        {[20, 35, 60, 80, 45, 30].map((height, idx) => (
-                                            <div key={idx} className="w-1/6 px-1">
+                            {/* 과목별 성취도 */}
+                            <div className="bg-white rounded-lg shadow p-6">
+                                <h3 className="text-xl font-bold mb-4">과목별 성취도</h3>
+                                <div className="space-y-4">
+                                    {[
+                                        { subject: '중추신경계', score: 85, improvement: 5 },
+                                        { subject: '말초신경계', score: 72, improvement: -2 },
+                                        { subject: '자율신경계', score: 68, improvement: 3 },
+                                    ].map((item, index) => (
+                                        <div key={index} className="space-y-2">
+                                            <div className="flex justify-between">
+                                                <span className="font-medium">{item.subject}</span>
+                                                <span className={item.improvement > 0 ? 'text-green-500' : 'text-red-500'}>
+                                                    {item.improvement > 0 ? '▲' : '▼'} {Math.abs(item.improvement)}%
+                                                </span>
+                                            </div>
+                                            <div className="h-2 bg-gray-200 rounded-full">
                                                 <div
-                                                    className="bg-blue-400 rounded-t"
-                                                    style={{ height: `${height}%` }}
+                                                    className="h-full bg-blue-500 rounded-full"
+                                                    style={{ width: `${item.score}%` }}
                                                 ></div>
-                                                <p className="text-xs text-center mt-1">{`${idx * 4}시`}</p>
                                             </div>
-                                        ))}
-                                    </div>
+                                            <div className="text-sm text-gray-500 text-right">{item.score}%</div>
+                                        </div>
+                                    ))}
                                 </div>
-                                <div>
-                                    <h4 className="font-medium mb-2">요일별 학습량</h4>
-                                    <div className="space-y-2">
-                                        {['월', '화', '수', '목', '금', '토', '일'].map((day, idx) => (
-                                            <div key={idx} className="flex items-center">
-                                                <span className="w-8">{day}</span>
-                                                <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
+                            </div>
+
+                            {/* 취약 부분 분석 */}
+                            <div className="bg-white rounded-lg shadow p-6">
+                                <div className="flex justify-between items-center mb-4">
+                                    <h3 className="text-xl font-bold">취약 부분 분석</h3>
+                                    <button className="text-blue-500 hover:text-blue-700">
+                                        피드백 보내기
+                                    </button>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {[
+                                        {
+                                            topic: '말초신경계 - 척수신경',
+                                            problems: 15,
+                                            accuracy: 45,
+                                            recommendation: '기본 개념 복습 필요'
+                                        },
+                                        {
+                                            topic: '자율신경계 - 교감신경',
+                                            problems: 12,
+                                            accuracy: 52,
+                                            recommendation: '문제 풀이 연습 필요'
+                                        },
+                                    ].map((item, index) => (
+                                        <div key={index} className="border rounded-lg p-4">
+                                            <h4 className="font-bold text-red-500">{item.topic}</h4>
+                                            <p className="text-sm text-gray-600 mt-2">
+                                                풀이 문제 수: {item.problems}문제<br />
+                                                정답률: {item.accuracy}%<br />
+                                                추천: {item.recommendation}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* 학습 패턴 분석 */}
+                            <div className="bg-white rounded-lg shadow p-6">
+                                <h3 className="text-xl font-bold mb-4">학습 패턴 분석</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <h4 className="font-medium mb-2">시간대별 학습 분포</h4>
+                                        <div className="h-40 flex items-end justify-between">
+                                            {[20, 35, 60, 80, 45, 30].map((height, idx) => (
+                                                <div key={idx} className="w-1/6 px-1">
                                                     <div
-                                                        className="h-full bg-green-400"
-                                                        style={{ width: `${Math.random() * 60 + 40}%` }}
+                                                        className="bg-blue-400 rounded-t"
+                                                        style={{ height: `${height}%` }}
                                                     ></div>
+                                                    <p className="text-xs text-center mt-1">{`${idx * 4}시`}</p>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-medium mb-2">요일별 학습량</h4>
+                                        <div className="space-y-2">
+                                            {['월', '화', '수', '목', '금', '토', '일'].map((day, idx) => (
+                                                <div key={idx} className="flex items-center">
+                                                    <span className="w-8">{day}</span>
+                                                    <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
+                                                        <div
+                                                            className="h-full bg-green-400"
+                                                            style={{ width: `${Math.random() * 60 + 40}%` }}
+                                                        ></div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </>
+                        </>
+                    )
                 )}
             </div>
         </main>

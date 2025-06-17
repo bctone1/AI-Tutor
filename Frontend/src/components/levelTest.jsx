@@ -80,12 +80,13 @@ const LevelTest = ({ setView, userdata }) => {
     };
 
     useEffect(() => {
-        // 현재 인덱스의 답변 있으면 불러오기
-        setSelectedAnswer(answers[currentQuestionIndex] ?? null);
-    }, [currentQuestionIndex]);
+        if (!testQuestions.length) return;
+        const questionId = testQuestions[currentQuestionIndex]?.id;
+        setSelectedAnswer(answers[questionId] ?? null);
+    }, [currentQuestionIndex, testQuestions, answers]);
 
     useEffect(() => {
-        
+
         const getQuestion = async () => {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getTestQuestion`, {
                 method: "POST",
@@ -106,8 +107,10 @@ const LevelTest = ({ setView, userdata }) => {
     }, []);
 
     const handleNext = async () => {
-
         const questionId = testQuestions[currentQuestionIndex]?.id;
+        console.log(questionId);
+        console.log(answers);
+
 
         if (!questionId) {
             console.error("문제 ID를 찾을 수 없습니다.");
@@ -124,11 +127,13 @@ const LevelTest = ({ setView, userdata }) => {
             ...answers,
             [questionId]: selectedAnswer,
         };
-
+        setAnswers(updatedAnswers);
         if (currentQuestionIndex < testQuestions.length - 1) {
-            setAnswers(updatedAnswers);
+            // setAnswers(updatedAnswers);
             setCurrentQuestionIndex(currentQuestionIndex + 1);
+            // console.log(answers);
         } else {
+            console.log(answers);
             if (confirm("제출하시겠습니까?")) {
 
                 try {
@@ -169,10 +174,11 @@ const LevelTest = ({ setView, userdata }) => {
     };
 
     const handlePrev = () => {
-        setAnswers((prev) => ({
-            ...prev,
-            [currentQuestionIndex]: selectedAnswer,
-        }));
+        console.log(answers);
+        // setAnswers((prev) => ({
+        //     ...prev,
+        //     [currentQuestionIndex]: selectedAnswer,
+        // }));
 
         if (currentQuestionIndex > 0) {
             setCurrentQuestionIndex(currentQuestionIndex - 1);
