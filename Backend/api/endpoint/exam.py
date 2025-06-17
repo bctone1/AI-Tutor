@@ -214,7 +214,7 @@ async def get_user_case_progress_endpoint(request: dict, db: Session = Depends(g
             "success": True,
             "progress": progress,
             "total_question": record.total_question,
-            "correct_rate" : record.correct_rate,
+            "correct_rate" : record.correct_rate * 100,
             "attendance": record.attendance,
             "total_time": record.total_time
         }

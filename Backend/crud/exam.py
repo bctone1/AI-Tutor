@@ -6,6 +6,7 @@ from core.config import CHATGPT_API_KEY
 from sqlalchemy.orm import Session
 from typing import Dict, Tuple
 from collections import defaultdict
+from model.user import User
 from langchain_service.chain.get_explantation import generate_explantation, generate_hint
 import random
 from pathlib import Path
@@ -311,18 +312,9 @@ def save_user_case_scores(db: Session, user_id: int, case_results: Dict[str, Dic
     print(f"사용자 {user_id}의 유형별 점수가 저장되었습니다.")
 
 def get_user_case_progress(db: Session, user_id: int) -> Dict[str, Dict]:
-    """
-    사용자의 유형별 학습 현황을 조회하는 함수
-    
-    Args:
-        db: 데이터베이스 세션
-        user_id: 사용자 ID
-        
-    Returns:
-        Dict: 유형별 학습 현황
-    """
     case_scores = db.query(UserCaseScore).filter(UserCaseScore.user_id == user_id).all()
-    
+    user_data = db.query(User).filter(User.id == user_id).first()
+    department = user_data.department
     progress = {}
     for score in case_scores:
         progress[score.case] = {
@@ -333,19 +325,29 @@ def get_user_case_progress(db: Session, user_id: int) -> Dict[str, Dict]:
             'level': score.level,
             'last_updated': score.last_updated.isoformat() if score.last_updated else None
         }
-    
-    # 아직 시도하지 않은 유형들도 포함
-    for case in PHYSICAL_THERAPY_CASES:
-        if case not in progress:
-            progress[case] = {
-                'total_questions': 0,
-                'correct_answers': 0,
-                'total_score': 0,
-                'accuracy': 0.0,
-                'level': '미시도',
-                'last_updated': None
-            }
-    
+
+    if department == "물리치료학과":
+        for case in PHYSICAL_THERAPY_CASES:
+            if case not in progress:
+                progress[case] = {
+                    'total_questions': 0,
+                    'correct_answers': 0,
+                    'total_score': 0,
+                    'accuracy': 0.0,
+                    'level': '미시도',
+                    'last_updated': None
+                }
+    elif department == "작업치료학과":
+        for case in PHYSICAL_THERAPY_CASES:
+            if case not in progress:
+                progress[case] = {
+                    'total_questions': 0,
+                    'correct_answers': 0,
+                    'total_score': 0,
+                    'accuracy': 0.0,
+                    'level': '미시도',
+                    'last_updated': None
+                }
     return progress
 
 def classify_level(score: int, num_cases: int) -> Tuple[str, int]:
