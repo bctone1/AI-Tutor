@@ -86,6 +86,7 @@ const LevelTest = ({ setView, userdata }) => {
     }, [currentQuestionIndex, testQuestions, answers]);
 
     useEffect(() => {
+        let cancelled = false;
 
         const getQuestion = async () => {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getTestQuestion`, {
@@ -96,14 +97,17 @@ const LevelTest = ({ setView, userdata }) => {
                 body: JSON.stringify({ major: userdata.user.major }),
             });
             const data = await response.json();
-            if (response.ok) {
+            if (!cancelled && response.ok) {
                 setTestQuestions(data);
                 console.log(data);
             } else {
-                console.error("공급자 오류발생");
+                // console.error("공급자 오류발생");
             }
         };
         getQuestion();
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
     const handleNext = async () => {

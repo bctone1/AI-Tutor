@@ -19,7 +19,7 @@ const Navigation = ({ view, setView, userdata }) => {
     if (userdata?.user?.major === "소속 없음") {
       alert("프로필을 완성해주세요.");
     } else if (userdata?.user?.testscore) {
-      setView('leveltest');
+      // setView('leveltest');
       alert("레벨테스트를 이미 완료했습니다.");
     } else {
       setView('leveltest');
