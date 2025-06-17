@@ -100,17 +100,45 @@ def generate_user_current_score(db: Session, email : str, major : str):
     if user:
         if major == "물리치료학과":
             for case in PHYSICAL_THERAPY_CASES:
-                new_score = UserCurrentScore(
+                new_current_score = UserCurrentScore(
+                    user_id = user.id,
+                    case = case,
+                )
+                db.add(new_current_score)
+                db.commit()
+                db.refresh(new_current_score)
+
+            return user
+        elif major == "작업치료학과":
+            for case in Occupational_Therapy:
+                new_current_score = UserCurrentScore(
+                    user_id = user.id,
+                    case = case,
+                )
+                db.add(new_current_score)
+                db.commit()
+                db.refresh(new_current_score)
+            return user
+    else:
+        return None
+
+def generate_user_score(db: Session, email : str, major : str):
+    user = db.query(User).filter(User.email == email).first()
+    if user:
+        if major == "물리치료학과":
+            for case in PHYSICAL_THERAPY_CASES:
+                new_score = UserCaseScore(
                     user_id = user.id,
                     case = case,
                 )
                 db.add(new_score)
                 db.commit()
                 db.refresh(new_score)
+
             return user
         elif major == "작업치료학과":
             for case in Occupational_Therapy:
-                new_score = UserCurrentScore(
+                new_score = UserCaseScore(
                     user_id = user.id,
                     case = case,
                 )
@@ -276,3 +304,5 @@ def get_user_case_current(db: Session, user_id: int) -> Dict[str, Dict]:
 def get_student_data(db: Session):
     exclude_roles: list[str] = ['professor', 'admin']
     return db.query(User).filter(not_(User.role.in_(exclude_roles))).all()
+
+
