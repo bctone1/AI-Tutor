@@ -11,20 +11,7 @@ from langchain_service.chain.get_explantation import generate_explantation, gene
 import random
 from pathlib import Path
 from datetime import datetime
-
-# 물리치료 10개 유형 상수 정의
-PHYSICAL_THERAPY_CASES = [
-    "인체의 구분과 조직",
-    "뼈대계통", 
-    "관절계통",
-    "근육계통",
-    "순환계통",
-    "호흡계통", 
-    "소화계통",
-    "피부계통 및 특수감각계통",
-    "비뇨계통 및 내분비계통",
-    "신경계통"
-]
+from core.util import *
 
 
 embedding_model = OpenAIEmbeddings(
@@ -338,7 +325,7 @@ def get_user_case_progress(db: Session, user_id: int) -> Dict[str, Dict]:
                     'last_updated': None
                 }
     elif department == "작업치료학과":
-        for case in PHYSICAL_THERAPY_CASES:
+        for case in Occupational_Therapy:
             if case not in progress:
                 progress[case] = {
                     'total_questions': 0,
