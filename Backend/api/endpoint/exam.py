@@ -177,7 +177,10 @@ async def submit_test_endpoint(request: SubmitTestRequest, db: Session = Depends
     answers = request.answers
     user_id = request.userdata.user.id
 
-    print(f"ANSWER : {answers}")
+    print("\n===== 사용자가 제출한 답안 =====")
+    for qid, ans in answers.items():
+        print(f"문제 ID: {qid}, 사용자 답안: {ans}")
+    print("================================\n")
 
     # 기존 전체 채점
     score, num_cases = grading_test(db, answers)

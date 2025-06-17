@@ -169,6 +169,7 @@ async def update_profile_endpoint(request: UpdateProfileRequest, db : Session = 
     major = request.major
     grade = request.grade
     generate_user_current_score(db = db, email = email, major = major)
+    generate_user_score(db=db, email=email, major=major)
     try:
         user = change_user_info(db = db, email = email, major = major, grade = grade)
         return JSONResponse(
@@ -214,7 +215,6 @@ async def get_daily_endpoint(request: GetDailyRecordRequest, db : Session = Depe
     user_id = request.user_id
     record = get_daily_record(db = db, user_id=user_id)
     print(f"RECORD : {record}")
-    #return record
     return JSONResponse(content=record, status_code=200)
 
 
