@@ -150,14 +150,14 @@ const LevelTest = ({ setView, userdata }) => {
                     });
                     const data = await response.json();
                     if (response.ok) {
-
+                        console.log(data);
                         // 스코어 업데이트 후 세션 초기화
                         await signIn("credentials3", {
                             redirect: false,
                             email: userdata.user.email,
                             testscore: data.score
                         });
-
+                        setView("profile");
 
                     } else {
                         console.error("제출 실패:", data);
