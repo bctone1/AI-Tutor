@@ -239,3 +239,9 @@ async def get_user_case_progress_endpoint(request: dict, db: Session = Depends(g
 async def get_student_data_endpoint(db: Session = Depends(get_db)):
     student_data = get_student_data(db = db)
     return student_data
+
+@user_router.post('/GetLagCases')
+async def get_student_data_endpoint(request : GetUserLagCase, db: Session = Depends(get_db)):
+    user_id = request.user_id
+    lag_cases = get_user_lag_case(db = db, user_id = user_id)
+    return lag_cases

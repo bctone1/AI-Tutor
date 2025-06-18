@@ -430,9 +430,18 @@ def get_unique_filename(path: Path) -> tuple[Path, str]:
             return new_path, new_name  # 경로 전체 + 파일명만 분리해서 리턴
         counter += 1
 
-def update_current_score(db : Session, question_id : int, correct_answer : bool):
+def update_current_score(db : Session, user_id : int, question_id : int, correct_answer : bool):
     question = db.query(LabelingData).filter(LabelingData.question_id == question_id).first()
-    user_status = db.query(UserCurrentScore).filter(UserCurrentScore.case == question.case).first()
+    user_status = (
+        db.query(UserCurrentScore)
+        .filter(
+            UserCurrentScore.case == question.case,
+            UserCurrentScore.user_id == user_id
+        )
+        .first()
+    )
+    print(f"과목 : {question.case}")
+    print(f"사용자 데이터 : {user_status.id}")
     user_status.total_questions += 1
     if correct_answer is True:
         user_status.correct_answers += 1

@@ -1,6 +1,7 @@
 import bcrypt
 from sqlalchemy.orm import Session
 from model.user import *
+from model.exam import LabelingData
 import random
 from datetime import datetime
 from core.util import *
@@ -305,4 +306,33 @@ def get_student_data(db: Session):
     exclude_roles: list[str] = ['professor', 'admin']
     return db.query(User).filter(not_(User.role.in_(exclude_roles))).all()
 
+def get_user_lag_case(db: Session, user_id: int):
+    # accuracy 기준으로 낮은 순 3개
+    lag_accuracy = (
+        db.query(UserCurrentScore)
+        .filter(UserCurrentScore.user_id == user_id)
+        .order_by(UserCurrentScore.accuracy.asc())
+        .limit(3)
+        .all()
+    )
+    accuracy_cases = [score.case for score in lag_accuracy]
 
+    # total_questions 기준으로 낮은 순 3개
+    lag_total_questions = (
+        db.query(UserCurrentScore)
+        .filter(UserCurrentScore.user_id == user_id)
+        .order_by(UserCurrentScore.total_questions.asc())
+        .limit(3)
+        .all()
+    )
+    question_cases = [score.case for score in lag_total_questions]
+
+    # 두 목록을 합치고 중복 제거 (유지 순서: accuracy → total_questions)
+    combined_cases = []
+    seen = set()
+    for case in accuracy_cases + question_cases:
+        if case not in seen:
+            combined_cases.append(case)
+            seen.add(case)
+
+    return combined_cases

@@ -250,7 +250,7 @@ async def get_explantation_endpoint(request: GetExplantationRequest, db: Session
 
     reference = get_most_similar_question(db = db, embedding = embedding_vector, id_list = ids)
     print(f"REFERENCE : {reference}")
-
+    print(f"사용자 ID : {user_id}")
 
 
     correct_answer = get_correct_answer(db = db, question_id = question_id)
@@ -262,7 +262,7 @@ async def get_explantation_endpoint(request: GetExplantationRequest, db: Session
 
     if exist:
         save_total_correct(db=db, user_id=user_id, is_correct=is_correct)
-        update_current_score(db=db, question_id=question_id, correct_answer=is_correct)
+        update_current_score(db=db, user_id = user_id, question_id=question_id, correct_answer=is_correct)
         add_daily_record(db=db, user_id=user_id, question_id=question_id)
         return JSONResponse(content={
             "isCorrect" : is_correct,
@@ -272,7 +272,7 @@ async def get_explantation_endpoint(request: GetExplantationRequest, db: Session
         explanation = get_explantation(db=db, question_id=question_id, correct_answer=correct_answer, reference=reference)
         save_new_commentary(db = db, question_id = question_id, commentary = explanation)
         save_total_correct(db=db, user_id=user_id, is_correct=is_correct)
-        update_current_score(db=db, question_id=question_id, correct_answer=is_correct)
+        update_current_score(db=db, user_id = user_id, question_id=question_id, correct_answer=is_correct)
         add_daily_record(db=db, user_id=user_id, question_id=question_id)
 
         return JSONResponse(content={

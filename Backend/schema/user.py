@@ -110,3 +110,5 @@ class GetUserCaseScoresResponse(BaseModel):
 class GetDailyRecordRequest(BaseModel):
     user_id : int
 
+class GetUserLagCase(BaseModel):
+    user_id : int
