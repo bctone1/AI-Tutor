@@ -237,13 +237,6 @@ def get_daily_record(db : Session, user_id : int):
     ]
     return result
 
-'''
-def get_daily_record(db : Session, user_id : int):
-    record = db.query(UserDaily).filter(UserDaily.user_id == user_id).all()
-    return record
-
-'''
-
 
 def generate_current_score_status(db: Session, user_email: str, major: str):
     user = db.query(User).filter(User.email == user_email).first()
