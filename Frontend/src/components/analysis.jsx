@@ -142,7 +142,7 @@ const Analysis = ({ userdata }) => {
             });
             const data = await response.json();
             if (response.ok) {
-                // console.log(data);
+                console.log(data);
                 setStudents(data);
             } else {
                 console.error("지식베이스 오류");
@@ -262,10 +262,11 @@ const Analysis = ({ userdata }) => {
                                         <p className="text-sm text-gray-600">{student.major} {student.grade}학년</p>
                                     </div>
                                     <div className={`px-3 py-1 rounded-full text-sm font-bold
-                                        ${student.testscore >= 80 ? 'bg-green-100 text-green-700' :
-                                            student.testscore >= 50 ? 'bg-yellow-100 text-yellow-700' :
+                                        ${student.score === null ? 'bg-gray-100 text-gray-700' :
+                                            student.score >= 80 ? 'bg-green-100 text-green-700' :
+                                            student.score >= 50 ? 'bg-yellow-100 text-yellow-700' :
                                                 'bg-red-100 text-red-700'}`}>
-                                        {student.testscore}점
+                                        {student.score ? student.score + "점" : 'NULL'}
                                     </div>
                                 </div>
                             </div>
