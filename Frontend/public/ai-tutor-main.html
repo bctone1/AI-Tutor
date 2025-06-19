@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tutor - 개인 맞춤형 학습 도우미</title>
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #f97316;
+            --danger: #ef4444;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f9fafb;
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
+        header {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo span {
+            margin-left: 0.5rem;
+        }
+
+        .footer-logo {
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--gray-800);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-light {
+            background-color: white;
+            color: var(--primary);
+        }
+
+        .btn-light:hover {
+            background-color: var(--gray-100);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 0;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .hero-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+            color: var(--gray-800);
+        }
+
+        /* Sections */
+        .features {
+            padding: 4rem 0;
+            background-color: white;
+        }
+
+        .tech-section {
+            padding: 4rem 0;
+            background-color: var(--gray-100);
+        }
+
+        .user-types-section {
+            padding: 4rem 0;
+            background-color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 4px;
+            background-color: var(--primary);
+            position: absolute;
+            bottom: -0.75rem;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .section-description {
+            text-align: center;
+            font-size: 1.125rem;
+            color: #6b7280;
+            max-width: 800px;
+            margin: 0 auto 2rem auto;
+        }
+
+        /* Feature Cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background-color: var(--gray-100);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            background-color: var(--primary-light);
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Tech Cards */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tech-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+        }
+
+        .tech-icon {
+            background-color: var(--warning);
+            color: white;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+        }
+
+        .tech-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+
+        .tech-card p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+            color: #6b7280;
+            flex-grow: 1;
+        }
+
+        .tech-list {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .tech-list li {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+            color: #6b7280;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .tech-list li:before {
+            content: "•";
+            color: var(--primary);
+            margin-right: 0.5rem;
+        }
+
+        /* User Type Cards */
+        .user-types-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .user-type-card {
+            background-color: var(--gray-100);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-type-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+        }
+
+        .user-type-icon {
+            color: white;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+        }
+
+        .admin-icon {
+            background-color: var(--danger);
+        }
+
+        .professor-icon {
+            background-color: var(--primary);
+        }
+
+        .student-icon {
+            background-color: var(--success);
+        }
+
+        .user-type-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+
+        .user-type-card p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+            color: #6b7280;
+        }
+
+        .feature-list {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .feature-list li {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+            color: #6b7280;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            color: var(--success);
+            margin-right: 0.5rem;
+            font-weight: bold;
+        }
+
+        /* RAG Process Visualization */
+        .rag-process-visualization {
+            margin-top: 3rem;
+            background-color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .rag-process-visualization h4 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #374151;
+            font-size: 1.25rem;
+        }
+
+        .process-steps {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .process-step {
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .step-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem auto;
+            font-weight: bold;
+        }
+
+        .step-1 {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .step-2 {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+
+        .step-3 {
+            background-color: #d1fae5;
+            color: #059669;
+        }
+
+        .step-4 {
+            background-color: #e0e7ff;
+            color: #4f46e5;
+        }
+
+        .step-5 {
+            background-color: #f3e8ff;
+            color: #7c3aed;
+        }
+
+        .process-step p {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .arrow {
+            color: #9ca3af;
+            font-size: 1.5rem;
+        }
+
+        .process-summary {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #f3f4f6;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .process-summary p {
+            font-size: 0.875rem;
+            color: #374151;
+            margin: 0;
+        }
+
+        /* Dashboard Styles */
+        .new-dashboard-preview {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #f3f4f6;
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .dashboard-grid.two-col {
+            grid-template-columns: 1fr 2fr;
+        }
+
+        .dashboard-grid.three-col {
+            grid-template-columns: 2fr 1fr 1fr;
+        }
+
+        .new-dashboard-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+        }
+
+        .new-card-header {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0 0 16px 0;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 24px;
+        }
+
+        .user-info h2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .user-info p {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .level-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .level-text h3 {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .continue-learning-btn {
+            background-color: #10b981;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 9999px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .progress-section {
+            flex: 1;
+        }
+
+        .progress-item {
+            margin-bottom: 16px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-fill.green {
+            background-color: #10b981;
+        }
+
+        .progress-fill.yellow {
+            background-color: #f59e0b;
+        }
+
+        .progress-fill.red {
+            background-color: #ef4444;
+        }
+
+        .recommendation-item {
+            background-color: #e0e7ff;
+            color: #3730a3;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        /* Chat Styles */
+        .chat-preview {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background-color: #4f46e5;
+            color: white;
+            padding: 12px 16px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-content {
+            padding: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .chat-message {
+            margin-bottom: 16px;
+            max-width: 80%;
+        }
+
+        .chat-message.ai {
+            background-color: #e0e7ff;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border-top-left-radius: 4px;
+        }
+
+        .chat-message.user {
+            background-color: #d1fae5;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border-top-right-radius: 4px;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .chat-sender {
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 0.875rem;
+        }
+
+        .ai-sender {
+            color: #4f46e5;
+        }
+
+        .chat-text {
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .question-options {
+            margin-top: 8px;
+        }
+
+        .question-options div {
+            margin-bottom: 4px;
+        }
+
+        .chat-input {
+            padding: 12px 16px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 9999px;
+            border: 1px solid #d1d5db;
+            font-size: 0.875rem;
+        }
+
+        /* Professor Management Panel */
+        .quality-cycle-box {
+            max-width: 900px;
+            margin: 0 auto 2rem auto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            color: white;
+            text-align: center;
+        }
+
+        .quality-cycle-box h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .quality-cycle-box p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .arrow-text {
+            color: #ffd700;
+        }
+
+        .professor-management-panel {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .panel-header {
+            background-color: #3f51b5;
+            color: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .panel-nav {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .nav-menu span {
+            cursor: pointer;
+        }
+
+        .nav-menu .active {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+        }
+
+        .logout-btn {
+            background-color: #ef4444;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: none;
+            color: white;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        .panel-content {
+            padding: 1.5rem;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .content-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #374151;
+            margin: 0;
+        }
+
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.875rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        .management-table {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 80px 60px 2fr 2fr 80px;
+            background-color: #f9fafb;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 80px 60px 2fr 2fr 80px;
+            padding: 1rem;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 0.875rem;
+            align-items: start;
+        }
+
+        .table-row div {
+            color: #374151;
+        }
+
+        .question-cell {
+            line-height: 1.4;
+        }
+
+        .explanation-status {
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .edit-btn {
+            background-color: #2563eb;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: none;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .quality-info {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #f0f9ff;
+            border-radius: 8px;
+            border-left: 4px solid #0ea5e9;
+        }
+
+        .quality-info p {
+            font-size: 0.875rem;
+            color: #0c4a6e;
+            margin: 0;
+        }
+
+        /* RAG Management Panel */
+        .rag-management-panel {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .breadcrumb {
+            background-color: #f8f9fa;
+            padding: 12px 24px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 0.875rem;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .breadcrumb a {
+            color: #6b7280;
+            text-decoration: none;
+        }
+
+        .rag-header {
+            padding: 24px 24px 0 24px;
+        }
+
+        .rag-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 24px;
+        }
+
+        .tabs-container {
+            border-bottom: 1px solid #d1d5db;
+            margin-bottom: 24px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tab {
+            display: inline-block;
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .tab.active {
+            color: #4f46e5;
+            border-bottom: 2px solid #4f46e5;
+            background-color: #f8fafc;
+        }
+
+        .tab-content {
+            padding: 0 24px 24px 24px;
+        }
+
+        .department-select {
+            margin-bottom: 24px;
+        }
+
+        .department-select label {
+            display: block;
+            color: #374151;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .department-select select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            background-color: white;
+        }
+
+        .upload-box {
+            border: 2px dashed #d1d5db;
+            background-color: #f9fafb;
+            border-radius: 8px;
+            padding: 48px 24px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .upload-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 16px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #9ca3af;
+            color: #9ca3af;
+            border-radius: 8px;
+        }
+
+        .upload-title {
+            font-size: 1.125rem;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .upload-subtitle {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .upload-btn {
+            padding: 8px 24px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .upload-btn.primary {
+            background-color: #4f46e5;
+            color: white;
+        }
+
+        .upload-btn.success {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .upload-note {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            margin-top: 16px;
+        }
+
+        .file-list {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .file-list-header {
+            display: flex;
+            padding: 12px 20px;
+            background-color: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+
+        .file-list-header>div {
+            flex: 1;
+        }
+
+        .file-list-header>div:last-child {
+            width: 160px;
+            text-align: center;
+        }
+
+        .file-row {
+            display: flex;
+            padding: 12px 20px;
+            border-bottom: 1px solid #f3f4f6;
+            align-items: center;
+            font-size: 0.875rem;
+        }
+
+        .file-row>div {
+            flex: 1;
+            color: #6b7280;
+        }
+
+        .file-row>div:last-child {
+            width: 160px;
+        }
+
+        .file-name {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #374151 !important;
+        }
+
+        .file-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #fff;
+        }
+
+        .file-icon.primary {
+            background: #4f46e5;
+        }
+
+        .file-icon.success {
+            background: #10b981;
+        }
+
+        .file-actions {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .download-btn {
+            color: #2563eb;
+            border: 1px solid #2563eb;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            color: #dc2626;
+            border: 1px solid #dc2626;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        .rag-info {
+            background-color: #f0f9ff;
+            padding: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .rag-info p {
+            font-size: 0.875rem;
+            color: #0c4a6e;
+            margin: 0;
+            text-align: center;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 4rem 0;
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--gray-900);
+            color: white;
+            padding: 2rem 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .dashboard-grid.two-col,
+            .dashboard-grid.three-col {
+                grid-template-columns: 1fr !important;
+            }
+
+            .level-display {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .continue-learning-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .tech-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .tech-card {
+                min-height: auto;
+                padding: 1.5rem;
+            }
+
+            .user-types-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .user-type-card {
+                min-height: auto;
+                padding: 1.5rem;
+            }
+
+            .process-steps {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+
+            .table-header,
+            .table-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .panel-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .panel-nav {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .content-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .file-list-header,
+            .file-row {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
+            }
+
+            .file-actions {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                    </svg>
+                    <span>AI Tutor</span>
+                </div>
+                <a href="/login" class="btn">로그인</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- 1. 서비스 소개 (Hero Section) -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero">
+                    <div class="hero-content">
+                        <h1>AI 기반 맞춤형 학습 도우미</h1>
+                        <p>
+                            AI Tutor는 학생들의 자기주도 학습을 돕는 AI 기반 웹 튜터링 시스템입니다.
+                            학생 개개인의 학습 수준을 측정하여 관련 학과에 맞춘 자동형 학습 지원 기능을 제공하며,
+                            강의 외 시간에도 언제 어디서든 학습할 수 있도록 설계되었습니다.
+                        </p>
+                    </div>
+                    <div class="hero-image">
+                        <img src="./main_img2.png" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 주요 기능 -->
+        <section id="features" class="features">
+            <div class="container">
+                <h2 class="section-title">주요 기능</h2>
+                <div class="section-description">
+                    AI Tutor는 단순한 학습을 넘어서, 다음과 같은 특징을 갖는 '디지털 학습 코치'로 설계됩니다.
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 16v-4"></path>
+                                <path d="M12 8h.01"></path>
+                            </svg>
+                        </div>
+                        <h3>개인별 레벨 진단</h3>
+                        <p>서비스 최초 이용 시 진단형 테스트를 통해 학생의 전공 이해도 및 수준을 정확히 분석합니다.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                        </div>
+                        <h3>맞춤형 문제 추천</h3>
+                        <p>진단 결과를 기반으로 학생 수준에 적합한 문제를 선별하여 효과적인 반복 학습을 지원합니다.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polygon
+                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                                </polygon>
+                            </svg>
+                        </div>
+                        <h3>AI 맞춤 해설</h3>
+                        <p>기존 문제은행과 GPT 기반 AI가 생성하는 새로운 해설로 실전 대비력을 강화합니다.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                        </div>
+                        <h3>자기주도 학습 관리</h3>
+                        <p>풀이 이력, 정답률, 추천 문제 현황을 한눈에 확인할 수 있는 대시보드를 제공합니다.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                        </div>
+                        <h3>웹 기반 접근성</h3>
+                        <p>학습 장소와 시간의 제약 없이 사용할 수 있는 반응형 웹 인터페이스로 설계됩니다.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <line x1="12" y1="2" x2="12" y2="6"></line>
+                                <line x1="12" y1="18" x2="12" y2="22"></line>
+                                <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                                <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                                <line x1="2" y1="12" x2="6" y2="12"></line>
+                                <line x1="18" y1="12" x2="22" y2="12"></line>
+                                <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                                <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                            </svg>
+                        </div>
+                        <h3>빅데이터 피드백</h3>
+                        <p>축적된 학습 로그를 분석해 개인 맞춤 피드백을 제공하고 학습 경향을 파악합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 핵심 기술 및 시스템 구조 -->
+        <section class="tech-section">
+            <div class="container">
+                <h2 class="section-title">핵심 기술 및 시스템 구조</h2>
+                <div class="section-description">
+                    데이터, AI 기술, 사용자 인터페이스가 유기적으로 결합된 3계층 맞춤형 학습 플랫폼입니다.
+                </div>
+
+                <div class="tech-grid">
+                    <div class="tech-card">
+                        <div class="tech-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                        </div>
+                        <h3>하이브리드 데이터 시스템<br>(RAG + RDBMS)</h3>
+                        <p>RAG와 관계형 데이터베이스를 결합하여 효율적인 문제 관리와 정확한 정답 제공을 동시에 구현합니다.</p>
+                        <ul class="tech-list">
+                            <li>Vector DB를 통한 고속 문제 검색</li>
+                            <li>관계형 DB로 정답 데이터 정확성 보장</li>
+                            <li>기출문제 데이터 표준화 및 구조화</li>
+                            <li>교육 자료 품질 검증 시스템</li>
+                        </ul>
+                    </div>
+                    <div class="tech-card">
+                        <div class="tech-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                <path d="M10 7.5L14 10l-4 2.5v-5z"></path>
+                            </svg>
+                        </div>
+                        <h3>LLM 연동 AI 엔진<br>(ChatGPT API)</h3>
+                        <p>ChatGPT API와 RAG 기술을 활용하여 개인별 수준에 맞춘 맞춤형 해설을 실시간으로 생성합니다.</p>
+                        <ul class="tech-list">
+                            <li>OpenAI ChatGPT API 통합 활용</li>
+                            <li>벡터 데이터베이스 기반 유사도 검색</li>
+                            <li>컨텍스트 기반 개인화 해설 생성</li>
+                            <li>높은 유사도 순서 기반 문제 추천</li>
+                        </ul>
+                    </div>
+                    <div class="tech-card">
+                        <div class="tech-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M3 3v18h18"></path>
+                                <path d="M7 12l4-4 4 4 6-6"></path>
+                            </svg>
+                        </div>
+                        <h3>3계층 시스템<br>아키텍처</h3>
+                        <p>확장 가능한 마이크로서비스 구조로 설계되어 각 기능이 독립적으로 동작하며, 시스템 확장성과 안정성을 보장합니다.</p>
+                        <ul class="tech-list">
+                            <li>데이터 저장/관리 계층 (Vector DB + RDBMS)</li>
+                            <li>AI 처리 계층 (RAG + LLM 연동)</li>
+                            <li>사용자 인터페이스 계층 (웹 기반 UI)</li>
+                            <li>GPU 서버를 통한 고성능 AI 모델 추론</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. RAG 기반 해설 품질 향상 프로세스 -->
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">RAG 기반 해설 품질 향상 프로세스</h2>
+                <div class="section-description">
+                    교육 자료를 RAG 시스템에 업로드하여 LLM이 정확하고 품질 높은 해설을 생성하는 5단계 시스템입니다.
+                </div>
+
+                <div class="user-types-grid">
+                    <div class="user-type-card">
+                        <div class="user-type-icon admin-icon">
+                            <span style="font-size: 1.5rem;">1</span>
+                        </div>
+                        <h3>교육 자료 업로드</h3>
+                        <p>표준 교재, 참고서, 강의 노트 등 신뢰할 수 있는 교육 자료를 RAG 데이터베이스에 업로드합니다.</p>
+                        <ul class="feature-list">
+                            <li>텍스트 파일, PDF, Word 문서 지원</li>
+                            <li>다양한 형태의 교육 자료 처리</li>
+                            <li>자동 문서 분석 및 분류</li>
+                        </ul>
+                    </div>
+
+                    <div class="user-type-card">
+                        <div class="user-type-icon professor-icon">
+                            <span style="font-size: 1.5rem;">2</span>
+                        </div>
+                        <h3>벡터 데이터베이스 구축</h3>
+                        <p>업로드된 교육 자료를 벡터화하여 RAG 시스템에 저장하고 의미론적 검색이 가능하도록 최적화합니다.</p>
+                        <ul class="feature-list">
+                            <li>고차원 벡터 임베딩 생성</li>
+                            <li>의미론적 유사도 기반 인덱싱</li>
+                            <li>실시간 검색 최적화</li>
+                        </ul>
+                    </div>
+
+                    <div class="user-type-card">
+                        <div class="user-type-icon student-icon">
+                            <span style="font-size: 1.5rem;">3</span>
+                        </div>
+                        <h3>컨텍스트 기반 해설 생성</h3>
+                        <p>문제가 주어지면 RAG 시스템이 관련 교육 자료를 검색하고, 이를 컨텍스트로 활용하여 정확한 해설을 생성합니다.</p>
+                        <ul class="feature-list">
+                            <li>관련 자료 실시간 검색</li>
+                            <li>컨텍스트 기반 해설 생성</li>
+                            <li>교육적으로 유용한 설명 제공</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- RAG 프로세스 시각화 -->
+                <div class="rag-process-visualization">
+                    <h4>RAG 기반 해설 생성 5단계 프로세스</h4>
+                    <div class="process-steps">
+                        <div class="process-step">
+                            <div class="step-circle step-1">
+                                <span>1</span>
+                            </div>
+                            <p>교육자료<br>업로드</p>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="process-step">
+                            <div class="step-circle step-2">
+                                <span>2</span>
+                            </div>
+                            <p>벡터DB<br>구축</p>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="process-step">
+                            <div class="step-circle step-3">
+                                <span>3</span>
+                            </div>
+                            <p>AI 해설<br>생성</p>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="process-step">
+                            <div class="step-circle step-4">
+                                <span>4</span>
+                            </div>
+                            <p>교수님<br>검토/수정</p>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="process-step">
+                            <div class="step-circle step-5">
+                                <span>5</span>
+                            </div>
+                            <p>지속적<br>품질개선</p>
+                        </div>
+                    </div>
+                    <div class="process-summary">
+                        <p>
+                            <strong>핵심:</strong> 더 많은 교육 자료 업로드 + 교수님 검토 → AI 해설 품질 지속적 향상
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. 사용자별 시스템 및 기능 -->
+        <section class="user-types-section">
+            <div class="container">
+                <h2 class="section-title">사용자별 시스템 및 기능</h2>
+                <div class="section-description">
+                    관리자, 교수자, 학생 각각의 역할에 맞춘 전용 시스템으로 효율적인 학습 생태계를 구축합니다.
+                </div>
+
+                <div class="user-types-grid">
+                    <div class="user-type-card">
+                        <div class="user-type-icon admin-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3>관리자 (시스템 운영)</h3>
+                        <p>전체 시스템을 관리하고 운영하는 최고 권한자로서, 플랫폼의 안정적인 운영과 성장을 책임집니다.</p>
+                        <ul class="feature-list">
+                            <li>전체 사용자 계정 및 권한 관리</li>
+                            <li>시스템 성능 모니터링 및 최적화</li>
+                            <li>콘텐츠 품질 관리 및 검증</li>
+                            <li>백업 및 보안 설정 관리</li>
+                            <li>플랫폼 업데이트 및 유지보수</li>
+                        </ul>
+                    </div>
+
+                    <div class="user-type-card">
+                        <div class="user-type-icon professor-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <h3>교수자 (해설 품질 관리)</h3>
+                        <p>AI가 생성한 해설을 검토하고 개선하여 학습 품질을 높이며, 교육 자료를 관리하는 역할을 담당합니다.</p>
+                        <ul class="feature-list">
+                            <li>문제 데이터베이스 업로드 및 관리</li>
+                            <li>AI 생성 해설의 실시간 검토 및 수정</li>
+                            <li>문제별 맞춤형 해설 직접 작성</li>
+                            <li>교육 자료 및 참고서 RAG 시스템 업로드</li>
+                            <li>해설 버전 관리 및 품질 보증</li>
+                            <li>학생별 학습 현황 모니터링</li>
+                        </ul>
+                    </div>
+
+                    <div class="user-type-card">
+                        <div class="user-type-icon student-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path
+                                    d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3>학생 (맞춤형 학습)</h3>
+                        <p>개인화된 학습 환경에서 AI 튜터와 함께 효율적으로 학습하며 실력을 향상시킵니다.</p>
+                        <ul class="feature-list">
+                            <li>개인 수준 진단 테스트 참여</li>
+                            <li>AI 튜터와 실시간 대화형 학습</li>
+                            <li>맞춤형 문제 추천 및 풀이</li>
+                            <li>상세한 해설 및 피드백 확인</li>
+                            <li>학습 진도 및 성취도 추적</li>
+                            <li>취약점 분석 및 집중 학습 계획</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. 학생 맞춤 학습 대시보드 -->
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">학생 맞춤 학습 대시보드</h2>
+                <div class="section-description">
+                    AI 튜터가 학습자의 개인별 학습 데이터를 분석하여 맞춤형 학습 관리와 진도 추천을 제공합니다.
+                </div>
+                <div class="new-dashboard-preview">
+                    <!-- 첫 번째 행: 사용자 정보와 종합 레벨 -->
+                    <div class="dashboard-grid two-col">
+                        <div class="new-dashboard-card user-info">
+                            <h2>BCTONE님, 안녕하세요!</h2>
+                            <p>작업치료학과 2학년</p>
+                        </div>
+                        <div class="new-dashboard-card level-display">
+                            <div class="level-text">
+                                <h3>종합 레벨: 하</h3>
+                            </div>
+                            <button class="continue-learning-btn">
+                                오늘의 학습 계속하기
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 두 번째 행: 유형별 학습 현황과 집중 학습 추천 -->
+                    <div class="dashboard-grid two-col">
+                        <div class="new-dashboard-card progress-section">
+                            <div class="new-card-header">유형별 학습 현황</div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span>심혈관계, 면역계</span>
+                                    <span>하</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill red" style="width: 10%"></div>
+                                </div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span>호흡계, 음성, 말하기 관련 기관</span>
+                                    <span>하</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill red" style="width: 20%"></div>
+                                </div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span>소화계, 삼킴관련 기관</span>
+                                    <span>하</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill red" style="width: 20%"></div>
+                                </div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span>인체의 체계</span>
+                                    <span>하</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill red" style="width: 10%"></div>
+                                </div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span>신경계</span>
+                                    <span>중</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill yellow" style="width: 50%"></div>
+                                </div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span>피부, 눈, 귀 등 감각계</span>
+                                    <span>상</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill green" style="width: 70%"></div>
+                                </div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span>내분비계, 비뇨계, 생식계</span>
+                                    <span>중</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill yellow" style="width: 50%"></div>
+                                </div>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span>혈액순환, 면역기능</span>
+                                    <span>중</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill yellow" style="width: 50%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="new-dashboard-card">
+                            <div class="new-card-header">집중 학습 추천</div>
+                            <div class="recommendation-item">심혈관계, 면역계</div>
+                            <div class="recommendation-item">호흡계, 음성, 말하기 관련 기관</div>
+                            <div class="recommendation-item">소화계, 삼킴관련 기관</div>
+                            <div class="recommendation-item">인체의 체계</div>
+                            <div class="recommendation-item">호흡, 음성, 말하기 기능</div>
+                            <div class="recommendation-item">내분비, 배설, 생식기능</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. AI 튜터 대화형 학습 -->
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">AI 튜터 대화형 학습</h2>
+                <div class="section-description">
+                    AI 튜터와 자연스러운 대화를 통해 문제를 풀고 맞춤형 해설을 받을 수 있습니다.
+                </div>
+
+                <div class="chat-preview">
+                    <div class="chat-header">
+                        <div>AI Tutor - 학습 대화</div>
+                    </div>
+
+                    <div class="chat-content">
+                        <div class="chat-message ai">
+                            <div class="chat-sender ai-sender">AI 튜터</div>
+                            <div class="chat-text">
+                                안녕하세요! 저는 여러분의 AI 튜터입니다. 😊<br><br>
+                                지금부터 기출문제를 함께 풀어보며 학습할 거예요. 각 문항에 대해 정답을 채팅창에 입력하시면, 해설과 함께 피드백을 드릴게요.
+                            </div>
+                        </div>
+
+                        <div class="chat-message ai">
+                            <div class="chat-sender ai-sender">AI 튜터</div>
+                            <div class="chat-text">
+                                <p><strong>문제 1:</strong> 다음 중 중추신경계에 포함되지 않는 것은?</p>
+
+                                <div class="question-options">
+                                    <div>① 대뇌</div>
+                                    <div>② 소뇌</div>
+                                    <div>③ 척수신경</div>
+                                    <div>④ 뇌간</div>
+                                    <div>⑤ 척수</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chat-message user">
+                            <div class="chat-sender">나</div>
+                            <div class="chat-text">3</div>
+                        </div>
+
+                        <div class="chat-message ai">
+                            <div class="chat-sender ai-sender">AI 튜터</div>
+                            <div class="chat-text">
+                                <p>정답입니다! ③ 척수신경은 중추신경계에 포함되지 않습니다.</p>
+                                <p><strong>해설:</strong> 중추신경계(CNS)는 뇌와 척수로 구성됩니다. 대뇌, 소뇌, 뇌간은 모두 뇌의 일부이며, 척수와 함께 중추신경계를
+                                    형성합니다. 반면, 척수신경은 말초신경계(PNS)에 속합니다.</p>
+                                <p>다음 문제로 넘어가시려면 "다음 문제"라고 입력해주세요.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input">
+                        <input type="text" placeholder="정답 번호 또는 추가 질문을 입력하세요..." />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. 교수자 해설 품질 관리 -->
+        <section class="tech-section">
+            <div class="container">
+                <h2 class="section-title">교수자 해설 품질 관리</h2>
+                <div class="section-description">
+                    학생들이 받는 AI 해설의 품질을 높이기 위해 교수자가 직접 검토하고 개선하는 관리 시스템입니다.
+                </div>
+
+                <!-- 연결 설명 박스 -->
+                <div class="quality-cycle-box">
+                    <h4>🔄 AI 해설 품질 향상 사이클</h4>
+                    <p>
+                        <strong>1단계:</strong> 학생이 AI 튜터와 문제를 풀고 해설을 받습니다
+                        <span class="arrow-text">→</span>
+                        <strong>2단계:</strong> 교수자가 AI 해설을 검토하고 더 나은 설명으로 개선합니다
+                        <span class="arrow-text">→</span>
+                        <strong>3단계:</strong> 개선된 해설이 다음 학생들에게 제공됩니다
+                    </p>
+                </div>
+
+                <div class="professor-management-panel">
+                    <!-- Header -->
+                    <div class="panel-header">
+                        <div class="panel-title">AI Tutor - 교수자 모드</div>
+                        <nav class="panel-nav">
+                            <div class="nav-menu">
+                                <span>전체 현황</span>
+                                <span>기출데이터</span>
+                                <span class="active">정답/해설</span>
+                                <span>개인별 분석</span>
+                            </div>
+                            <button class="logout-btn">
+                                로그아웃
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="panel-content">
+                        <div class="content-header">
+                            <h3>문제 관리</h3>
+                            <div class="search-box">
+                                <input type="text" placeholder="과목 또는 문제 검색..." value="인대는?">
+                                <div class="search-icon">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8" />
+                                        <path d="M21 21l-4.35-4.35" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Table -->
+                        <div class="management-table">
+                            <!-- Table Header -->
+                            <div class="table-header">
+                                <div>과목</div>
+                                <div>주제</div>
+                                <div>난이도</div>
+                                <div>정답</div>
+                                <div>문제</div>
+                                <div>해설</div>
+                                <div>관리</div>
+                            </div>
+
+                            <!-- Table Row -->
+                            <div class="table-row">
+                                <div>물리치료학기초_해부생리학</div>
+                                <div>관절계통</div>
+                                <div>상</div>
+                                <div>4</div>
+                                <div class="question-cell">
+                                    엉덩관절의 관절주머니 뒤쪽을 보강하고 있는 나선형의 인대는?<br>
+                                    ① 절구가로인대<br>
+                                    ② 엉덩넙다리인대<br>
+                                    ③ 두덩넙다리인대<br>
+                                    ④ 궁둥업다리인대<br>
+                                    ⑤ 넙다리뼈머리인대
+                                </div>
+                                <div class="explanation-status">해설 미작성</div>
+                                <div>
+                                    <button class="edit-btn">
+                                        수정
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 하단 설명 -->
+                        <div class="quality-info">
+                            <p>
+                                <strong>💡 품질 관리 프로세스:</strong> AI가 생성한 해설이 부족하거나 부정확한 경우, 교수자가 직접 수정하여 학생들에게 더 나은 학습
+                                경험을 제공할 수 있습니다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. RAG 지식베이스 관리 시스템 -->
+        <section class="tech-section">
+            <div class="container">
+                <h2 class="section-title">RAG 지식베이스 관리 시스템</h2>
+                <div class="section-description">
+                    문제 데이터와 교육 자료를 RAG 시스템에 업로드하여</br> 
+                    AI 해설 품질을 향상시키는 통합 관리 시스템입니다.
+
+                    <p style="color: red; font-size: 15px; margin-top:20px;">*아래 문제 업로드, 참고 데이터 업로드 중 하나를 선택해주세요</p>
+                </div>
+                
+
+                <div class="rag-management-panel">
+                    <!-- Breadcrumb -->
+                    <div class="breadcrumb">
+                        <a href="#">홈</a>
+                        <span>></span>
+                        <a href="#">지식베이스 관리</a>
+                        <span>></span>
+                        <span>RAG 데이터 업로드</span>
+                    </div>
+
+                    <!-- Header -->
+                    <div class="rag-header">
+                        <h3>RAG 지식베이스 통합 관리</h3>
+
+                        <!-- Tabs -->
+                        <div class="tabs-container">
+                            <div class="tabs">
+                                <div id="tab-problems" class="tab active">
+                                    문제 업로드
+                                </div>
+                                <div id="tab-reference" class="tab">
+                                    참고 데이터 업로드
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 문제 업로드 탭 내용 -->
+                    <div id="content-problems" class="tab-content">
+                        <!-- Upload Box -->
+                        <div class="upload-box">
+                            <div class="upload-icon">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 19V6M5 12l7-7 7 7" />
+                                </svg>
+                            </div>
+                            <p class="upload-title">문제 파일을 여기에 끌어다 놓거나 선택하세요</p>
+                            <p class="upload-subtitle">Excel(.xlsx), CSV(.csv) 또는 Word(.docx) 파일을 업로드할 수 있습니다.</p>
+                            <button class="upload-btn primary">
+                                파일 선택
+                            </button>
+                            <p class="upload-note">권장 형식: 번호, 문제, 선택지, 정답, 해설, 난이도, 유형</p>
+                        </div>
+
+                        <!-- File List -->
+                        <div class="file-list">
+                            <!-- Header -->
+                            <div class="file-list-header">
+                                <div>파일명</div>
+                                <div>관련학과</div>
+                                <div>크기</div>
+                                <div>작업</div>
+                            </div>
+
+                            <!-- File Row -->
+                            <div class="file-row">
+                                <div class="file-name">
+                                    <span class="file-icon primary">📄</span>
+                                    해부학_문제_01.docx
+                                </div>
+                                <div>작업치료학과</div>
+                                <div>2.4MB</div>
+                                <div class="file-actions">
+                                    <button class="delete-btn">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 참고 데이터 업로드 탭 내용 -->
+                    <div id="content-reference" class="tab-content" style="display: none;">
+                        <!-- 학과 선택 -->
+                        <div class="department-select">
+                            <label>학과 선택</label>
+                            <select>
+                                <option value="">학과를 선택하세요</option>
+                                <option value="물리치료학과">물리치료학과</option>
+                                <option value="작업치료학과">작업치료학과</option>
+                            </select>
+                        </div>
+
+                        <!-- Upload Box -->
+                        <div class="upload-box">
+                            <div class="upload-icon">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 19V6M5 12l7-7 7 7" />
+                                </svg>
+                            </div>
+                            <p class="upload-title">교육 자료를 여기에 끌어다 놓거나 선택하세요</p>
+                            <p class="upload-subtitle">PDF(.pdf) 또는 TXT(.txt) 파일을 업로드할 수 있습니다.</p>
+                            <button class="upload-btn success">
+                                파일 선택
+                            </button>
+                            <p class="upload-note">교과서, 참고서, 강의 노트 등의 교육 자료를 업로드하세요</p>
+                        </div>
+
+                        <!-- Reference File List -->
+                        <div class="file-list">
+                            <!-- Header -->
+                            <div class="file-list-header">
+                                <div style="width: 60px;">ID</div>
+                                <div>파일명</div>
+                                <div>학과</div>
+                                <div>파일 크기</div>
+                                <div>작업</div>
+                            </div>
+
+                            <!-- Reference File Rows -->
+                            <div class="file-row">
+                                <div style="width: 60px;">1</div>
+                                <div class="file-name">
+                                    <span class="file-icon success">📚</span>
+                                    6장.txt
+                                </div>
+                                <div>물리치료학과</div>
+                                <div>42.7 KB</div>
+                                <div class="file-actions">
+                                    <button class="download-btn">다운로드</button>
+                                    <button class="delete-btn">삭제</button>
+                                </div>
+                            </div>
+
+                            <div class="file-row">
+                                <div style="width: 60px;">2</div>
+                                <div class="file-name">
+                                    <span class="file-icon success">📚</span>
+                                    11장.txt
+                                </div>
+                                <div>물리치료학과</div>
+                                <div>42.7 KB</div>
+                                <div class="file-actions">
+                                    <button class="download-btn">다운로드</button>
+                                    <button class="delete-btn">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 하단 설명 -->
+                    <div class="rag-info">
+                        <p>
+                            <strong>💡 RAG 시스템:</strong> 문제 데이터와 교육 자료를 함께 업로드하여 AI가 더 정확하고 풍부한 해설을 생성할 수 있도록 지원합니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. CTA -->
+        <section class="cta">
+            <div class="container">
+                <h2>지금 바로 AI Tutor를 경험해보세요</h2>
+                <p>
+                    개인 맞춤형 학습으로 학습 효율을 극대화하고, 실시간 피드백을 통해
+                    학습 성취도를 높여보세요.
+                </p>
+                <a href="/login" class="btn btn-light">시작하기</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="logo footer-logo">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                        </svg>
+                        <span>AI Tutor</span>
+                    </div>
+                    <p>© 2025 AI Tutor. 모든 권리 보유.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

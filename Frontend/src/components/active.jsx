@@ -49,7 +49,7 @@ const Active = ({ userdata }) => {
     // }, []);
 
     const fetchInitialQuestion = async () => {
-        console.log(solvedProblemIds);
+        // console.log(solvedProblemIds);
 
         if (!active) {
             alert("이미 문제를 풀고 있습니다.");
@@ -64,7 +64,7 @@ const Active = ({ userdata }) => {
 
             const data = await res.json();
             if (res.ok) {
-                console.log(data);
+                // console.log(data);
                 if(data.status){
                     setChatLog(prev => [
                         ...prev,
@@ -109,6 +109,7 @@ const Active = ({ userdata }) => {
     };
 
     const handleSubmitAnswer = async (choiceNumber, id) => {
+        console.log(userdata);
         setActive(true);
         setChatLog(prev => [
             ...prev,
@@ -165,7 +166,7 @@ const Active = ({ userdata }) => {
     };
 
     const handleLLMChat = async () => {
-        console.log(solvedProblemIds);
+        // console.log(solvedProblemIds);
         if (!selectedSubject) {
             setChatLog((prev) => [
                 ...prev,
