@@ -428,15 +428,15 @@ const Legend = () => (
     <div className="mt-6 flex gap-6 text-sm text-gray-600">
         <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-green-400 rounded"></div>
-            <span>상 (모든 문제 정답)</span>
+            <span>상</span>
         </div>
         <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-yellow-400 rounded"></div>
-            <span>중 (일부 문제 정답)</span>
+            <span>중</span>
         </div>
         <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-red-400 rounded"></div>
-            <span>하 (모든 문제 오답)</span>
+            <span>하</span>
         </div>
     </div>
 );
