@@ -231,7 +231,7 @@ async def get_user_case_progress_endpoint(request: dict, db: Session = Depends(g
             "total_question": record.total_question,
             "correct_rate" : record.correct_rate * 100,
             "attendance": record.attendance,
-            "total_time": record.total_time
+            "total_score": record.total_score
         }
         
     except Exception as e:
@@ -259,6 +259,7 @@ async def get_explantation_endpoint(request: GetExplantationRequest, db: Session
         is_correct = True
     else:
         is_correct = False
+    save_score_record(db = db, user_id = user_id, question_id = question_id, is_correct = is_correct)
 
     if exist:
         save_total_correct(db=db, user_id=user_id, is_correct=is_correct)

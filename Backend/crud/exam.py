@@ -1,5 +1,5 @@
 from model.exam import *
-from model.user import UserCaseScore, UserCurrentScore
+from model.user import UserCaseScore, UserCurrentScore, UserTotalRecord
 from langchain_service.document_loader.extract_question import parse_question_block
 from langchain_openai import OpenAIEmbeddings
 from core.config import CHATGPT_API_KEY
@@ -445,3 +445,20 @@ def save_comment(db : Session, label_id, commentary, answer):
 def get_question_by_id(db : Session, question_id):
     question = db.query(KnowledgeBase).filter(KnowledgeBase.id == question_id).first()
     return question.question
+
+def save_score_record(db : Session, user_id : int, question_id : int, is_correct : bool):
+    level = db.query(LabelingData.level).filter(LabelingData.question_id == question_id).first()[0]
+    user_record = db.query(UserTotalRecord).filter(UserTotalRecord.user_id == user_id).first()
+
+    if is_correct:
+        if level == "상":
+            user_record.total_score += 3
+        elif level == "중":
+            user_record.total_score += 2
+        else:
+            user_record.total_score += 1
+    else:
+        user_record.total_score -= 1
+    db.add(user_record)
+    db.commit()
+    db.refresh(user_record)

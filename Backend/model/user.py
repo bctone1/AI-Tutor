@@ -45,7 +45,7 @@ class UserTotalRecord(Base):
     total_correct = Column(Integer, default=0)
     correct_rate = Column(Float, default=0.0)
     attendance = Column(Integer, default = 0)
-    total_time = Column(Integer, default = 0)
+    total_score= Column(Integer, default = 1000)
 
     user = relationship("User", back_populates="user_record")
 
