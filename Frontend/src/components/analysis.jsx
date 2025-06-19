@@ -168,7 +168,7 @@ const Analysis = ({ userdata }) => {
                         attendance: data.attendance,
                         correct_rate: data.correct_rate,
                         total_questions: data.total_question,
-                        total_time: data.total_time
+                        total_score: data.total_score
                     });
                     setCaseProgress(data.progress);
                 }
@@ -320,8 +320,8 @@ const Analysis = ({ userdata }) => {
                                         </p>
                                     </div>
                                     <div className="bg-white rounded-lg shadow p-6">
-                                        <h3 className="text-gray-500">총 학습 시간</h3>
-                                        <p className="text-2xl font-bold">{dailyProgress.total_time}시간</p>
+                                        <h3 className="text-gray-500">점수</h3>
+                                        <p className="text-2xl font-bold">{dailyProgress.total_score}점</p>
                                         <p className={`text-sm ${selectedStudent.achievementChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
                                             {selectedStudent.achievementChange >= 0 ? '▲' : '▼'} 목표 대비 {Math.abs(selectedStudent.achievementChange)}% {selectedStudent.achievementChange >= 0 ? '초과' : '미달'}
                                         </p>

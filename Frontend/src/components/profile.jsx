@@ -46,7 +46,7 @@ const Profile = ({ userdata, setView }) => {
                         attendance: data.attendance,
                         correct_rate: data.correct_rate,
                         total_questions: data.total_question,
-                        total_time: data.total_time
+                        total_score: data.total_score
                     });
                     setCaseProgress(data.progress);
                 }
@@ -248,12 +248,12 @@ const Profile = ({ userdata, setView }) => {
                         <StatCard label="총 풀이 문제" value={dailyProgress.total_questions + "문제"} />
                         <StatCard label="평균 정답률" value={(dailyProgress.correct_rate * 1).toFixed(1) + "%"} />
                         <StatCard label="연속 학습" value={dailyProgress.attendance + "일"} />
-                        <StatCard label="총 학습 시간" value={dailyProgress.total_time + "시간"} />
+                        <StatCard label="내 점수" value={dailyProgress.total_score + "점"} />
 
                         {/* <StatCard label="총 풀이 문제" value="427" />
                         <StatCard label="평균 정답률" value="72%" />
                         <StatCard label="연속 학습" value="5일" />
-                        <StatCard label="총 학습 시간" value="64:05" /> */}
+                        <StatCard label="내 점수" value="64:05" /> */}
                     </div>
                 </div>
 
