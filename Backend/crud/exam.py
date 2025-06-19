@@ -9,7 +9,6 @@ from collections import defaultdict
 from model.user import User
 from langchain_service.chain.get_explantation import generate_explantation, generate_hint
 import random
-from pathlib import Path
 from datetime import datetime
 from core.util import *
 
@@ -67,8 +66,6 @@ def update_labelingdata(db : Session, subject : str, question_id : int, correct_
     db.refresh(new_label)
     return new_label.id
 
-
-'''
 def generate_level_test(db: Session, subject: str):
     labels = db.query(LabelingData).filter(LabelingData.subject == subject).all()
 
@@ -96,59 +93,11 @@ def generate_level_test(db: Session, subject: str):
 
         selected_question_ids.extend(selected_ids_for_case)
 
-    # 문제 본문 조회
-    questions = db.query(KnowledgeBase).filter(KnowledgeBase.id.in_(selected_question_ids)).all()
-    question_texts = [parse_question_block(q.question) for q in questions]
-
-    # 레벨, subject, case 매핑
-    id_to_label = {label.question_id: label for label in labels}
-    levels = [id_to_label.get(q.id).level if id_to_label.get(q.id) else "미정" for q in questions]
-    subjects = [id_to_label.get(q.id).subject if id_to_label.get(q.id) else "미정" for q in questions]
-    cases = [id_to_label.get(q.id).case if id_to_label.get(q.id) else "미정" for q in questions]
-
-    return selected_question_ids, question_texts, levels, subjects, cases
-
-'''
-
-def generate_level_test(db: Session, subject: str):
-    # 라벨 데이터 수집 (subject 기준)
-    labels = db.query(LabelingData).filter(LabelingData.subject == subject).all()
-
-    # case → level → [question_id] 구조로 정리
-    case_level_map = defaultdict(lambda: defaultdict(list))
-    for label in labels:
-        case_level_map[label.case][label.level].append(label.question_id)
-
-    selected_question_ids = []
-
-    # 각 case별로 상/중/하 난이도에서 최소 1개씩 선택, 부족하면 추가
-    for case, level_dict in case_level_map.items():
-        selected_ids_for_case = []
-
-        for level in ['상', '중', '하']:
-            question_ids = level_dict.get(level, [])
-            if question_ids:
-                selected_ids_for_case.append(random.choice(question_ids))
-
-        # 부족한 수만큼 추가 선택
-        remaining = 3 - len(selected_ids_for_case)
-        if remaining > 0:
-            all_question_ids = sum(level_dict.values(), [])
-            remaining_ids = list(set(all_question_ids) - set(selected_ids_for_case))
-            if remaining_ids:
-                additional_ids = random.sample(remaining_ids, min(remaining, len(remaining_ids)))
-                selected_ids_for_case.extend(additional_ids)
-
-        selected_question_ids.extend(selected_ids_for_case)
-
-    # 문제 본문 조회
     questions = db.query(KnowledgeBase).filter(KnowledgeBase.id.in_(selected_question_ids)).all()
 
-    # 🔧 수정 1: questions를 selected_question_ids 순서대로 재정렬
     questions_dict = {q.id: q for q in questions}
     questions_sorted = [questions_dict[qid] for qid in selected_question_ids if qid in questions_dict]
 
-    # 🔧 수정 2: 정렬된 questions 기준으로 모든 데이터 생성
     question_texts = [parse_question_block(q.question) for q in questions_sorted]
 
     id_to_label = {label.question_id: label for label in labels}
@@ -156,7 +105,6 @@ def generate_level_test(db: Session, subject: str):
     subjects = [id_to_label[q.id].subject if q.id in id_to_label else "미정" for q in questions_sorted]
     cases = [id_to_label[q.id].case if q.id in id_to_label else "미정" for q in questions_sorted]
 
-    # 🔁 selected_question_ids도 정렬 기준에 맞춰 반환
     ordered_question_ids = [q.id for q in questions_sorted]
 
     return ordered_question_ids, question_texts, levels, subjects, cases
@@ -190,16 +138,6 @@ def grading_test(db: Session, answers: Dict[str, int]):
 
 
 def grading_test_by_case(db: Session, answers: Dict[str, int]) -> Tuple[int, int, Dict[str, Dict]]:
-    """
-    유형별 채점을 수행하는 함수
-    
-    Args:
-        db: 데이터베이스 세션
-        answers: {question_id: user_answer} 형태의 답안
-        
-    Returns:
-        tuple: (총점, 총 유형 수, 유형별 상세 결과)
-    """
     total_score = 0
     case_results = defaultdict(lambda: {
         'total_questions': 0,
@@ -254,15 +192,6 @@ def grading_test_by_case(db: Session, answers: Dict[str, int]) -> Tuple[int, int
     return total_score, num_cases, dict(case_results)
 
 def classify_level_by_case(case_result: Dict) -> str:
-    """
-    유형별 등급을 분류하는 함수
-    
-    Args:
-        case_result: 유형별 결과 딕셔너리
-        
-    Returns:
-        str: 등급 (상/중/하)
-    """
     accuracy = case_result['accuracy']
     
     if accuracy >= 0.8:  # 80% 이상
@@ -273,14 +202,6 @@ def classify_level_by_case(case_result: Dict) -> str:
         return "하"
 
 def save_user_case_scores(db: Session, user_id: int, case_results: Dict[str, Dict]):
-    """
-    사용자의 유형별 점수를 데이터베이스에 저장하는 함수
-    
-    Args:
-        db: 데이터베이스 세션
-        user_id: 사용자 ID
-        case_results: 유형별 결과 딕셔너리
-    """
     for case, result in case_results.items():
         # 기존 기록이 있는지 확인
         existing_score = db.query(UserCaseScore).filter(
@@ -383,16 +304,6 @@ def get_explantation(db : Session, question_id : int, correct_answer : int, refe
     return explantation
 
 def get_hint(db: Session, question_id: int):
-    """
-    문제 ID를 받아서 해당 문제에 대한 힌트를 생성합니다.
-    
-    Args:
-        db (Session): 데이터베이스 세션
-        question_id (int): 문제 ID
-        
-    Returns:
-        str: 생성된 힌트 텍스트
-    """
     question = db.query(KnowledgeBase).filter(KnowledgeBase.id == question_id).first()
     if not question:
         raise ValueError(f"Question with ID {question_id} not found")

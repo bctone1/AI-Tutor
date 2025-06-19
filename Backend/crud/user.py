@@ -1,12 +1,11 @@
 import bcrypt
 from sqlalchemy.orm import Session
 from model.user import *
-from model.exam import LabelingData
 import random
 from datetime import datetime
 from core.util import *
-from typing import Dict, Tuple
-from sqlalchemy import not_, or_
+from typing import Dict
+from sqlalchemy import not_
 
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')

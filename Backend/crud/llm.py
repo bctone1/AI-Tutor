@@ -1,6 +1,5 @@
 from langchain_openai import OpenAIEmbeddings
 from core.config import CHATGPT_API_KEY
-from sqlalchemy.orm import Session
 from sqlalchemy import text
 from model.exam import *
 from model.llm import *
