@@ -389,7 +389,7 @@ const Profile = ({ userdata, setView }) => {
 
                 )}
 
-                {userdata.user.testscore && userdata.user.grade (
+                {userdata.user.major && userdata.user.grade && (
                     <div className="bg-white shadow-md rounded-lg p-6 mt-6 mb-6">
                         <div className="text-gray-600 text-lg mb-6">
                             ⚠️ 먼저 <span className="font-bold text-[#3f51b5]">레벨테스트</span>를 완료해주세요.
@@ -404,7 +404,6 @@ const Profile = ({ userdata, setView }) => {
                             </button>
                         </div>
                     </div>
-
                 )}
 
 
