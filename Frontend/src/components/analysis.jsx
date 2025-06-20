@@ -693,9 +693,7 @@ const FocusArea = ({ title, areas }) => (
     <div className="mt-6 bg-red-50 p-5 rounded-[5px] border border-red-200">
         <div className="text-sm font-semibold text-red-500">{title}</div>
         <div className="text-m">{areas}</div>
-        <div className="text-sm text-gray-700 mt-1">
-            해당 영역에 대한 맞춤형 학습 자료를 '학습하기' 메뉴에서 확인하세요.
-        </div>
+        
     </div>
 );
 export default Analysis; 
