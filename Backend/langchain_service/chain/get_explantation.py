@@ -25,7 +25,6 @@ Add a visible '\\n\\n' character at every point where a line break is appropriat
 This includes between explanations for each option and within long explanations for clarity.
 """
 
-# 힌트용 프롬프트 템플릿 추가
 hint_template = """
 Here is an exam question:
 
