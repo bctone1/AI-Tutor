@@ -48,7 +48,7 @@ async def chat_agent(request: ChatAgentRequest, db: Session = Depends(get_db)):
         similar_example = get_similar_questions(db=db, embedding=vector_response, exclude_ids = solved_problems, id_list = id_list, top_k=10)
         if not similar_example:
             return JSONResponse(content={
-                "message": "해당 과목의 문제를 전부 학습하셨습니다! 더 이상 풀 문제가 없습니다.",
+                "message": "해당 유형의 문제를 전부 학습하셨습니다! 더 이상 풀 문제가 없습니다.",
                 "status": True
             })
         selected_row = random.choice(similar_example)
@@ -82,7 +82,7 @@ async def get_question_endpoint(request: Request, db: Session = Depends(get_db))
 
     if not question:
         return JSONResponse(content={
-            "message" : "해당 과목의 문제를 전부 학습하셨습니다! 더 이상 풀 문제가 없습니다.",
+            "message" : "해당 유형의 문제를 전부 학습하셨습니다! 더 이상 풀 문제가 없습니다.",
             "status" : True
         })
 
