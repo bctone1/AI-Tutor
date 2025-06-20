@@ -218,7 +218,7 @@ const UploadData = ({ userdata }) => {
                     다운로드
                   </a>
                   <button
-                    className="text-red-600 border border-red-500 px-3 py-1 rounded text-xs hover:bg-red-500 hover:text-white transition"
+                    className="text-red-600 border border-red-500 px-3 py-1 rounded text-xs hover:bg-red-500 hover:text-white transition cursor-pointer"
                     onClick={() => handleDelete(file.id)}
                   >
                     삭제
