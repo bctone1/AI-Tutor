@@ -7,34 +7,41 @@ import os
 os.environ["OPENAI_API_KEY"] = CHATGPT_API_KEY
 
 template = """
-다음은 두 개의 입력값을 바탕으로 작성된 질문입니다.
+Based on the following three inputs, generate a detailed explanation for the given exam question.
 
-입력 1 ( 시험 문제 내용 ) : {input_1}
-입력 2 ( 해당 시험 문제의 정답 ): {input_2}
-입력 3 ( DB 내의 데이터들) : {input_3}
+Input 1 (Exam question content): {input_1}
+Input 2 (Correct answer to the exam question): {input_2}
+Input 3 (Database content): {input_3}
 
-위 정보를 바탕으로 왜 해당 문제에 대한 해설을 적어주세요.
-각 보기의 내용에 대한 구체적인 해설이 필요합니다.
-정답이 아닌 보기의 경우 해당 보기가 정답이 될 수 없는 이유를,
-정답인 보기의 경우 그것이 왜 정답인지에 대한 이유를 명확히 알려주세요.
-DB 내의 데이터는 만약 해설 생성에 필요할 경우 사용하고,
-그렇지 않을 경우에는 해당 내용을 무시하고 해설을 생성해주세요.
+Please write the explanation **in Korean**.
+
+Your explanation should clearly describe the reasoning behind each of the options.
+- For incorrect options, explain why they cannot be the correct answer.
+- For the correct option, explain clearly why it is the correct choice.
+
+Use the database information (Input 3) **only if** it is necessary to generate a meaningful explanation. Otherwise, ignore it.
+
+Format the explanation in a structured and readable way.  
+Include line breaks between each option’s explanation.
 """
 
 # 힌트용 프롬프트 템플릿 추가
 hint_template = """
-다음은 시험 문제입니다.
+Here is an exam question:
 
-문제 내용: {question}
+Question: {question}
 
-이 문제를 해결하는데 도움이 되는 단계별 힌트를 제공해주세요.
-정답을 직접 알려주지 말고, 학습자가 스스로 답을 찾을 수 있도록 점진적인 힌트를 3단계로 나누어 제공해주세요.
+Provide step-by-step hints to help the learner solve the problem.
+Do **not** reveal the correct answer. Instead, guide the learner to find the answer on their own by giving three progressive hints.
 
-힌트 1: 문제에서 핵심 키워드나 개념을 파악하는 방향
-힌트 2: 문제 해결을 위한 접근 방법이나 관련 이론
-힌트 3: 답을 도출하기 위한 구체적인 사고 과정
+Write the hints **in Korean**.
 
-각 힌트는 간결하고 명확하게 작성해주세요.
+Hint 1: Help the learner identify key concepts or keywords in the question.  
+Hint 2: Suggest a general approach or relevant theory for solving the problem.  
+Hint 3: Provide a concrete thinking process that leads toward the correct answer.
+
+Each hint should be concise, clear, and presented in a well-structured format.  
+Include line breaks between each hint.
 """
 
 prompt = PromptTemplate(
