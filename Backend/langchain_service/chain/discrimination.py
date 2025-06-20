@@ -9,17 +9,19 @@ os.environ["OPENAI_API_KEY"] = CHATGPT_API_KEY
 
 # 1. 프롬프트 템플릿 정의
 template = """
-저의 프로젝트는 두 가지 유형의 기능을 제공합니다.
+My project provides two types of functions:
 
-1. DB 내에서 사용자 요청과 관련된 시험지 제공
-2. 일반적으로 사용자 질문에 따른 답변 제공
+1. Retrieving specific **exam papers or past test questions** from the database based on the user's request.  
+2. Providing answers to general **knowledge-based** or **casual** questions.
 
-다음은 사용자가 입력한 질문입니다.
+Here is the user's input:
 
-입력 ( 사용자 질문 ) : {input}
+User Question: {input}
 
-위 정보를 바탕으로 1과 2 중 어떤 기능을 제공할지 알려주세요.
-응답은 단순하게 "1" 혹은 "2"로만 대답해주세요.
+If the question is **directly related to** "exam paper", "past exam questions", "test problems", "exam requests", or "question sheets", then choose "1".  
+For all other general knowledge or everyday questions, choose "2".
+
+Please respond with **only "1" or "2"**, nothing else.
 """
 
 prompt = PromptTemplate(
