@@ -324,3 +324,4 @@ async def delete_exam_endpoint(request: DeleteExamData, db: Session = Depends(ge
     delete_exam(db = db, exam_id = exam_id)
     return JSONResponse(content={
         "message": "시험지가 삭제되었습니다."})
+
