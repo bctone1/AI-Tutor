@@ -23,6 +23,8 @@ Use the database information (Input 3) **only if** it is necessary to generate a
 
 Add a visible '\\n\\n' character at every point where a line break is appropriate.  
 This includes between explanations for each option and within long explanations for clarity.
+
+
 """
 
 hint_template = """
