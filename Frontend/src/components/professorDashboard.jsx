@@ -12,8 +12,8 @@ const dashboard = ({ userdata }) => {
                 <div className="bg-white rounded shadow mb-5">
                     <div className="flex justify-between items-center p-4 border-b">
                         <h2 className="text-lg font-bold text-gray-800">{userdata.user.major} 모니터링</h2>
-                        <div className="bg-gray-300 text-sm rounded-full px-3 py-1 cursor-pointer flex items-center">
-                            2023년 2학기 <span className="ml-1">▼</span>
+                        <div className="bg-gray-300 text-sm rounded-full px-3 py-1 flex items-center">
+                            2025년 2학기 
                         </div>
                     </div>
                 </div>
