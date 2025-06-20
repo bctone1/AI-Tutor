@@ -124,8 +124,9 @@ const UploadPage = ({ userdata }) => {
     };
 
     const handleDelete = async (id) => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/deleteQuestion/${id}`, {
-            method: "DELETE",
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/DeleteExamData`, {
+            method: "POST",
+            body: JSON.stringify({ exam_id: id }),
         });
         const data = await res.json();
         console.log(data);
