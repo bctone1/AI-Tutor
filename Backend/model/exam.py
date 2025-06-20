@@ -14,19 +14,29 @@ class Exam(Base):
     uploader = Column(String(100))
     status = Column(Boolean)
     file_location = Column(String(255))
-    knowledge_bases = relationship('KnowledgeBase', back_populates='exam', cascade="all, delete-orphan")
+    knowledge_bases = relationship(
+        'KnowledgeBase',
+        back_populates='exam',
+        cascade="all, delete-orphan",
+        passive_deletes=True  # ← 중요
+    )
 
 
 class KnowledgeBase(Base):
     __tablename__ = "knowledge_base"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    exam_id = Column(Integer, ForeignKey("exam_table.id"))
+    exam_id = Column(Integer, ForeignKey("exam_table.id", ondelete="CASCADE"))
     question_number = Column(Integer)
     question = Column(Text)
     vector_memory = Column(Vector(1536))
 
-    labeling_data = relationship("LabelingData", back_populates="knowledge_base", cascade="all, delete-orphan")
+    labeling_data = relationship(
+        "LabelingData",
+        back_populates="knowledge_base",
+        cascade="all, delete-orphan",
+        passive_deletes = True
+    )
     exam = relationship("Exam", back_populates="knowledge_bases")
 
 
@@ -35,7 +45,7 @@ class LabelingData(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     subject = Column(String(50))
-    question_id = Column(Integer, ForeignKey("knowledge_base.id"))
+    question_id = Column(Integer, ForeignKey("knowledge_base.id", ondelete="CASCADE"))
     correct_answer = Column(Integer)
     level = Column(String(50))
     case = Column(String(100))

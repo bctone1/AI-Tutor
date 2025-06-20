@@ -462,3 +462,9 @@ def save_score_record(db : Session, user_id : int, question_id : int, is_correct
     db.add(user_record)
     db.commit()
     db.refresh(user_record)
+
+def delete_exam(db : Session, exam_id : int):
+     exam = db.query(Exam).filter(Exam.id == exam_id).first()
+     if exam:
+         db.delete(exam)
+         db.commit()

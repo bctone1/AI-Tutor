@@ -317,3 +317,10 @@ async def save_commentary_endpoint(request: SaveCommentRequest, db: Session = De
     save_comment(db = db, label_id = label_id, commentary = new_explanation, answer = new_answer)
     return JSONResponse(content={
         "message": "등록이 완료되었습니다."})
+
+@exam_router.post("/DeleteExamData")
+async def delete_exam_endpoint(request: DeleteExamData, db: Session = Depends(get_db)):
+    exam_id = request.exam_id
+    delete_exam(db = db, exam_id = exam_id)
+    return JSONResponse(content={
+        "message": "시험지가 삭제되었습니다."})

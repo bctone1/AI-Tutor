@@ -68,3 +68,6 @@ class SaveCommentRequest(BaseModel):
     answer : int
     explanation : str
     id : int
+
+class DeleteExamData(BaseModel):
+    exam_id : int
