@@ -46,4 +46,4 @@ class ReferenceSchema(BaseModel):
     file_content : str
 
 class DeleteReferenceData(BaseModel):
-    reference_id : int
+    file_id : int
