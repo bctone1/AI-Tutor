@@ -59,13 +59,13 @@ const Active = ({ userdata }) => {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getQuestion`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userdata: userdata, selectedSubject: selectedSubject, solvedProblemIds:solvedProblemIds })
+                body: JSON.stringify({ userdata: userdata, selectedSubject: selectedSubject, solvedProblemIds: solvedProblemIds })
             });
 
             const data = await res.json();
             if (res.ok) {
                 // console.log(data);
-                if(data.status){
+                if (data.status) {
                     setChatLog(prev => [
                         ...prev,
                         { sender: 'AI 튜터', content: data.message }
@@ -133,7 +133,12 @@ const Active = ({ userdata }) => {
                         <div>
                             {data.isCorrect ? "정답입니다! 🎉" : "오답입니다. ❌"}
                             <br />
-                            <div className="mt-2 text-gray-700">{data.explanation}</div>
+                            <div
+                                className="mt-2 text-gray-700"
+                                dangerouslySetInnerHTML={{
+                                    __html: data.explanation.replace(/\n/g, "<br />")
+                                }}
+                            />
                         </div>
                     )
                 }
@@ -186,7 +191,7 @@ const Active = ({ userdata }) => {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/chatAgent`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMessage, userdata: userdata, selectedSubject: selectedSubject, solvedProblemIds:solvedProblemIds })
+                body: JSON.stringify({ message: userMessage, userdata: userdata, selectedSubject: selectedSubject, solvedProblemIds: solvedProblemIds })
             });
             const data = await res.json();
             if (data.method) {
