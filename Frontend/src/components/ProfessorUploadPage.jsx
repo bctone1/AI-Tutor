@@ -126,6 +126,9 @@ const UploadPage = ({ userdata }) => {
     const handleDelete = async (id) => {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/DeleteExamData`, {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify({ exam_id: id }),
         });
         const data = await res.json();
