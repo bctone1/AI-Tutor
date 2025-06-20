@@ -25,15 +25,15 @@ class Reference(Base):
     chunks = relationship(
         "ReferenceChunk",
         back_populates="reference",
-        cascade="all, delete",
-        passive_deletes=True
+        cascade="all, delete-orphan",   # ← 수정됨
+        passive_deletes=True            # ← 수정됨
     )
 
 class ReferenceChunk(Base):
     __tablename__ = "reference_chunk"
 
-    id = Column(Integer, primary_key = True, autoincrement=True)
-    reference_id = Column(Integer, ForeignKey("reference.id"), nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    reference_id = Column(Integer, ForeignKey("reference.id", ondelete="CASCADE"), nullable=False)  # ← 수정됨
     content = Column(Text)
     vector_memory = Column(Vector(1536))
 

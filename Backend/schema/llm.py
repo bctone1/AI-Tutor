@@ -44,3 +44,6 @@ class ReferenceSchema(BaseModel):
     file_size : int
     subject : str
     file_content : str
+
+class DeleteReferenceData(BaseModel):
+    reference_id : int
