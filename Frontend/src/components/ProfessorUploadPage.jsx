@@ -124,6 +124,9 @@ const UploadPage = ({ userdata }) => {
     };
 
     const handleDelete = async (id) => {
+        if (!confirm("정말 삭제하시겠습니까?")) {
+            return;
+        }
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/DeleteExamData`, {
             method: "POST",
             headers: {
@@ -218,12 +221,6 @@ const UploadPage = ({ userdata }) => {
                             {/* <div className="flex-1 text-gray-600">{file.size}</div> */}
 
                             <div className="w-50 flex justify-center gap-2">
-                                <button
-                                    className="text-red-600 border border-red-500 px-3 py-1 rounded text-xs hover:bg-red-500 hover:text-white transition"
-                                    onClick={() => handleDelete(file.id)}
-                                >
-                                    삭제
-                                </button>
                                 {!file.status ? (
                                     <button
                                         className="text-blue-600 border border-blue-500 px-3 py-1 rounded text-xs hover:bg-blue-500 hover:text-white transition"
@@ -241,6 +238,13 @@ const UploadPage = ({ userdata }) => {
                                         해설 다운로드
                                     </a>
                                 )}
+
+                                <button
+                                    className="text-red-600 border border-red-500 px-3 py-1 rounded text-xs hover:bg-red-500 hover:text-white transition cursor-pointer"
+                                    onClick={() => handleDelete(file.id)}
+                                >
+                                    삭제
+                                </button>
                             </div>
 
                         </div>

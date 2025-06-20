@@ -18,7 +18,7 @@ const UploadData = ({ userdata }) => {
       const data = await response.json();
       if (response.ok) {
         // 선택된 학과에 따라 파일 필터링
-        const filteredFiles = selectedDepartment 
+        const filteredFiles = selectedDepartment
           ? data.filter(file => file.subject === selectedDepartment)
           : [];
         setFiles(filteredFiles);
@@ -33,12 +33,31 @@ const UploadData = ({ userdata }) => {
     fetchFiles();
   }, [selectedDepartment]); // selectedDepartment가 변경될 때마다 실행
 
+  const handleDelete = async (id) => {
+    if (!confirm("정말 삭제하시겠습니까?")) {
+      return;
+    }
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/DeleteReferenceData`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ file_id: id }),
+    });
+    const data = await res.json();
+    console.log(data);
+    if (res.ok) {
+      alert("파일이 삭제되었습니다.");
+      setFiles(prevFiles => prevFiles.filter(file => file.id !== id));
+    } else {
+      alert("삭제 실패: 서버 오류");
+    }
+  }
 
 
 
 
 
-  
   const handleFileChange = async (event) => {
     const selectedFile = event.target.files[0];
     console.log(selectedFile);
@@ -182,23 +201,28 @@ const UploadData = ({ userdata }) => {
                 </div>
                 <div className="flex-1 text-gray-600">
                   {file.subject === '물리치료학기초_해부생리학' || file.subject === '물리치료학과' ? '물리치료학과' :
-                    file.subject === '작업치료학과기초_해부생리학' || file.subject === '작업치료학과' ? '작업치료학과' : '-'}
+                    file.subject === '작업치료학기초_해부생리학' || file.subject === '작업치료학과' ? '작업치료학과' : '-'}
                 </div>
                 <div className="flex-1 text-gray-600">
                   {formatFileSize(file.file_size)}
                 </div>
                 {/* <div className="flex-1 text-gray-600">{file.uploaded_at ? new Date(file.uploaded_at).toLocaleString() : '-'}</div> */}
                 <div className="flex-1 text-center">
+
                   <a
                     href={`${process.env.NEXT_PUBLIC_API_URL}/files/reference/${file.file_name}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 underline mr-2"
+                    className="text-blue-600 border border-blue-500 px-3 py-1 rounded text-xs hover:bg-blue-500 hover:text-white transition mr-2"
                   >
                     다운로드
                   </a>
-                  ||
-                  <a className="text-red-600 underline ml-2" onClick={() => handleDelete(file.id)}>삭제</a>
+                  <button
+                    className="text-red-600 border border-red-500 px-3 py-1 rounded text-xs hover:bg-red-500 hover:text-white transition cursor-pointer"
+                    onClick={() => handleDelete(file.id)}
+                  >
+                    삭제
+                  </button>
                 </div>
               </div>
             ))
