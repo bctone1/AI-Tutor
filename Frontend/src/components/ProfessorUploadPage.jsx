@@ -123,7 +123,20 @@ const UploadPage = ({ userdata }) => {
         }
     };
 
-
+    const handleDelete = async (id) => {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/DeleteExamData`, {
+            method: "POST",
+            body: JSON.stringify({ exam_id: id }),
+        });
+        const data = await res.json();
+        console.log(data);
+        if (res.ok) {
+            alert("파일이 삭제되었습니다.");
+            setFiles(prevFiles => prevFiles.filter(file => file.id !== id));
+        } else {
+            alert("삭제 실패: 서버 오류");
+        }
+    }
 
     return (
         <div className="bg-gray-100 min-h-screen text-sm text-gray-800">
@@ -202,7 +215,10 @@ const UploadPage = ({ userdata }) => {
                             {/* <div className="flex-1 text-gray-600">{file.size}</div> */}
 
                             <div className="w-50 flex justify-center gap-2">
-                                <button className="text-red-600 border border-red-500 px-3 py-1 rounded text-xs hover:bg-red-500 hover:text-white transition">
+                                <button
+                                    className="text-red-600 border border-red-500 px-3 py-1 rounded text-xs hover:bg-red-500 hover:text-white transition"
+                                    onClick={() => handleDelete(file.id)}
+                                >
                                     삭제
                                 </button>
                                 {!file.status ? (
