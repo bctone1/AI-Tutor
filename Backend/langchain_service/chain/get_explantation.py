@@ -21,8 +21,8 @@ Your explanation should clearly describe the reasoning behind each of the option
 
 Use the database information (Input 3) **only if** it is necessary to generate a meaningful explanation. Otherwise, ignore it.
 
-Format the explanation in a structured and readable way.  
-Include line breaks between each option’s explanation.
+Add a visible '\\n\\n' character at every point where a line break is appropriate.  
+This includes between explanations for each option and within long explanations for clarity.
 """
 
 # 힌트용 프롬프트 템플릿 추가
