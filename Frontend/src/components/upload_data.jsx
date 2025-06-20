@@ -42,7 +42,7 @@ const UploadData = ({ userdata }) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ exam_id: id }),
+      body: JSON.stringify({ file_id: id }),
     });
     const data = await res.json();
     console.log(data);
