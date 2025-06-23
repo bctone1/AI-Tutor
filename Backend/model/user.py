@@ -78,9 +78,11 @@ class UserCurrentScore(Base):
 
 class FeedBack(Base):
     __tablename__ = "feedback"
+
     id = Column(Integer, primary_key=True, autoincrement=True)
     professor = Column(String(50))
     student_id = Column(Integer, ForeignKey("user_table.id"))
     content = Column(Text)
     date = Column(Date, default=func.now(), onupdate=func.now())
+
     user = relationship("User", back_populates="feedback")
