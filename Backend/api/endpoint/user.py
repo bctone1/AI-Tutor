@@ -251,7 +251,8 @@ async def get_student_data_endpoint(request : SaveFeedbackRequest, db: Session =
     professor = request.professor
     student_id = request.user_id
     feedback = request.feedback
-    save_feedback(db = db, professor = professor, student_id = student_id, feedback = feedback)
+    date_info = request.date
+    save_feedback(db = db, professor = professor, student_id = student_id, feedback = feedback, date_info = date_info)
 
     return JSONResponse(content={'message': '피드백이 저장되었습니다.'}, status_code=200)
 

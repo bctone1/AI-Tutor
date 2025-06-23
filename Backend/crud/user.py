@@ -2,7 +2,7 @@ import bcrypt
 from sqlalchemy.orm import Session
 from model.user import *
 import random
-from datetime import datetime
+from datetime import datetime, date
 from core.util import *
 from typing import Dict
 from sqlalchemy import not_
@@ -329,11 +329,12 @@ def get_user_lag_case(db: Session, user_id: int):
 
     return combined_cases
 
-def save_feedback(db : Session, professor : str, student_id : int, feedback : str):
+def save_feedback(db : Session, professor : str, student_id : int, feedback : str, date_info : date):
     new_feedback = FeedBack(
         professor = professor,
         student_id = student_id,
         content = feedback,
+        date = date_info
     )
     db.add(new_feedback)
     db.commit()

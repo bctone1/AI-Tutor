@@ -114,6 +114,7 @@ class GetUserLagCase(BaseModel):
     user_id : int
 
 class SaveFeedbackRequest(BaseModel):
+    date : date
     professor : str
     user_id : int
     feedback : str
