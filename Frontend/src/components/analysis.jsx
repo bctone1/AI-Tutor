@@ -453,7 +453,7 @@ const Analysis = ({ userdata }) => {
                                                     {feedback.professor}
                                                 </span>
                                             </div>
-                                            <p className="text-gray-800">{feedback.feedback}</p>
+                                            <p className="text-gray-800">{feedback.content}</p>
 
                                             {/* 삭제 버튼 추가 */}
                                             <div className="text-right">
