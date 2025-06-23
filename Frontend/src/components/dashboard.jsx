@@ -4,8 +4,31 @@ const dashboard = ({ userdata, setView }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [caseProgress, setCaseProgress] = useState(null);
     const [dailyRecord, setDailyRecord] = useState(null);
+    const [feedbackList, setFeedbackList] = useState([]);
 
     useEffect(() => {
+
+        const getFeedbackList = async () => {
+            // setFeedbackList([
+            //     { date: '2025-05-01', feedback: '~~유형의 학습이 부족하니 집중적으로 학습이 요망됩니다.', professor: 'A교수' },
+            //     { date: '2025-06-01', feedback: '저번달 대비 ~~유형의 학습이 부족함으로 학습이 필요합니다.', professor: 'B교수' }
+            // ]);
+            // return;
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getFeedbackList`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: userdata.user.id })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                console.log(data);
+                setFeedbackList(data);
+            } else {
+                console.error("피드백 목록 조회 오류");
+            }
+        }
+
+
         const fetchCaseProgress = async () => {
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getUserCaseScore`, {
@@ -64,6 +87,7 @@ const dashboard = ({ userdata, setView }) => {
         if (userdata?.user?.id) {
             fetchDailyRecord();
             fetchCaseProgress();
+            getFeedbackList();
         }
     }, [userdata?.user?.id]);
 
@@ -232,23 +256,22 @@ const dashboard = ({ userdata, setView }) => {
                     <div className="w-full bg-white rounded shadow">
                         <div className="border-b px-6 py-4 font-bold text-lg">교수 피드백</div>
                         <div className="p-6 space-y-4">
-                            {/* 피드백 블록 1 */}
-                            <div className="border rounded-lg p-4 bg-gray-50 shadow-sm space-y-2">
-                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                                    <span className="text-base text-blue-600 font-semibold">2025-05-01</span>
-                                    <span className="text-base text-gray-700 font-semibold">A교수</span>
+                            {feedbackList.map((feedback, index) => (
+                                <div
+                                    key={index}
+                                    className="border rounded-lg p-4 bg-gray-50 shadow-sm space-y-2"
+                                >
+                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                                        <span className="text-base text-blue-600 font-semibold">
+                                            {feedback.date}
+                                        </span>
+                                        <span className="text-base text-gray-700 font-semibold">
+                                            {feedback.professor}
+                                        </span>
+                                    </div>
+                                    <p className="text-gray-800">{feedback.content}</p>
                                 </div>
-                                <p className="text-gray-800">~~유형의 학습이 부족하니 집중적으로 학습이 요망됩니다.</p>
-                            </div>
-
-                            {/* 피드백 블록 2 */}
-                            <div className="border rounded-lg p-4 bg-gray-50 shadow-sm space-y-2">
-                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                                    <span className="text-base text-blue-600 font-semibold">2025-06-01</span>
-                                    <span className="text-base text-gray-700 font-semibold">B교수</span>
-                                </div>
-                                <p className="text-gray-800">저번달 대비 ~~유형의 학습이 부족함으로 학습이 필요합니다.</p>
-                            </div>
+                            ))}
                         </div>
                     </div>
                 </div>

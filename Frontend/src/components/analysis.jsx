@@ -260,7 +260,7 @@ const Analysis = ({ userdata }) => {
         const data = await res.json();
         if (res.ok) {
             console.log(data);
-            setFeedbackList(prev => [...prev, { date, feedback, professor: userdata.user.name }]);
+            setFeedbackList(prev => [...prev, { date, content: feedback, professor: userdata.user.name }]);
             setIsFeedbackModalOpen(false);
         } else {
             console.error("피드백 보내기 오류발생");
@@ -453,7 +453,7 @@ const Analysis = ({ userdata }) => {
                                                     {feedback.professor}
                                                 </span>
                                             </div>
-                                            <p className="text-gray-800">{feedback.feedback}</p>
+                                            <p className="text-gray-800">{feedback.content}</p>
 
                                             {/* 삭제 버튼 추가 */}
                                             <div className="text-right">
