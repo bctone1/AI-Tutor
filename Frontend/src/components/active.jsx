@@ -30,6 +30,29 @@ const Active = ({ userdata }) => {
         fetchInitialQuestion();
     };
 
+    const handleFetchAIQuestion = () => {
+        if (!selectedSubject) {
+            console.log(userdata);
+            alert("과목을 선택해주세요.");
+            return;
+        }
+        fetchAIQuestion();
+    };
+
+    const fetchAIQuestion = async () => {
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getAIQuestion`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ major: userdata.user.major, selectedSubject: selectedSubject})
+            });
+            const data = await res.json();
+            console.log(data);
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
     // useEffect(() => {
     //     // 페이지 진입 시 안내 메시지를 먼저 표시
     //     setChatLog([
@@ -49,8 +72,6 @@ const Active = ({ userdata }) => {
     // }, []);
 
     const fetchInitialQuestion = async () => {
-        // console.log(solvedProblemIds);
-
         if (!active) {
             alert("이미 문제를 풀고 있습니다.");
             return;
@@ -317,6 +338,13 @@ const Active = ({ userdata }) => {
                             className="px-3 py-2 text-sm rounded-md bg-indigo-100 text-indigo-800 hover:bg-indigo-200 shadow text-center"
                         >
                             기출문제
+                        </button>
+
+                        <button
+                            onClick={handleFetchAIQuestion}
+                            className="px-3 py-2 text-sm rounded-md bg-indigo-100 text-indigo-800 hover:bg-indigo-200 shadow text-center"
+                        >
+                            AI기출문제
                         </button>
                     </div>
 
