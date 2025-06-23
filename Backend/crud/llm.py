@@ -4,6 +4,7 @@ from sqlalchemy import text
 from model.exam import *
 from model.llm import *
 from sqlalchemy.sql.expression import func
+from langchain_service.chain.generate_question import generate_ai_question
 
 embedding_model = OpenAIEmbeddings(
     model="text-embedding-3-small",
@@ -140,3 +141,6 @@ def delete_reference(db: Session, reference_id: int):
         db.delete(reference)
         db.commit()
 
+def get_ai_question(major : str, subject : str):
+    question = generate_ai_question(major = major, subject = subject)
+    return question
