@@ -50,7 +50,6 @@ class UserTotalRecord(Base):
 
     user = relationship("User", back_populates="user_record")
 
-
 class UserDaily(Base):
     __tablename__ = "user_daily"
 
