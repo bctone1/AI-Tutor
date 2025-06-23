@@ -139,3 +139,4 @@ def delete_reference(db: Session, reference_id: int):
     if reference:
         db.delete(reference)
         db.commit()
+

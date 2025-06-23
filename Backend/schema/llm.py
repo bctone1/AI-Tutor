@@ -47,3 +47,7 @@ class ReferenceSchema(BaseModel):
 
 class DeleteReferenceData(BaseModel):
     file_id : int
+
+class GenerateQuestionAI(BaseModel):
+    department : str
+    subject : str
