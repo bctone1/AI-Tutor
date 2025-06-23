@@ -245,3 +245,19 @@ async def get_student_data_endpoint(request : GetUserLagCase, db: Session = Depe
     user_id = request.user_id
     lag_cases = get_user_lag_case(db = db, user_id = user_id)
     return lag_cases
+
+@user_router.post('/SaveFeedback')
+async def get_student_data_endpoint(request : SaveFeedbackRequest, db: Session = Depends(get_db)):
+    professor = request.professor
+    student_id = request.student_id
+    feedback = request.feedback
+    save_feedback(db = db, professor = professor, student_id = student_id, feedback = feedback)
+
+    return JSONResponse(content={'message': '피드백이 저장되었습니다.'}, status_code=200)
+
+@user_router.post('/GetFeedback')
+async def get_feedback_endpoint(request : GetFeedbackRequest, db: Session = Depends(get_db)):
+    student_id = request.student_id
+    feedback = get_feedback(db = db, student_id = student_id)
+
+    return feedback

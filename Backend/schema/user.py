@@ -112,3 +112,11 @@ class GetDailyRecordRequest(BaseModel):
 
 class GetUserLagCase(BaseModel):
     user_id : int
+
+class SaveFeedbackRequest(BaseModel):
+    professor : str
+    student_id : int
+    feedback : str
+
+class GetFeedbackRequest(BaseModel):
+    student_id : int
