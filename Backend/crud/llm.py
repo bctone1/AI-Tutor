@@ -132,3 +132,10 @@ def get_id_by_case(db : Session, case : str):
     ids = db.query(LabelingData.question_id).filter(LabelingData.case == case).all()
     id_list = [id_tuple[0] for id_tuple in ids]
     return id_list
+
+
+def delete_reference(db: Session, reference_id: int):
+    reference = db.query(Reference).filter(Reference.id == reference_id).first()
+    if reference:
+        db.delete(reference)
+        db.commit()

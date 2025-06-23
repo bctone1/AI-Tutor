@@ -130,3 +130,10 @@ async def upload_reference_data(
 async def get_reference_data_endpoint(db: Session = Depends(get_db)):
     references = get_reference_data(db = db)
     return references
+
+@llm_router.post("/DeleteReferenceData")
+async def delete_exam_endpoint(request: DeleteReferenceData, db: Session = Depends(get_db)):
+    reference_id = request.file_id
+    delete_reference(db = db, reference_id = reference_id)
+    return JSONResponse(content={
+        "message": "참고자료가 삭제되었습니다."})
