@@ -40,18 +40,84 @@ const Active = ({ userdata }) => {
     };
 
     const fetchAIQuestion = async () => {
+        if (!active) {
+            alert("이미 문제를 풀고 있습니다.");
+            return;
+        }
+
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getAIQuestion`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ major: userdata.user.major, selectedSubject: selectedSubject})
+                body: JSON.stringify({ major: userdata.user.major, selectedSubject: selectedSubject })
             });
             const data = await res.json();
             console.log(data);
+            console.log(data.question);
+            console.log(data.choices);
+            console.log(data.answer);
+            console.log(data.description);
+            if (res.ok) {
+                const { question, choices, answer, description } = data;
+
+                setChatLog(prev => [
+                    ...prev,
+                    {
+                        sender: 'AI 튜터',
+                        content: (
+                            <>
+                                <div
+                                    className="mb-2"
+                                    dangerouslySetInnerHTML={{ __html: question.replace(/\n/g, '<br />') }}
+                                ></div>
+
+                                {choices.map((choice, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => handleSubmitAIAnswer(idx + 1, answer, description)}
+                                        className="block w-full text-left bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded mb-1"
+                                    >
+                                        {idx + 1}. {choice}
+                                    </button>
+                                ))}
+                            </>
+                        )
+                    }
+                ]);
+                setActive(false);
+            }
         } catch (e) {
             console.error(e);
         }
     };
+
+    const handleSubmitAIAnswer = async (choiceNumber, answer, description) => {
+        setActive(true);
+        setChatLog(prev => [
+            ...prev,
+            { sender: '나', content: `답: ${choiceNumber}번` },
+        ]);
+
+        setChatLog(prev => [
+            ...prev,
+            {
+                sender: 'AI 튜터',
+                content: (
+                    <div>
+                        {choiceNumber == answer ? "정답입니다! 🎉" : "오답입니다. ❌"}
+                        <br />
+                        <div
+                            className="mt-2 text-gray-700"
+                            dangerouslySetInnerHTML={{
+                                __html: description.replace(/\n/g, "<br />")
+                            }}
+                        />
+                    </div>
+                )
+            }
+        ]);
+        
+    }
 
     // useEffect(() => {
     //     // 페이지 진입 시 안내 메시지를 먼저 표시
@@ -130,7 +196,6 @@ const Active = ({ userdata }) => {
     };
 
     const handleSubmitAnswer = async (choiceNumber, id) => {
-        console.log(userdata);
         setActive(true);
         setChatLog(prev => [
             ...prev,
