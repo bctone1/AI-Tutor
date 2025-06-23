@@ -328,3 +328,18 @@ def get_user_lag_case(db: Session, user_id: int):
             seen.add(case)
 
     return combined_cases
+
+def save_feedback(db : Session, professor : str, student_id : int, feedback : str):
+    new_feedback = FeedBack(
+        professor = professor,
+        student_id = student_id,
+        content = feedback,
+    )
+    db.add(new_feedback)
+    db.commit()
+    db.refresh(new_feedback)
+    return new_feedback
+
+def get_feedback(db : Session, student_id : int):
+    feedback = db.query(FeedBack).filter(FeedBack.student_id == student_id).all()
+    return feedback

@@ -19,6 +19,7 @@ class User(Base):
     user_record = relationship("UserTotalRecord", back_populates="user", cascade="all, delete-orphan")
     user_daily = relationship("UserDaily", back_populates="user", cascade="all, delete-orphan")
     current_score = relationship("UserCurrentScore", back_populates="user", cascade="all, delete-orphan")
+    feedback = relationship("FeedBack", back_populates="user", cascade="all, delete-orphan")
 
 class UserCaseScore(Base):
     __tablename__ = "user_case_scores"
@@ -75,3 +76,12 @@ class UserCurrentScore(Base):
     last_updated = Column(DateTime, default=func.now(), onupdate=func.now())
 
     user = relationship("User", back_populates="current_score")
+
+class FeedBack(Base):
+    __tablename__ = "feedback"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    professor = Column(String(50))
+    student_id = Column(Integer, ForeignKey("user_table.id"))
+    content = Column(Text)
+    date = Column(Date, default=func.now(), onupdate=func.now())
+    user = relationship("User", back_populates="feedback")
