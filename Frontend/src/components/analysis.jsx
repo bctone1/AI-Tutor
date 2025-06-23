@@ -5,7 +5,10 @@ const Analysis = ({ userdata }) => {
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [students, setStudents] = useState([]);
     // console.log(selectedStudent);
-
+    const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+    const [selectedFeedback, setSelectedFeedback] = useState('');
+    const [feedbackList, setFeedbackList] = useState([]);
 
     const [caseProgress, setCaseProgress] = useState(null);
     const [caseScoreProgress, setCaseScoreProgress] = useState(null);
@@ -154,6 +157,26 @@ const Analysis = ({ userdata }) => {
     useEffect(() => {
         if (!selectedStudent) return;
 
+        const getFeedbackList = async () => {
+            // setFeedbackList([
+            //     { date: '2025-05-01', feedback: '~~유형의 학습이 부족하니 집중적으로 학습이 요망됩니다.', professor: 'A교수' },
+            //     { date: '2025-06-01', feedback: '저번달 대비 ~~유형의 학습이 부족함으로 학습이 필요합니다.', professor: 'B교수' }
+            // ]);
+            // return;
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getFeedbackList`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: selectedStudent.id })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                console.log(data);
+                setFeedbackList(data);
+            } else {
+                console.error("피드백 목록 조회 오류");
+            }
+        }
+
         const getUserCaseProgress = async () => {
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getUserCaseProgress`, {//레벨테스트 결과
@@ -216,6 +239,7 @@ const Analysis = ({ userdata }) => {
             await getUserCaseProgress();
             await getUserCaseScore();
             await getDailyRecord();
+            await getFeedbackList();
             setTimeout(() => {
                 setIsLoading(false); // 로딩 끝    
                 // console.log(dailyRecord);
@@ -224,6 +248,25 @@ const Analysis = ({ userdata }) => {
 
         fetchAllData();
     }, [selectedStudent]);
+
+
+
+    const handleSave = async (date, feedback) => {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/sendFeedback`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ date, feedback, professor: userdata.user.name, user_id: selectedStudent.id })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            console.log(data);
+            setFeedbackList(prev => [...prev, { date, feedback, professor: userdata.user.name }]);
+            setIsFeedbackModalOpen(false);
+        } else {
+            console.error("피드백 보내기 오류발생");
+        }
+
+    };
 
     return (
         <main className="max-w-6xl mx-auto px-5">
@@ -264,8 +307,8 @@ const Analysis = ({ userdata }) => {
                                     <div className={`px-3 py-1 rounded-full text-sm font-bold
                                         ${student.score === null ? 'bg-gray-100 text-gray-700' :
                                             student.score >= 80 ? 'bg-green-100 text-green-700' :
-                                            student.score >= 50 ? 'bg-yellow-100 text-yellow-700' :
-                                                'bg-red-100 text-red-700'}`}>
+                                                student.score >= 50 ? 'bg-yellow-100 text-yellow-700' :
+                                                    'bg-red-100 text-red-700'}`}>
                                         {student.score ? student.score + "점" : 'NULL'}
                                     </div>
                                 </div>
@@ -362,7 +405,10 @@ const Analysis = ({ userdata }) => {
                             <div className="bg-white rounded-lg shadow p-6">
                                 <div className="flex justify-between items-center mb-4">
                                     <h3 className="text-xl font-bold">취약 부분 분석</h3>
-                                    <button className="text-blue-500 hover:text-blue-700">
+                                    <button
+                                        className="text-blue-500 hover:text-blue-700 cursor-pointer"
+                                        onClick={() => setIsFeedbackModalOpen(true)}
+                                    >
                                         피드백 보내기
                                     </button>
                                 </div>
@@ -391,6 +437,37 @@ const Analysis = ({ userdata }) => {
                                         </div>
                                     ))}
                                 </div>
+
+
+                                <div className="space-y-4 mt-4">
+                                    {feedbackList.map((feedback, index) => (
+                                        <div
+                                            key={index}
+                                            className="border rounded-lg p-4 bg-gray-50 shadow-sm space-y-2"
+                                        >
+                                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                                                <span className="text-base text-blue-600 font-semibold">
+                                                    {feedback.date}
+                                                </span>
+                                                <span className="text-base text-gray-700 font-semibold">
+                                                    {feedback.professor}
+                                                </span>
+                                            </div>
+                                            <p className="text-gray-800">{feedback.feedback}</p>
+
+                                            {/* 삭제 버튼 추가 */}
+                                            <div className="text-right">
+                                                <button
+                                                    // onClick={() => handleDelete(index)}
+                                                    className="text-sm text-red-600 hover:underline"
+                                                >
+                                                    삭제
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
                             </div>
 
                             {selectedStudent.score && (
@@ -652,6 +729,52 @@ const Analysis = ({ userdata }) => {
                     )
                 )}
             </div>
+            {isFeedbackModalOpen && (
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-lg shadow-xl max-w-lg w-full">
+                        <div className="px-6 py-4 border-b border-gray-200">
+                            <h2 className="text-xl font-semibold text-gray-900">피드백 보내기</h2>
+                        </div>
+                        <div className="px-6 py-4 space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">날짜</label>
+                                <input
+                                    type="date"
+                                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    // value={selectedDate}
+                                    onChange={(e) => setSelectedDate(e.target.value)}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">피드백</label>
+                                <textarea
+                                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    // value={selectedFeedback}
+                                    onChange={(e) => setSelectedFeedback(e.target.value)}
+                                    placeholder="피드백을 작성해주세요."
+                                    rows={4}
+                                />
+                            </div>
+                        </div>
+                        <div className="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-end space-x-3">
+                            <button
+                                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                onClick={() => setIsFeedbackModalOpen(false)}
+                            >
+                                취소
+                            </button>
+                            <button
+                                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                onClick={() => handleSave(selectedDate, selectedFeedback)}
+                            >
+                                보내기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
         </main>
     );
 };
@@ -693,7 +816,7 @@ const FocusArea = ({ title, areas }) => (
     <div className="mt-6 bg-red-50 p-5 rounded-[5px] border border-red-200">
         <div className="text-sm font-semibold text-red-500">{title}</div>
         <div className="text-m">{areas}</div>
-        
+
     </div>
 );
 export default Analysis; 

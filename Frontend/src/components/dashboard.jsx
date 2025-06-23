@@ -185,8 +185,6 @@ const dashboard = ({ userdata, setView }) => {
 
                 {/* 학습 현황 및 추천 */}
                 <div className="flex flex-col md:flex-row gap-4">
-
-
                     <div className="w-full md:w-2/3 bg-white rounded shadow">
                         <div className="border-b px-6 py-4 font-bold text-lg">유형별 학습 현황</div>
                         <div className="p-6 space-y-4">
@@ -227,9 +225,35 @@ const dashboard = ({ userdata, setView }) => {
                             )}
                         </div>
                     </div>
-
-
                 </div>
+
+                {/* 교수 피드백 */}
+                <div className="flex flex-col md:flex-row gap-4">
+                    <div className="w-full bg-white rounded shadow">
+                        <div className="border-b px-6 py-4 font-bold text-lg">교수 피드백</div>
+                        <div className="p-6 space-y-4">
+                            {/* 피드백 블록 1 */}
+                            <div className="border rounded-lg p-4 bg-gray-50 shadow-sm space-y-2">
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                                    <span className="text-base text-blue-600 font-semibold">2025-05-01</span>
+                                    <span className="text-base text-gray-700 font-semibold">A교수</span>
+                                </div>
+                                <p className="text-gray-800">~~유형의 학습이 부족하니 집중적으로 학습이 요망됩니다.</p>
+                            </div>
+
+                            {/* 피드백 블록 2 */}
+                            <div className="border rounded-lg p-4 bg-gray-50 shadow-sm space-y-2">
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                                    <span className="text-base text-blue-600 font-semibold">2025-06-01</span>
+                                    <span className="text-base text-gray-700 font-semibold">B교수</span>
+                                </div>
+                                <p className="text-gray-800">저번달 대비 ~~유형의 학습이 부족함으로 학습이 필요합니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
 
                 {/* 월간 및 주간 통계 */}
                 <div className="flex flex-col md:flex-row gap-4">
