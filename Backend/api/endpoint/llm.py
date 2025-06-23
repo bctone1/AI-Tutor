@@ -139,7 +139,6 @@ async def delete_exam_endpoint(request: DeleteReferenceData, db: Session = Depen
     return JSONResponse(content={
         "message": "참고자료가 삭제되었습니다."})
 
-
 @llm_router.post("/getAIQuestion")
 async def get_ai_question_endpoint(request: GetAIQuestionRequest):
     major = request.major
