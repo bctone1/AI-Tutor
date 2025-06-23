@@ -52,11 +52,7 @@ const Active = ({ userdata }) => {
                 body: JSON.stringify({ major: userdata.user.major, selectedSubject: selectedSubject })
             });
             const data = await res.json();
-            console.log(data);
-            console.log(data.question);
-            console.log(data.choices);
-            console.log(data.answer);
-            console.log(data.description);
+            // console.log(data);
             if (res.ok) {
                 const { question, choices, answer, description } = data;
 
