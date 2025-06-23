@@ -9,6 +9,7 @@ from fastapi.responses import JSONResponse
 from langchain_service.document_loader.extract_question import parse_question_block
 from langchain_service.chain.discrimination import discrimination
 from langchain_service.document_loader.file_loader import load_document, split_text_into_chunks
+from langchain_service.document_loader.parsing_ai_response import parse_ai_question
 import random
 import os
 
@@ -147,5 +148,6 @@ async def get_ai_question_endpoint(request: GetAIQuestionRequest):
     print(f"SUBJECT : {subject}")
     question = get_ai_question(major = major, subject = subject)
     print(f"QUESTION : {question}")
-    return JSONResponse(content={
-        "message": question})
+    parsed = parse_ai_question(question)
+    print(parsed)
+    return parsed

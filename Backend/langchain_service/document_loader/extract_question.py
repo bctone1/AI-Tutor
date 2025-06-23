@@ -1,41 +1,7 @@
 import re
 from typing import List, Dict
 
-'''
-def extract_questions_from_pages(page_texts: List[str]) -> List[str]:
-    """
-    PDF 텍스트에서 숫자. 패턴을 기준으로 문제 단위로 분리하되,
-    숫자. 다음이 공백 또는 특수문자 (특히 소괄호 등)만 오는 경우는 무시.
-    """
-    full_text = "\n".join(page_texts)
 
-    # 후보 split 포인트 찾기: 숫자 + 마침표
-    matches = list(re.finditer(r'(?<!\d)(\d{1,3})\.', full_text))
-    if not matches:
-        return []
-
-    starts = []
-    for m in matches:
-        num_end = m.end()  # 마침표 뒤 인덱스
-        if num_end >= len(full_text):  # 끝났으면 무시
-            continue
-
-        # 숫자. 다음 문자가 유효한 문제 시작인지 확인
-        next_char = full_text[num_end]
-
-        # 유효한 경우: 공백 또는 한글/영문/숫자 시작이어야 함
-        if re.match(r'[\s]*[가-힣a-zA-Z0-9]', full_text[num_end:num_end + 3]):
-            starts.append(m.start())
-
-    starts.append(len(full_text))  # 마지막 인덱스 추가
-
-    questions = [
-        full_text[starts[i]:starts[i + 1]].strip()
-        for i in range(len(starts) - 1)
-    ]
-
-    return questions
-'''
 def extract_questions_from_pages(page_texts: List[str]) -> List[str]:
     """
     PDF 텍스트에서 숫자. 패턴을 기준으로 문제 단위로 분리하되,
@@ -105,4 +71,4 @@ def extract_all_structured_questions(page_texts: List[str]) -> List[Dict]:
 
 
 
-# 출력 예시 : [{'question': '1. 다음 중 경첩관절은 ?', 'choices': ['어깨관절', '팔꿉관절', '손목관절', '엉덩관절', '복장빗장관절']}]
+# 출력 예시 : [{'question': '다음 중 경첩관절은 ?', 'choices': ['어깨관절', '팔꿉관절', '손목관절', '엉덩관절', '복장빗장관절'], "answer" : 3}]
