@@ -267,7 +267,7 @@ def get_user_case_progress(db: Session, user_id: int) -> Dict[str, Dict]:
 
 '''
 
-def get_user_case_progress(db: Session, user_id: int) -> Dict[str, Dict]:
+def get_user_case_progress(db: Session, user_id: int) -> Dict[int, Dict]:
     case_scores = db.query(UserCaseScore).filter(UserCaseScore.user_id == user_id).all()
     progress = {}
     for idx, score in enumerate(case_scores, start=1):
