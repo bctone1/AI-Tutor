@@ -256,25 +256,32 @@ const dashboard = ({ userdata, setView }) => {
                     <div className="w-full bg-white rounded shadow">
                         <div className="border-b px-6 py-4 font-bold text-lg">교수 피드백</div>
                         <div className="p-6 space-y-4">
-                            {feedbackList.map((feedback, index) => (
-                                <div
-                                    key={index}
-                                    className="border rounded-lg p-4 bg-gray-50 shadow-sm space-y-2"
-                                >
-                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                                        <span className="text-base text-blue-600 font-semibold">
-                                            {feedback.date}
-                                        </span>
-                                        <span className="text-base text-gray-700 font-semibold">
-                                            {feedback.professor}
-                                        </span>
+                            {feedbackList.length > 0 ? (
+                                feedbackList.map((feedback, index) => (
+                                    <div
+                                        key={index}
+                                        className="border rounded-lg p-4 bg-gray-50 shadow-sm space-y-2"
+                                    >
+                                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                                            <span className="text-base text-blue-600 font-semibold">
+                                                {feedback.date}
+                                            </span>
+                                            <span className="text-base text-gray-700 font-semibold">
+                                                {feedback.professor}
+                                            </span>
+                                        </div>
+                                        <p className="text-gray-800">{feedback.content}</p>
                                     </div>
-                                    <p className="text-gray-800">{feedback.content}</p>
+                                ))
+                            ) : (
+                                <div className="text-gray-500 text-center py-4">
+                                    아직 교수 피드백이 없습니다.
                                 </div>
-                            ))}
+                            )}
                         </div>
                     </div>
                 </div>
+
 
 
 
