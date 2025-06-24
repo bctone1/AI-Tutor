@@ -153,6 +153,7 @@ def update_user_score(db: Session, user_id : int, score : int, level : str):
     user = db.query(User).filter(User.id == user_id).first()
     if user:
         user.score = score
+        user.level = level
         db.commit()
         db.refresh(user)
         return user

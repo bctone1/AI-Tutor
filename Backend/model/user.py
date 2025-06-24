@@ -26,7 +26,7 @@ class UserCaseScore(Base):
     __tablename__ = "user_case_scores"
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("user_table.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user_table.id", ondelete="CASCADE"), nullable=False)
     case = Column(String(100), nullable=False)
     category = Column(String(100), nullable=True)  # 유형 카테고리 (근육계, 신경계 등)
     total_questions = Column(Integer, default=0)
@@ -42,7 +42,7 @@ class UserTotalRecord(Base):
     __tablename__ = "user_total_record"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("user_table.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user_table.id", ondelete="CASCADE"), nullable=False)
     total_question = Column(Integer, default=0)
     total_correct = Column(Integer, default=0)
     correct_rate = Column(Float, default=0.0)
@@ -55,7 +55,7 @@ class UserDaily(Base):
     __tablename__ = "user_daily"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("user_table.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user_table.id", ondelete="CASCADE"), nullable=False)
     question_id = Column(Integer, ForeignKey("knowledge_base.id"))
     date = Column(Date, default=func.now(), onupdate=func.now())
 
@@ -66,7 +66,7 @@ class UserCurrentScore(Base):
     __tablename__ = "user_current_score"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("user_table.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user_table.id", ondelete="CASCADE"), nullable=False)
     case = Column(String(100), nullable=False)
     total_questions = Column(Integer, default=0)
     correct_answers = Column(Integer, default=0)
@@ -82,7 +82,7 @@ class FeedBack(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     professor = Column(String(50))
-    student_id = Column(Integer, ForeignKey("user_table.id"))
+    student_id = Column(Integer, ForeignKey("user_table.id", ondelete="CASCADE"))
     content = Column(Text)
     date = Column(Date, default=func.now(), onupdate=func.now())
 

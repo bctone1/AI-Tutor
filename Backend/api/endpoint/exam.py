@@ -208,6 +208,12 @@ async def submit_test_endpoint(request: SubmitTestRequest, db: Session = Depends
     print(f"유형별 결과: {case_results}")
     
     update_user_score(db = db, user_id = user_id, score = normalized_score, level = level)
+    print("\n===== 레벨 테스트 결과 =====")
+    print(f"다 맞췄을 때 : {max_score}점")
+    print(f"사용자 점수 : {score}점")
+    print(f"정규화된 점수 : {normalized_score}점")
+    print(f"종합 레벨 : {level}")
+    print("================================\n")
 
     return {
         "score": score,
