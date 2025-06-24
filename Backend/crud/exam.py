@@ -209,36 +209,18 @@ def classify_level_by_case(case_result: Dict) -> str:
 
 def save_user_case_scores(db: Session, user_id: int, case_results: Dict[str, Dict]):
     for case, result in case_results.items():
-        # 기존 기록이 있는지 확인
-        existing_score = db.query(UserCaseScore).filter(
-            UserCaseScore.user_id == user_id,
-            UserCaseScore.case == case
-        ).first()
-        
-        # 등급 분류
         level = classify_level_by_case(result)
-        
-        if existing_score:
-            # 기존 기록 업데이트
-            existing_score.total_questions = result['total_questions']
-            existing_score.correct_answers = result['correct_answers']
-            existing_score.total_score = result['total_score']
-            existing_score.accuracy = result['accuracy']
-            existing_score.level = level
-            existing_score.last_updated = datetime.utcnow()
-        else:
-            # 새 기록 생성
-            new_case_score = UserCaseScore(
-                user_id=user_id,
-                case=case,
-                total_questions=result['total_questions'],
-                correct_answers=result['correct_answers'],
-                total_score=result['total_score'],
-                accuracy=result['accuracy'],
-                level=level,
-                last_updated=datetime.utcnow()
-            )
-            db.add(new_case_score)
+        new_case_score = UserCaseScore(
+            user_id=user_id,
+            case=case,
+            total_questions=result['total_questions'],
+            correct_answers=result['correct_answers'],
+            total_score=result['total_score'],
+            accuracy=result['accuracy'],
+            level=level,
+            last_updated=datetime.utcnow()
+        )
+        db.add(new_case_score)
     
     db.commit()
     print(f"사용자 {user_id}의 유형별 점수가 저장되었습니다.")
