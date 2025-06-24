@@ -34,7 +34,7 @@ class UserCaseScore(Base):
     total_score = Column(Integer, default=0)
     accuracy = Column(Float, default=0.0)
     level = Column(String(50), default="하")
-    last_updated = Column(DateTime, default=func.now(), onupdate=func.now())
+    last_updated = Column(Date, default=func.now(), onupdate=func.now())
 
     user = relationship("User", back_populates="case_scores")
 
@@ -73,7 +73,7 @@ class UserCurrentScore(Base):
     total_score = Column(Integer, default=0)
     accuracy = Column(Float, default=0.0)
     level = Column(String(50), default="하")
-    last_updated = Column(DateTime, default=func.now(), onupdate=func.now())
+    last_updated = Column(Date, default=func.current_date(), onupdate=func.current_date())
 
     user = relationship("User", back_populates="current_score")
 
