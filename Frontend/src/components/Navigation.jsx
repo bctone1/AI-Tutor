@@ -31,22 +31,15 @@ const Navigation = ({ view, setView, userdata }) => {
       <div className="text-2xl font-bold">AI Tutor KyungBok</div>
       <nav className="flex items-center">
         <ul className="flex space-x-5">
-          <li>
-            <a
-              onClick={()=>setView("monthtest")}
-              className={`${getLinkClass('monthtest')} cursor-pointer p-5`}
-            >
-              진단 테스트
-            </a>
-          </li>
-          <li>
+
+          {/* <li>
             <a
               onClick={handleLeveltestClick}
               className={`${getLinkClass('leveltest')} cursor-pointer p-5`}
             >
               레벨 테스트
             </a>
-          </li>
+          </li> */}
           <li>
             <a
               onClick={() => setView('dashboard')}
@@ -55,6 +48,16 @@ const Navigation = ({ view, setView, userdata }) => {
               대시보드
             </a>
           </li>
+          
+          <li>
+            <a
+              onClick={() => setView("monthtest")}
+              className={`${getLinkClass('monthtest')} cursor-pointer p-5`}
+            >
+              진단 테스트
+            </a>
+          </li>
+
           <li>
             <a
               onClick={handleActiveClick}

@@ -537,15 +537,7 @@ const FocusArea = ({ title, areas }) => (
 );
 
 
-const StatCard = ({ label, value }) => {
-    // console.log(value);
-    return (
-        <div className="bg-white-100 p-4 rounded-md text-center border border-gray-300">
-            <div className="text-xl font-bold text-[#3f51b5]">{value}</div>
-            <div className="text-sm text-gray-500 mt-1">{label}</div>
-        </div>
-    );
-};
+
 
 
 
