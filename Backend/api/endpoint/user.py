@@ -265,9 +265,9 @@ async def get_feedback_endpoint(request : GetFeedbackRequest, db: Session = Depe
     return feedback
 
 @user_router.post('/getMonthTestResult')
-async def get_user_case_progress_endpoint(request: dict, db: Session = Depends(get_db)):
+async def get_user_case_progress_endpoint(request: UserIDRequest, db: Session = Depends(get_db)):
     try:
-        user_id = request.get("user_id")
+        user_id = request.user_id
         if not user_id:
             raise HTTPException(status_code=400, detail="user_id가 필요합니다.")
 

@@ -121,3 +121,6 @@ class SaveFeedbackRequest(BaseModel):
 
 class GetFeedbackRequest(BaseModel):
     user_id : int
+
+class UserIDRequest(BaseModel):
+    user_id: int

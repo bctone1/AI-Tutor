@@ -269,11 +269,10 @@ def get_user_case_progress(db: Session, user_id: int) -> Dict[str, Dict]:
 
 def get_user_case_progress(db: Session, user_id: int) -> Dict[str, Dict]:
     case_scores = db.query(UserCaseScore).filter(UserCaseScore.user_id == user_id).all()
-    user_data = db.query(User).filter(User.id == user_id).first()
-    department = user_data.department
     progress = {}
-    for score in case_scores:
-        progress[score.case] = {
+    for idx, score in enumerate(case_scores, start=1):
+        progress[idx] = {
+            'case': score.case,
             'total_questions': score.total_questions,
             'correct_answers': score.correct_answers,
             'total_score': score.total_score,
@@ -281,30 +280,6 @@ def get_user_case_progress(db: Session, user_id: int) -> Dict[str, Dict]:
             'level': score.level,
             'last_updated': score.last_updated.isoformat() if score.last_updated else None
         }
-    '''
-    if department == "물리치료학과":
-        for case in PHYSICAL_THERAPY_CASES:
-            if case not in progress:
-                progress[case] = {
-                    'total_questions': 0,
-                    'correct_answers': 0,
-                    'total_score': 0,
-                    'accuracy': 0.0,
-                    'level': '미시도',
-                    'last_updated': None
-                }
-    elif department == "작업치료학과":
-        for case in Occupational_Therapy:
-            if case not in progress:
-                progress[case] = {
-                    'total_questions': 0,
-                    'correct_answers': 0,
-                    'total_score': 0,
-                    'accuracy': 0.0,
-                    'level': '미시도',
-                    'last_updated': None
-                }
-    '''
     return progress
 
 
