@@ -195,8 +195,8 @@ async def submit_test_endpoint(request: SubmitTestRequest, db: Session = Depends
     print("================================\n")
 
     # 기존 전체 채점
-    score, num_cases = grading_test(db, answers)
-    level, normalized_score = classify_level(score, num_cases)
+    score, num_cases, max_score = grading_test(db, answers)
+    level, normalized_score = classify_level(score, num_cases, max_score)
 
     # 유형별 채점 추가
     total_score_by_case, num_cases_by_case, case_results = grading_test_by_case(db, answers)
@@ -207,7 +207,7 @@ async def submit_test_endpoint(request: SubmitTestRequest, db: Session = Depends
     print(f"LEVEL : {level} | SCORE : {score} | NORMALIZED_SCORE : {normalized_score}")
     print(f"유형별 결과: {case_results}")
     
-    update_user_score(db = db, user_id = user_id, score = score)
+    update_user_score(db = db, user_id = user_id, score = normalized_score, level = level)
 
     return {
         "score": score,
@@ -259,7 +259,7 @@ async def get_explantation_endpoint(request: GetExplantationRequest, db: Session
         is_correct = True
     else:
         is_correct = False
-    save_score_record(db = db, user_id = user_id, question_id = question_id, is_correct = is_correct)
+    save_score_record(db = db, user_id = user_id, is_correct = is_correct)
 
     if exist:
         save_total_correct(db=db, user_id=user_id, is_correct=is_correct)

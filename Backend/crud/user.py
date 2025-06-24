@@ -149,7 +149,7 @@ def generate_user_score(db: Session, email : str, major : str):
     else:
         return None
 
-def update_user_score(db: Session, user_id : int, score : int):
+def update_user_score(db: Session, user_id : int, score : int, level : str):
     user = db.query(User).filter(User.id == user_id).first()
     if user:
         user.score = score

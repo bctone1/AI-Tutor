@@ -111,29 +111,35 @@ def generate_level_test(db: Session, subject: str):
 
 def grading_test(db: Session, answers: Dict[str, int]):
     score = 0
+    max_score = 0  # 최대 점수용 변수 추가
     case_set = set()
+
     for key, value in answers.items():
         label = db.query(LabelingData).filter(LabelingData.question_id == key).first()
         print(f"라벨링 응답 : {label.correct_answer}")
         print(f"사용자 응답 : {value}")
         case_set.add(label.case)
 
+        # 문제 난이도에 따른 해당 문제의 점수
+        if label.level == "상":
+            problem_score = 5
+        elif label.level == "중":
+            problem_score = 3
+        elif label.level == "하":
+            problem_score = 2
+        else:
+            problem_score = 0  # 혹시 모를 예외 처리
+
+        max_score += problem_score  # 최대 점수 누적
+
         if label.correct_answer == value:
             print("정답")
-            if label.level == "상":
-                print("상급 문제 맞춤 - 5점 추가")
-                score += 5
-            elif label.level == "중":
-                print("중급 문제 맞춤 - 3점 추가")
-                score += 3
-            elif label.level == "하":
-                print("중급 문제 맞춤 - 2점 추가")
-                score += 2
+            score += problem_score
         else:
             print("오답")
-    num_cases = len(case_set)
-    return score, num_cases
 
+    num_cases = len(case_set)
+    return score, num_cases, max_score  # 최대 점수 함께 반환
 
 
 
@@ -194,9 +200,9 @@ def grading_test_by_case(db: Session, answers: Dict[str, int]) -> Tuple[int, int
 def classify_level_by_case(case_result: Dict) -> str:
     accuracy = case_result['accuracy']
     
-    if accuracy >= 0.8:  # 80% 이상
+    if accuracy >= 0.7:  # 80% 이상
         return "상"
-    elif accuracy >= 0.5:  # 50% 이상
+    elif accuracy >= 0.4:  # 50% 이상
         return "중"
     else:  # 50% 미만
         return "하"
@@ -276,15 +282,14 @@ def get_user_case_progress(db: Session, user_id: int) -> Dict[str, Dict]:
                 }
     return progress
 
-def classify_level(score: int, num_cases: int) -> Tuple[str, int]:
+def classify_level(score: int, num_cases: int, max_score : int) -> Tuple[str, int]:
     print(f"NUM_CASES = {num_cases}")
-    max_score = num_cases * 10
     ratio = score / max_score
     normalized_score = int(ratio * 100)
 
-    if ratio >= 80:
+    if ratio >= 70:
         level = "상"
-    elif ratio >= 50:
+    elif ratio >= 40:
         level = "중"
     else:
         level = "하"

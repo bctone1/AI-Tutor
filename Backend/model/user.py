@@ -14,6 +14,7 @@ class User(Base):
     department = Column(String(100))
     grade = Column(Integer, nullable = False)
     score = Column(Integer)
+    level = Column(String(25))
 
     case_scores = relationship("UserCaseScore", back_populates="user", cascade="all, delete-orphan")
     user_record = relationship("UserTotalRecord", back_populates="user", cascade="all, delete-orphan")
