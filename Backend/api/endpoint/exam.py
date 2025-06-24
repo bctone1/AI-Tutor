@@ -228,12 +228,10 @@ async def get_user_case_progress_endpoint(request: dict, db: Session = Depends(g
         user_id = request.get("user_id")
         if not user_id:
             raise HTTPException(status_code=400, detail="user_id가 필요합니다.")
-        
-        progress = get_user_case_progress(db, user_id)
+
         record = get_total_record(db=db, user_id=user_id)
         return {
             "success": True,
-            "progress": progress,
             "total_question": record.total_question,
             "correct_rate" : record.correct_rate * 100,
             "attendance": record.attendance,
@@ -243,6 +241,8 @@ async def get_user_case_progress_endpoint(request: dict, db: Session = Depends(g
     except Exception as e:
         print(f"유형별 학습 현황 조회 오류: {str(e)}")
         raise HTTPException(status_code=500, detail="학습 현황 조회 중 오류가 발생했습니다.")
+
+
 
 @exam_router.post("/getExplanation")
 async def get_explantation_endpoint(request: GetExplantationRequest, db: Session = Depends(get_db)):

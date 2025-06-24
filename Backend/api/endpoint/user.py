@@ -1,5 +1,6 @@
 from crud.user import *
 from schema.user import *
+from crud.exam import get_user_case_progress
 from database.session import get_db
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
@@ -262,3 +263,19 @@ async def get_feedback_endpoint(request : GetFeedbackRequest, db: Session = Depe
     feedback = get_feedback(db = db, student_id = student_id)
 
     return feedback
+
+@user_router.post('/getMonthTestResult')
+async def get_user_case_progress_endpoint(request: dict, db: Session = Depends(get_db)):
+    try:
+        user_id = request.get("user_id")
+        if not user_id:
+            raise HTTPException(status_code=400, detail="user_id가 필요합니다.")
+
+        progress = get_user_case_progress(db, user_id)
+        return {
+            "progress": progress
+        }
+
+    except Exception as e:
+        print(f"유형별 학습 현황 조회 오류: {str(e)}")
+        raise HTTPException(status_code=500, detail="학습 현황 조회 중 오류가 발생했습니다.")
