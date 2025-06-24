@@ -7,6 +7,7 @@ import LevelTest from '@/components/levelTest';
 import Dashboard from '@/components/dashboard';
 import Active from '@/components/active';
 import Profile from '@/components/profile';
+import MonthTest from '@/components/monthTest';
 
 export default function AnatomyTestPage() {
   const [view, setView] = useState(); // ✅ JS 문법: 타입 제거
@@ -43,6 +44,10 @@ export default function AnatomyTestPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       <Navigation view={view} setView={setView} userdata={session} />
+
+      {view === 'monthtest' && (
+        <MonthTest setView={setView} userdata={session} />
+      )}
 
       {view === 'leveltest' && (
         <LevelTest setView={setView} userdata={session} />

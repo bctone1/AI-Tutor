@@ -19,7 +19,7 @@ const Navigation = ({ view, setView, userdata }) => {
     if (userdata?.user?.major === "소속 없음") {
       alert("프로필을 완성해주세요.");
     } else if (userdata?.user?.testscore) {
-      // setView('leveltest');
+      setView('leveltest');
       alert("레벨테스트를 이미 완료했습니다.");
     } else {
       setView('leveltest');
@@ -31,6 +31,14 @@ const Navigation = ({ view, setView, userdata }) => {
       <div className="text-2xl font-bold">AI Tutor KyungBok</div>
       <nav className="flex items-center">
         <ul className="flex space-x-5">
+          <li>
+            <a
+              onClick={()=>setView("monthtest")}
+              className={`${getLinkClass('monthtest')} cursor-pointer p-5`}
+            >
+              진단 테스트
+            </a>
+          </li>
           <li>
             <a
               onClick={handleLeveltestClick}
