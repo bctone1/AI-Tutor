@@ -356,12 +356,15 @@ def update_current_score(db : Session, user_id : int, question_id : int, correct
     user_status.total_questions += 1
     if correct_answer is True:
         user_status.correct_answers += 1
-        user_status.total_score += 3
-    else:
-        user_status.total_score -= 3
-    db.add(user_status)
-    db.commit()
-    db.refresh(user_status)
+        if question.level == "하":
+            user_status.total_score += 2
+        elif question.level == "중":
+            user_status.total_score += 3
+        elif question.level == "상":
+            user_status.total_score += 5
+        db.add(user_status)
+        db.commit()
+        db.refresh(user_status)
     user_status.accuracy = user_status.correct_answers/user_status.total_questions
     if user_status.accuracy >= 0.8:
         user_status.level = "상"
@@ -443,19 +446,13 @@ def get_question_by_id(db : Session, question_id):
     question = db.query(KnowledgeBase).filter(KnowledgeBase.id == question_id).first()
     return question.question
 
-def save_score_record(db : Session, user_id : int, question_id : int, is_correct : bool):
-    level = db.query(LabelingData.level).filter(LabelingData.question_id == question_id).first()[0]
+def save_score_record(db : Session, user_id : int, is_correct : bool):
     user_record = db.query(UserTotalRecord).filter(UserTotalRecord.user_id == user_id).first()
 
     if is_correct:
-        if level == "상":
-            user_record.total_score += 3
-        elif level == "중":
-            user_record.total_score += 2
-        else:
-            user_record.total_score += 1
+        user_record.total_score += 3
     else:
-        user_record.total_score -= 1
+        user_record.total_score -= 3
     db.add(user_record)
     db.commit()
     db.refresh(user_record)
