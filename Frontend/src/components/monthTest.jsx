@@ -11,9 +11,10 @@ const MonthTest = ({ setView, userdata }) => {
     );
 
     const [caseProgress, setCaseProgress] = useState(null);
-
+    
+    
     useEffect(() => {
-        const fetchCaseProgress = async () => {
+        const getMonthTestResult = async () => {
             try {
                 const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getMonthTestResult`, {
                     method: 'POST',
@@ -27,6 +28,45 @@ const MonthTest = ({ setView, userdata }) => {
                 const data = await response.json();
                 if (response.ok) {
                     console.log(data.progress);
+
+                    const rawData = data.progress;
+
+                    const transformedData = {};
+
+                    // 1~12월 초기화
+                    for (let i = 1; i <= 12; i++) {
+                        transformedData[i] = {
+                            completed: false,
+                            score: null,
+                            questions: 0,
+                            correct: 0,
+                        };
+                    }
+
+                    // 각 항목 처리
+                    rawData.forEach(item => {
+                        if (!item.last_updated) return;
+
+                        const month = new Date(item.last_updated).getMonth() + 1; // JS의 getMonth()는 0~11 반환
+
+                        // 누적 계산
+                        transformedData[month].questions += item.total_questions || 0;
+                        transformedData[month].correct += item.correct_answers || 0;
+                        transformedData[month].score = (transformedData[month].score || 0) + (item.total_score || 0);
+                    });
+
+                    // completed 및 score null 처리
+                    for (let i = 1; i <= 12; i++) {
+                        if (transformedData[i].questions > 0) {
+                            transformedData[i].completed = true;
+                        } else {
+                            transformedData[i].score = null;
+                        }
+                    }
+
+                    // 결과 적용
+                    setMonthData(transformedData);
+
                     setCaseProgress(data.progress);
                 } else {
                     throw new Error('유형별 학습 현황을 가져오는데 실패했습니다.');
@@ -38,7 +78,7 @@ const MonthTest = ({ setView, userdata }) => {
 
 
         if (userdata?.user?.id) {
-            fetchCaseProgress();
+            getMonthTestResult();
         }
     }, [userdata?.user?.id]);
 
@@ -94,40 +134,30 @@ const MonthTest = ({ setView, userdata }) => {
 
     // 월별 상태 확인
     const getMonthStatus = (monthId) => {
-        if (monthId < currentMonth) {
-            return 'completed'; // 완료된 달
-        } else if (monthId === currentMonth) {
-            // 이번 달에 이미 풀었으면 doneCurrent 반환
+
+        // if (monthId < currentMonth) {
+        //     return 'completed'; // 완료된 달
+        // } else 
+        if (monthId === currentMonth) {
             if (monthData[monthId]?.completed) {
                 return 'doneCurrent';
             }
             return 'current'; // 현재 달
+        }
+
+        if (monthData[monthId]?.completed) {
+            return 'completed';
+        } else if (monthId > currentMonth) {
+            return 'disabled';
         } else {
-            return 'disabled'; // 미래 달
+            return 'disabled';
         }
     };
 
-
-    useEffect(() => {
-        const mockData = {
-            1: { completed: false, score: null, questions: 0, correct: 0 },
-            2: { completed: true, score: 78, questions: 20, correct: 15 },
-            3: { completed: true, score: 92, questions: 20, correct: 18 },
-            4: { completed: true, score: 88, questions: 20, correct: 17 },
-            5: { completed: true, score: 95, questions: 20, correct: 19 },
-            6: { completed: false, score: null, questions: 0, correct: 0 },
-            7: { completed: false, score: null, questions: 0, correct: 0 },
-            8: { completed: false, score: null, questions: 0, correct: 0 },
-            9: { completed: false, score: null, questions: 0, correct: 0 },
-            10: { completed: false, score: null, questions: 0, correct: 0 },
-            11: { completed: false, score: null, questions: 0, correct: 0 },
-            12: { completed: false, score: null, questions: 0, correct: 0 }
-        };
-        setMonthData(mockData);
-    }, []);
-
     const handleMonthClick = (monthId) => {
+        console.log(monthId);
         console.log(caseProgress);
+
         const status = getMonthStatus(monthId);
         setSelectedMonth(monthId);
 
@@ -136,13 +166,20 @@ const MonthTest = ({ setView, userdata }) => {
         }
 
         if (status === 'current') {
-            // setSelectedMonth(monthId);
             // 여기서 해당 월의 테스트 페이지로 이동하거나 모달을 열 수 있음
-            // console.log(`${monthId}월 테스트 시작`);
         } else if (status === 'completed') {
             // 완료된 달의 결과 보기
-            // console.log(`${monthId}월 결과 보기`);
         }
+
+        const filtered = caseProgress
+            ? caseProgress.filter(item => {
+                if (!item.last_updated) return false;
+                const itemMonth = new Date(item.last_updated).getMonth() + 1;
+                return itemMonth === monthId;
+            })
+            : [];
+
+        console.log('선택한 달의 데이터:', filtered);
     };
 
     const getMonthCardClass = (monthId) => {
@@ -234,6 +271,15 @@ const MonthTest = ({ setView, userdata }) => {
                 return null;
         }
     };
+
+    // 선택한 달의 데이터 필터링
+    const filteredMonthData = caseProgress
+        ? caseProgress.filter(item => {
+            if (!item.last_updated) return false;
+            const itemMonth = new Date(item.last_updated).getMonth() + 1;
+            return itemMonth === selectedMonth;
+        })
+        : [];
 
     return (
         <div className="min-h-screen bg-gray-50 py-8">
@@ -329,45 +375,46 @@ const MonthTest = ({ setView, userdata }) => {
 
 
 
-                {userdata.user.testscore ? (
-                    <div className="bg-white shadow-md rounded-lg p-6 mt-6 mb-6">
-                        <h2 className="text-2xl font-semibold mb-6 text-gray-800">{selectedMonth}월 진단테스트 결과</h2>
 
-                        <div className="flex mb-4 gap-2">
-                            {userdata.user.major == "작업치료학과" ? (
-                                <div>
-                                    <button
-                                        className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer mr-3 ${activeTab === 'anatomy2' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
-                                            }`}
-                                        onClick={() => handleTabClick('anatomy2')}
-                                    >
-                                        해부학 (9개 유형)
-                                    </button>
-                                    <button
-                                        className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer ${activeTab === 'anatomy3' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
-                                            }`}
-                                        onClick={() => handleTabClick('anatomy3')}
-                                    >
-                                        생리학 (7개 유형)
-                                    </button>
-                                </div>
+                <div className="bg-white shadow-md rounded-lg p-6 mt-6 mb-6">
+                    <h2 className="text-2xl font-semibold mb-6 text-gray-800">{selectedMonth}월 진단테스트 결과</h2>
 
-                            ) : (
-                                <button
-                                    className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer ${activeTab === 'anatomy' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
-                                        }`}
-                                    onClick={() => handleTabClick('anatomy')}
-                                >
-                                    해부생리 (10개 유형)
-                                </button>
-
-                            )}
-
-                        </div>
-
-                        {activeTab === 'anatomy' && (
+                    <div className="flex mb-4 gap-2">
+                        {userdata.user.major == "작업치료학과" ? (
                             <div>
-                                {caseProgress && caseProgress.map((item, index) => (
+                                <button
+                                    className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer mr-3 ${activeTab === 'anatomy2' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
+                                        }`}
+                                    onClick={() => handleTabClick('anatomy2')}
+                                >
+                                    해부학 (9개 유형)
+                                </button>
+                                <button
+                                    className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer ${activeTab === 'anatomy3' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
+                                        }`}
+                                    onClick={() => handleTabClick('anatomy3')}
+                                >
+                                    생리학 (7개 유형)
+                                </button>
+                            </div>
+
+                        ) : (
+                            <button
+                                className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer ${activeTab === 'anatomy' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
+                                    }`}
+                                onClick={() => handleTabClick('anatomy')}
+                            >
+                                해부생리 (10개 유형)
+                            </button>
+
+                        )}
+
+                    </div>
+
+                    {activeTab === 'anatomy' && (
+                        <div>
+                            {filteredMonthData.length > 0 ? (
+                                filteredMonthData.map((item, index) => (
                                     <LevelItem
                                         key={index}
                                         label={item.case}
@@ -375,105 +422,90 @@ const MonthTest = ({ setView, userdata }) => {
                                         width={`${item.accuracy * 100}%`}
                                         level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
                                     />
-                                ))}
+                                ))
+                            ) : (
+                                <div className="text-center text-gray-500 py-8">데이터가 없습니다.</div>
+                            )}
+                            <Legend />
+                            <FocusArea
+                                title="집중 학습 필요 영역:"
+                                areas={
+                                    filteredMonthData.length > 0
+                                        ? filteredMonthData
+                                            .filter(item => item.level === '하')
+                                            .map(item => item.case)
+                                            .join(', ')
+                                        : ''
+                                }
+                            />
+                        </div>
+                    )}
 
-                                <Legend />
-                                <FocusArea
-                                    title="집중 학습 필요 영역:"
-                                    areas={
-                                        caseProgress
-                                            ? caseProgress
-                                                .filter(item => item.level === '하')
-                                                .map(item => item.case)
-                                                .join(', ')
-                                            : ''
-                                    }
-                                />
-                            </div>
-                        )}
+                    {activeTab === 'anatomy2' && (
+                        <div>
+                            {filteredMonthData.filter(item => targetCases.includes(item.case)).length > 0 ? (
+                                filteredMonthData
+                                    .filter(item => targetCases.includes(item.case))
+                                    .map((item, index) => (
+                                        <LevelItem
+                                            key={index}
+                                            label={item.case}
+                                            score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
+                                            width={`${item.accuracy * 100}%`}
+                                            level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
+                                        />
+                                    ))
+                            ) : (
+                                <div className="text-center text-gray-500 py-8">데이터가 없습니다.</div>
+                            )}
+                            <Legend />
+                            <FocusArea
+                                title="집중 학습 필요 영역:"
+                                areas={
+                                    filteredMonthData.length > 0
+                                        ? filteredMonthData
+                                            .filter(item => item.level === '하' && targetCases.includes(item.case))
+                                            .map(item => item.case)
+                                            .join(', ')
+                                        : ''
+                                }
+                            />
+                        </div>
+                    )}
 
-                        {activeTab === 'anatomy2' && (
-                            <div>
-                                {caseProgress &&
-                                    caseProgress
-                                        .filter(item => targetCases.includes(item.case))
-                                        .map((item, index) => (
-                                            <LevelItem
-                                                key={index}
-                                                label={item.case}
-                                                score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
-                                                width={`${item.accuracy * 100}%`}
-                                                level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
-                                            />
-                                        ))}
+                    {activeTab === 'anatomy3' && (
+                        <div>
+                            {filteredMonthData.filter(item => targetCases2.includes(item.case)).length > 0 ? (
+                                filteredMonthData
+                                    .filter(item => targetCases2.includes(item.case))
+                                    .map((item, index) => (
+                                        <LevelItem
+                                            key={index}
+                                            label={item.case}
+                                            score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
+                                            width={`${item.accuracy * 100}%`}
+                                            level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
+                                        />
+                                    ))
+                            ) : (
+                                <div className="text-center text-gray-500 py-8">데이터가 없습니다.</div>
+                            )}
+                            <Legend />
+                            <FocusArea
+                                title="집중 학습 필요 영역:"
+                                areas={
+                                    filteredMonthData.length > 0
+                                        ? filteredMonthData
+                                            .filter(item => item.level === '하' && targetCases2.includes(item.case))
+                                            .map(item => item.case)
+                                            .join(', ')
+                                        : ''
+                                }
+                            />
+                        </div>
+                    )}
 
-                                <Legend />
-                                <FocusArea
-                                    title="집중 학습 필요 영역:"
-                                    areas={
-                                        caseProgress
-                                            ? caseProgress
-                                                .filter(item => item.level === '하' && targetCases.includes(item.case))
-                                                .map(item => item.case)
-                                                .join(', ')
-                                            : ''
-                                    }
-                                />
-                            </div>
-                        )}
-
-                        {activeTab === 'anatomy3' && (
-                            <div>
-                                {caseProgress &&
-                                    caseProgress
-                                        .filter(item => targetCases2.includes(item.case))
-                                        .map((item, index) => (
-                                            <LevelItem
-                                                key={index}
-                                                label={item.case}
-                                                score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
-                                                width={`${item.accuracy * 100}%`}
-                                                level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
-                                            />
-                                        ))}
-
-                                <Legend />
-                                <FocusArea
-                                    title="집중 학습 필요 영역:"
-                                    areas={
-                                        caseProgress
-                                            ? caseProgress
-                                                .filter(item => item.level === '하' && targetCases2.includes(item.case))
-                                                .map(item => item.case)
-                                                .join(', ')
-                                            : ''
-                                    }
-                                />
-                            </div>
-                        )}
-
-                    </div>
-
-                ) : (
-                    <div>
-                        {userdata.user.major && userdata.user.grade && (
-                            <div className="bg-white shadow-md rounded-lg p-6 mt-6 mb-6">
-                                <div className="text-gray-600 text-lg mb-6">
-                                    ⚠️ 먼저 <span className="font-bold text-[#3f51b5]">레벨테스트</span>를 완료해주세요.
-                                </div>
-
-                                <div className="flex">
-                                    <button
-                                        onClick={handleLevelTestClick}
-                                        className="bg-[#3f51b5] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#303f9f] transition cusor-pointer"
-                                    >
-                                        레벨테스트 바로가기
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                )}
+                </div>
 
 
 
