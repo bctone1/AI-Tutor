@@ -147,7 +147,12 @@ async def get_ai_question_endpoint(request: GetAIQuestionRequest, db: Session = 
     print(f"SUBJECT : {subject}")
     propmt = get_question_prompt(db = db, subject = subject)
     question = get_ai_question(major = major, subject = subject, add_prompt=propmt)
+    print("\n\n===============기존 문제======================\n\n")
+    print(f"QUESTION : {propmt}")
+    print("\n\n==============================================\n\n")
+    print("\n\n===============생성된 문제======================\n\n")
     print(f"QUESTION : {question}")
+    print("\n\n==============================================\n\n")
     question_obj = json.loads(question)
     return JSONResponse(content={
         "question": question_obj["question"],

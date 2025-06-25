@@ -152,10 +152,8 @@ def get_question_prompt(db: Session, subject: str):
 
 
     answer = labeling_data.correct_answer
-    prompt = (f"""아래 문제를 바탕으로 새로운 문제를 생성해주세요.
-        문제 : {question_data.question}
-        정답 : {answer}
-        """)
+    prompt = (f"""문제 : {question_data.question}
+                  정답 : {answer}""")
     return prompt
 
 
