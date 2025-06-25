@@ -9,24 +9,24 @@ import Active from '@/components/active';
 import Profile from '@/components/profile';
 import MonthTest from '@/components/monthTest';
 
-export default function AnatomyTestPage() {
-  const [view, setView] = useState(); // ✅ JS 문법: 타입 제거
+export default function Userpage() {
+  const [view, setView] = useState();
   const { data: session, status } = useSession();
 
   // 💾 localStorage에서 view 복원
-  useEffect(() => {
-    const savedView = localStorage.getItem("currentView");
-    if (savedView) {
-      setView(savedView);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const savedView = localStorage.getItem("currentView");
+  //   if (savedView) {
+  //     setView(savedView);
+  //   }
+  // }, []);
 
-  // 🔁 view가 바뀔 때 localStorage에도 저장
-  useEffect(() => {
-    if (view) {
-      localStorage.setItem("currentView", view);
-    }
-  }, [view]);
+  // // 🔁 view가 바뀔 때 localStorage에도 저장
+  // useEffect(() => {
+  //   if (view) {
+  //     localStorage.setItem("currentView", view);
+  //   }
+  // }, [view]);
 
   // 🧠 세션에 따라 초기값 설정 (한 번만)
   useEffect(() => {

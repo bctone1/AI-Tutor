@@ -21,7 +21,7 @@ const dashboard = ({ userdata, setView }) => {
             });
             const data = await response.json();
             if (response.ok) {
-                console.log(data);
+                // console.log(data);
                 setFeedbackList(data);
             } else {
                 console.error("피드백 목록 조회 오류");
