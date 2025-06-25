@@ -271,6 +271,10 @@ async def get_user_case_progress_endpoint(request: UserIDRequest, db: Session = 
             raise HTTPException(status_code=400, detail="user_id가 필요합니다.")
 
         progress = get_user_case_progress(db, user_id)
+        print("\n\n===========PROGRESS=============")
+        for item in progress:
+            print(item)
+        print("========================\n\n")
         return {
             "progress": progress
         }
