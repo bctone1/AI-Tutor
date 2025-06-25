@@ -268,10 +268,11 @@ const Profile = ({ userdata, setView }) => {
                         </div>
                     )}
 
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mt-6">
                         <StatCard label="총 풀이 문제" value={dailyProgress.total_questions + "문제"} />
                         <StatCard label="평균 정답률" value={(dailyProgress.correct_rate * 1).toFixed(1) + "%"} />
                         <StatCard label="연속 학습" value={dailyProgress.attendance + "일"} />
+                        <StatCard label="총 학습시간" value={dailyProgress.attendance + "시간"} />
                         <StatCard label="내 점수" value={dailyProgress.total_score + "점"} />
 
                         {/* <StatCard label="총 풀이 문제" value="427" />
