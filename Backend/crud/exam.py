@@ -264,7 +264,6 @@ def get_user_case_progress(db: Session, user_id: int) -> Dict[str, Dict]:
                     'last_updated': None
                 }
     return progress
-
 '''
 
 def get_user_case_progress(db: Session, user_id: int) -> Dict[int, Dict]:
