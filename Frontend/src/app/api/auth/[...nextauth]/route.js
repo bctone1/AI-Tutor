@@ -42,6 +42,7 @@ export const handler = NextAuth({
               major: res.data.major,
               grade: res.data.grade,
               testscore: res.data.testscore,
+              level: res.data.level,
             };
           }
           return null;
@@ -79,6 +80,7 @@ export const handler = NextAuth({
               major: res.data.major,
               grade: res.data.grade,
               testscore: res.data.testscore,
+              level: res.data.level,
             };
           }
           return null;
@@ -116,6 +118,7 @@ export const handler = NextAuth({
               major: res.data.major,
               grade: res.data.grade,
               testscore: res.data.testscore,
+              level: res.data.level,
             };
           }
           return null;
@@ -151,6 +154,7 @@ export const handler = NextAuth({
             user.major = res.data.major;
             user.grade = res.data.grade;
             user.testscore = res.data.testscore;
+            user.level = res.data.level;
           }
         } catch (error) {
           console.error("Google 로그인 후 백엔드 전송 실패:", error);
@@ -172,6 +176,7 @@ export const handler = NextAuth({
             user.major = res.data.major;
             user.grade = res.data.grade;
             user.testscore = res.data.testscore;
+            user.level = res.data.level;
           }
         } catch (error) {
           console.error("Kakao 로그인 후 백엔드 전송 실패:", error);
@@ -190,6 +195,7 @@ export const handler = NextAuth({
         token.major = user.major;
         token.grade = user.grade;
         token.testscore = user.testscore;
+        token.level = user.level;
       }
       return token;
     },
@@ -202,6 +208,7 @@ export const handler = NextAuth({
       session.user.grade = token.grade;
       session.user.major = token.major;
       session.user.testscore = token.testscore;
+      session.user.level = token.level;
       return session;
     },
   },

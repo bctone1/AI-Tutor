@@ -26,7 +26,7 @@ const MonthTest = ({ setView, userdata }) => {
                 });
                 const data = await response.json();
                 if (response.ok) {
-                    console.log(data);
+                    console.log(data.progress);
                     setCaseProgress(data.progress);
                 } else {
                     throw new Error('유형별 학습 현황을 가져오는데 실패했습니다.');
@@ -72,12 +72,6 @@ const MonthTest = ({ setView, userdata }) => {
         "근육계의 기능"
     ]
 
-
-
-
-
-
-
     const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
@@ -113,16 +107,15 @@ const MonthTest = ({ setView, userdata }) => {
         }
     };
 
-    // 월별 데이터 가져오기 (실제로는 API 호출)
+
     useEffect(() => {
-        // 임시 데이터 - 실제로는 API에서 가져와야 함
         const mockData = {
             1: { completed: false, score: null, questions: 0, correct: 0 },
             2: { completed: true, score: 78, questions: 20, correct: 15 },
             3: { completed: true, score: 92, questions: 20, correct: 18 },
             4: { completed: true, score: 88, questions: 20, correct: 17 },
             5: { completed: true, score: 95, questions: 20, correct: 19 },
-            6: { completed: true, score: 50, questions: 20, correct: 10 },
+            6: { completed: false, score: null, questions: 0, correct: 0 },
             7: { completed: false, score: null, questions: 0, correct: 0 },
             8: { completed: false, score: null, questions: 0, correct: 0 },
             9: { completed: false, score: null, questions: 0, correct: 0 },
@@ -134,6 +127,7 @@ const MonthTest = ({ setView, userdata }) => {
     }, []);
 
     const handleMonthClick = (monthId) => {
+        console.log(caseProgress);
         const status = getMonthStatus(monthId);
         setSelectedMonth(monthId);
 
@@ -144,10 +138,10 @@ const MonthTest = ({ setView, userdata }) => {
         if (status === 'current') {
             // setSelectedMonth(monthId);
             // 여기서 해당 월의 테스트 페이지로 이동하거나 모달을 열 수 있음
-            console.log(`${monthId}월 테스트 시작`);
+            // console.log(`${monthId}월 테스트 시작`);
         } else if (status === 'completed') {
             // 완료된 달의 결과 보기
-            console.log(`${monthId}월 결과 보기`);
+            // console.log(`${monthId}월 결과 보기`);
         }
     };
 
@@ -193,7 +187,10 @@ const MonthTest = ({ setView, userdata }) => {
                 );
             case 'current':
                 return (
-                    <div className="text-center">
+                    <div
+                        className="text-center cursor-pointer"
+                        onClick={() => setView('leveltest')}
+                    >
                         <div className="text-lg font-semibold text-blue-700 mb-2">
                             {months[monthId - 1].name}
                         </div>
@@ -370,13 +367,13 @@ const MonthTest = ({ setView, userdata }) => {
 
                         {activeTab === 'anatomy' && (
                             <div>
-                                {caseProgress && Object.entries(caseProgress).map(([case_name, data]) => (
+                                {caseProgress && caseProgress.map((item, index) => (
                                     <LevelItem
-                                        key={case_name}
-                                        label={case_name}
-                                        score={`${data.level} (${data.correct_answers}/${data.total_questions})`}
-                                        width={`${data.accuracy * 100}%`}
-                                        level={data.level === '상' ? 'high' : data.level === '중' ? 'mid' : 'low'}
+                                        key={index}
+                                        label={item.case}
+                                        score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
+                                        width={`${item.accuracy * 100}%`}
+                                        level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
                                     />
                                 ))}
 
@@ -384,10 +381,10 @@ const MonthTest = ({ setView, userdata }) => {
                                 <FocusArea
                                     title="집중 학습 필요 영역:"
                                     areas={
-                                        caseProgress ?
-                                            Object.entries(caseProgress)
-                                                .filter(([_, data]) => data.level === '하')
-                                                .map(([case_name]) => case_name)
+                                        caseProgress
+                                            ? caseProgress
+                                                .filter(item => item.level === '하')
+                                                .map(item => item.case)
                                                 .join(', ')
                                             : ''
                                     }
@@ -398,15 +395,15 @@ const MonthTest = ({ setView, userdata }) => {
                         {activeTab === 'anatomy2' && (
                             <div>
                                 {caseProgress &&
-                                    Object.entries(caseProgress)
-                                        .filter(([case_name]) => targetCases.includes(case_name)) // ✅ 필터 추가
-                                        .map(([case_name, data]) => (
+                                    caseProgress
+                                        .filter(item => targetCases.includes(item.case))
+                                        .map((item, index) => (
                                             <LevelItem
-                                                key={case_name}
-                                                label={case_name}
-                                                score={`${data.level} (${data.correct_answers}/${data.total_questions})`}
-                                                width={`${data.accuracy * 100}%`}
-                                                level={data.level === '상' ? 'high' : data.level === '중' ? 'mid' : 'low'}
+                                                key={index}
+                                                label={item.case}
+                                                score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
+                                                width={`${item.accuracy * 100}%`}
+                                                level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
                                             />
                                         ))}
 
@@ -415,12 +412,9 @@ const MonthTest = ({ setView, userdata }) => {
                                     title="집중 학습 필요 영역:"
                                     areas={
                                         caseProgress
-                                            ? Object.entries(caseProgress)
-                                                .filter(
-                                                    ([case_name, data]) =>
-                                                        data.level === '하' && targetCases.includes(case_name) // ✅ 여기에도 필터 추가
-                                                )
-                                                .map(([case_name]) => case_name)
+                                            ? caseProgress
+                                                .filter(item => item.level === '하' && targetCases.includes(item.case))
+                                                .map(item => item.case)
                                                 .join(', ')
                                             : ''
                                     }
@@ -431,15 +425,15 @@ const MonthTest = ({ setView, userdata }) => {
                         {activeTab === 'anatomy3' && (
                             <div>
                                 {caseProgress &&
-                                    Object.entries(caseProgress)
-                                        .filter(([case_name]) => targetCases2.includes(case_name)) // ✅ 필터 추가
-                                        .map(([case_name, data]) => (
+                                    caseProgress
+                                        .filter(item => targetCases2.includes(item.case))
+                                        .map((item, index) => (
                                             <LevelItem
-                                                key={case_name}
-                                                label={case_name}
-                                                score={`${data.level} (${data.correct_answers}/${data.total_questions})`}
-                                                width={`${data.accuracy * 100}%`}
-                                                level={data.level === '상' ? 'high' : data.level === '중' ? 'mid' : 'low'}
+                                                key={index}
+                                                label={item.case}
+                                                score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
+                                                width={`${item.accuracy * 100}%`}
+                                                level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
                                             />
                                         ))}
 
@@ -448,18 +442,16 @@ const MonthTest = ({ setView, userdata }) => {
                                     title="집중 학습 필요 영역:"
                                     areas={
                                         caseProgress
-                                            ? Object.entries(caseProgress)
-                                                .filter(
-                                                    ([case_name, data]) =>
-                                                        data.level === '하' && targetCases2.includes(case_name) // ✅ 여기에도 필터 추가
-                                                )
-                                                .map(([case_name]) => case_name)
+                                            ? caseProgress
+                                                .filter(item => item.level === '하' && targetCases2.includes(item.case))
+                                                .map(item => item.case)
                                                 .join(', ')
                                             : ''
                                     }
                                 />
                             </div>
                         )}
+
                     </div>
 
                 ) : (

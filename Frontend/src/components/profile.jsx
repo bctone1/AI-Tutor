@@ -86,22 +86,17 @@ const Profile = ({ userdata, setView }) => {
                                 <div className="text-lg font-medium text-gray-800">
                                     {userdata.user.name}
 
-                                    {userdata.user.testscore > 0 && (
+                                    {userdata.user.level && (
                                         <span
                                             className={`ml-3 px-4 py-1.5 rounded-[12px] text-[16px] font-bold border-2 animate-pulse 
-                                                ${userdata.user.testscore >= 80
+                                                ${userdata.user.level == "상"
                                                     ? 'text-green-500 border-green-500 bg-[#e6fff3]'
-                                                    : userdata.user.testscore >= 50
+                                                    : userdata.user.level == "중"
                                                         ? 'text-orange-500 border-orange-500 bg-[#fff3e6]'
                                                         : 'text-red-500 border-red-500 bg-[#ffe6e6]'
                                                 }`}
                                         >
-                                            Level -{' '}
-                                            {userdata.user.testscore >= 80
-                                                ? '상'
-                                                : userdata.user.testscore >= 50
-                                                    ? '중'
-                                                    : '하'}
+                                            Level - {userdata.user.level}
                                         </span>
                                     )}
 
