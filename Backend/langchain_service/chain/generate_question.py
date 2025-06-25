@@ -2,7 +2,6 @@ from langchain_community.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from core.config import CHATGPT_API_KEY
-
 import os
 os.environ["OPENAI_API_KEY"] = CHATGPT_API_KEY
 
