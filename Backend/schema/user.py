@@ -25,6 +25,7 @@ class LoginResponse(BaseModel):
     department : str
     grade : int
     score : int
+    level : str
 
 class GoogleLoginRequest(BaseModel):
     email : str
@@ -41,6 +42,7 @@ class GoogleLoginResponse(BaseModel):
     grade: int
     score: int
     image : Optional[str] = None
+    level : str
 
 
 class SendEmailRequest(BaseModel):
@@ -64,6 +66,7 @@ class UpdateProfileResponse(BaseModel):
     major : str
     grade : int
     testscore : int
+    level : str
 
 class UpdateScoreRequest(BaseModel):
     email : str
@@ -77,6 +80,7 @@ class UpdateScoreResponse(BaseModel):
     major: str
     grade: int
     testscore: int
+    level : str
 
 class UserCaseScoreRequest(BaseModel):
     user_id: int

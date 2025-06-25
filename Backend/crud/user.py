@@ -42,7 +42,8 @@ def user_login(db: Session, email: str, pw: str):
                 "major": user.department,
                 "role": user.role,
                 "grade" : user.grade,
-                "testscore" : user.score
+                "testscore" : user.score,
+                "level" : user.level
             }
     else:
         if user.password == pw:
@@ -55,7 +56,8 @@ def user_login(db: Session, email: str, pw: str):
                 "major": user.department,
                 "role": user.role,
                 "grade" : user.grade,
-                "testscore" : user.score
+                "testscore" : user.score,
+                "level" : user.level
             }
 
     return None

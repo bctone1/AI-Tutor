@@ -72,6 +72,7 @@ async def login_endpoint(request: LoginRequest, db : Session = Depends(get_db)):
                 "major" : user_data["major"],
                 "grade" : user_data["grade"],
                 "testscore" : user_data["testscore"],
+                "level" : user_data["level"]
             },
             status_code=200
         )
@@ -86,6 +87,7 @@ async def login_endpoint(request: LoginRequest, db : Session = Depends(get_db)):
                 "major" : user_data["major"],
                 "grade" : user_data["grade"],
                 "testscore" : user_data["testscore"],
+                "level": user_data["level"]
             },
             status_code=200
         )
@@ -116,7 +118,8 @@ async def login(request: GoogleLoginRequest, db : Session = Depends(get_db)):
                     "major": new_user.department,
                     "grade": new_user.grade,
                     "testscore": new_user.score,
-                    "image": image
+                    "image": image,
+                    "level" : new_user.level
                 },
                 status_code=200
             )
@@ -132,7 +135,8 @@ async def login(request: GoogleLoginRequest, db : Session = Depends(get_db)):
                     "major": user.department,
                     "grade": user.grade,
                     "testscore": user.score,
-                    "image" : image
+                    "image" : image,
+                    "level" : user.level
                 },
                 status_code=200
             )
@@ -181,7 +185,8 @@ async def update_profile_endpoint(request: UpdateProfileRequest, db : Session = 
                 "role": user.role,
                 "major": user.department,
                 "grade": user.grade,
-                "testscore": user.score
+                "testscore": user.score,
+                "level" : user.level
             },
             status_code=200
         )
@@ -204,7 +209,8 @@ async def update_profile_endpoint(request: UpdateScoreRequest, db : Session = De
                 "role": user.role,
                 "major": user.department,
                 "grade": user.grade,
-                "testscore": user.score
+                "testscore": user.score,
+                "level" : user.level
             },
             status_code=200
         )
