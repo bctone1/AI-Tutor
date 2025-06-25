@@ -141,6 +141,24 @@ def delete_reference(db: Session, reference_id: int):
         db.delete(reference)
         db.commit()
 
-def get_ai_question(major : str, subject : str):
-    question = generate_ai_question(major = major, subject = subject)
+def get_question_prompt(db: Session, subject: str):
+    labeling_list = db.query(LabelingData).filter(LabelingData.case == subject)
+    labeling_data = labeling_list.order_by(func.random()).first()
+    if labeling_data is None:
+        return None
+    questino_id = labeling_data.question_id
+    question_data = db.query(KnowledgeBase).filter(KnowledgeBase.id == questino_id).first()
+    print(f"QUESTION : {question_data.question}")
+
+
+    answer = labeling_data.correct_answer
+    prompt = (f"""아래 문제를 바탕으로 새로운 문제를 생성해주세요.
+        문제 : {question_data.question}
+        정답 : {answer}
+        """)
+    return prompt
+
+
+def get_ai_question(major : str, subject : str, add_prompt : str):
+    question = generate_ai_question(major = major, subject = subject, add_prompt = add_prompt)
     return question

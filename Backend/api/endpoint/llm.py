@@ -74,7 +74,7 @@ async def chat_agent(request: ChatAgentRequest, db: Session = Depends(get_db)):
 
 @llm_router.post("/getQuestion")
 async def get_question_endpoint(request: Request, db: Session = Depends(get_db)):
-    data = await request.json()  # ⬅️ 비동기로 JSON 파싱
+    data = await request.json()
     subject = data.get("selectedSubject")
     solved = data.get("solvedProblemIds")
     print(f"SUBJECT : {subject}")
@@ -140,12 +140,13 @@ async def delete_exam_endpoint(request: DeleteReferenceData, db: Session = Depen
         "message": "참고자료가 삭제되었습니다."})
 
 @llm_router.post("/getAIQuestion")
-async def get_ai_question_endpoint(request: GetAIQuestionRequest):
+async def get_ai_question_endpoint(request: GetAIQuestionRequest, db: Session = Depends(get_db)):
     major = request.major
     subject = request.selectedSubject
     print(f"DEPARTMENT : {major}")
     print(f"SUBJECT : {subject}")
-    question = get_ai_question(major = major, subject = subject)
+    propmt = get_question_prompt(db = db, subject = subject)
+    question = get_ai_question(major = major, subject = subject, add_prompt=propmt)
     print(f"QUESTION : {question}")
     question_obj = json.loads(question)
     return JSONResponse(content={

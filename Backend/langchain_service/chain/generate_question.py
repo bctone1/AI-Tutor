@@ -9,7 +9,8 @@ os.environ["OPENAI_API_KEY"] = CHATGPT_API_KEY
 template = """
 사용자는 {major}를 전공 중이며,
 현재 {subject}에 관한 문제를 학습하고자 합니다.
-직접 문제를 생성하고, 
+{additional_prompt}
+문제를 생성하고, 
 아래 JSON 형식으로 출력해주세요:
 {{ 
   "question": "문제 내용", 
@@ -20,7 +21,7 @@ template = """
 """
 
 prompt = PromptTemplate(
-    input_variables=["major", "subject"],
+    input_variables=["major", "subject", ["additional_prompt"]],
     template=template
 )
 
@@ -36,10 +37,11 @@ llm = ChatOpenAI(
 chain = LLMChain(llm=llm, prompt=prompt)
 
 # 4. 함수 정의
-def generate_ai_question(major: str, subject : str) -> int:
+def generate_ai_question(major: str, subject : str, add_prompt : str) -> int:
     response = chain.run({
         "major": major,
-        "subject": subject
+        "subject": subject,
+        "additional_prompt": add_prompt
     })
     return response
 
