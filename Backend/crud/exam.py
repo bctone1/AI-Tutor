@@ -4,7 +4,7 @@ from langchain_service.document_loader.extract_question import parse_question_bl
 from langchain_openai import OpenAIEmbeddings
 from core.config import CHATGPT_API_KEY
 from sqlalchemy.orm import Session
-from typing import Dict, Tuple
+from typing import Dict, Tuple, List
 from collections import defaultdict
 from model.user import User
 from langchain_service.chain.get_explantation import generate_explantation, generate_hint
@@ -225,11 +225,12 @@ def save_user_case_scores(db: Session, user_id: int, case_results: Dict[str, Dic
     db.commit()
     print(f"사용자 {user_id}의 유형별 점수가 저장되었습니다.")
 
-def get_user_case_progress(db: Session, user_id: int) -> Dict[int, Dict]:
+def get_user_case_progress(db: Session, user_id: int) -> List[Dict]:
     case_scores = db.query(UserCaseScore).filter(UserCaseScore.user_id == user_id).all()
-    progress = {}
-    for idx, score in enumerate(case_scores, start=1):
-        progress[idx] = {
+    progress_list = []
+
+    for score in case_scores:
+        progress_list.append({
             'case': score.case,
             'total_questions': score.total_questions,
             'correct_answers': score.correct_answers,
@@ -237,8 +238,9 @@ def get_user_case_progress(db: Session, user_id: int) -> Dict[int, Dict]:
             'accuracy': score.accuracy,
             'level': score.level,
             'last_updated': score.last_updated.isoformat() if score.last_updated else None
-        }
-    return progress
+        })
+
+    return progress_list
 
 
 def classify_level(score: int, num_cases: int, max_score : int) -> Tuple[str, int]:

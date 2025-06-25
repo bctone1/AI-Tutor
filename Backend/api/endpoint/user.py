@@ -261,7 +261,6 @@ async def get_student_data_endpoint(request : SaveFeedbackRequest, db: Session =
 async def get_feedback_endpoint(request : GetFeedbackRequest, db: Session = Depends(get_db)):
     student_id = request.user_id
     feedback = get_feedback(db = db, student_id = student_id)
-
     return feedback
 
 @user_router.post('/getMonthTestResult')
