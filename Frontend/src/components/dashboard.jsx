@@ -211,20 +211,25 @@ const dashboard = ({ userdata, setView }) => {
                 <div className="flex flex-col md:flex-row gap-4">
                     <div className="w-full md:w-2/3 bg-white rounded shadow">
                         <div className="border-b px-6 py-4 font-bold text-lg">유형별 학습 현황</div>
+
                         <div className="p-6 space-y-4">
                             {caseProgress && Object.entries(caseProgress).map(([case_name, data]) => (
-                                <div key={case_name}>
-                                    <div className="flex justify-between text-xs mb-1">
-                                        <span>{case_name}</span>
-                                        <span>{data.level}</span>
+                                data.total_questions ? (
+                                    <div key={case_name}>
+                                        <div className="flex justify-between text-xs mb-1">
+                                            <span>{case_name}</span>
+                                            <span>{data.correct_answers}/{data.total_questions}</span>
+                                        </div>
+                                        <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+                                            <div
+                                                className={`${data.level === '상' ? 'bg-green-500' :
+                                                    data.level === '중' ? 'bg-yellow-500' :
+                                                        data.level === '하' ? 'bg-red-500' : 'bg-gray-500'} h-full rounded-full`}
+                                                style={{ width: `${data.accuracy * 100}%` }}
+                                            ></div>
+                                        </div>
                                     </div>
-                                    <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-                                        <div
-                                            className={`${data.level === '상' ? 'bg-green-500' : data.level === '중' ? 'bg-yellow-500' : 'bg-red-500'} h-full rounded-full`}
-                                            style={{ width: `${data.accuracy * 100}%` }}
-                                        ></div>
-                                    </div>
-                                </div>
+                                ) : null
                             ))}
                             <div className="text-xs text-gray-400 flex justify-between mt-2">
                                 <span>0%</span><span>50%</span><span>100%</span>
@@ -237,11 +242,14 @@ const dashboard = ({ userdata, setView }) => {
                         <div className="border-b px-6 py-4 font-bold text-lg">집중 학습 추천</div>
                         <div className="p-6 space-y-2 text-sm text-indigo-800">
                             {caseProgress && Object.entries(caseProgress)
-                                .filter(([_, data]) => data.level === '하')
-                                .map(([case_name]) => (
+                                .filter(([_, data]) => data.level === '하' && data.total_questions)
+                                .map(([case_name, _]) => (
                                     <div key={case_name} className="bg-indigo-100 p-3 rounded">{case_name}</div>
                                 ))
                             }
+
+
+
                             {(!caseProgress || Object.entries(caseProgress).filter(([_, data]) => data.level === '하').length === 0) && (
                                 <div className="text-gray-500 text-center p-3">
                                     현재 집중 학습이 필요한 유형이 없습니다.
@@ -249,6 +257,10 @@ const dashboard = ({ userdata, setView }) => {
                             )}
                         </div>
                     </div>
+
+
+
+
                 </div>
 
                 {/* 교수 피드백 */}
