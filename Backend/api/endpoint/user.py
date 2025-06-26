@@ -177,7 +177,7 @@ async def update_profile_endpoint(request: UpdateProfileRequest, db : Session = 
     major = request.major
     grade = request.grade
     generate_user_current_score(db = db, email = email, major = major)
-    #generate_user_score(db=db, email=email, major=major)
+    # generate_user_score(db=db, email=email, major=major)
     try:
         user = change_user_info(db = db, email = email, major = major, grade = grade)
         return JSONResponse(
