@@ -157,12 +157,30 @@ const Analysis = ({ userdata }) => {
     useEffect(() => {
         if (!selectedStudent) return;
 
+        const getMonthTestResult = async () => {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getMonthTestResult`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user_id: selectedStudent.id
+                    })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    console.log(data.progress);
+                    setCaseProgress(data.progress);
+                } else {
+                    throw new Error('유형별 학습 현황을 가져오는데 실패했습니다.');
+                }
+            } catch (error) {
+                // console.error('유형별 학습 현황 조회 오류:', error);
+            }
+        };
+
         const getFeedbackList = async () => {
-            // setFeedbackList([
-            //     { date: '2025-05-01', feedback: '~~유형의 학습이 부족하니 집중적으로 학습이 요망됩니다.', professor: 'A교수' },
-            //     { date: '2025-06-01', feedback: '저번달 대비 ~~유형의 학습이 부족함으로 학습이 필요합니다.', professor: 'B교수' }
-            // ]);
-            // return;
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getFeedbackList`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -193,7 +211,7 @@ const Analysis = ({ userdata }) => {
                         total_questions: data.total_question,
                         total_score: data.total_score
                     });
-                    setCaseProgress(data.progress);
+                    // setCaseProgress(data.progress);
                 }
             } catch (error) {
                 // console.error('유형별 학습 현황 조회 오류:', error);
@@ -240,6 +258,7 @@ const Analysis = ({ userdata }) => {
             await getUserCaseScore();
             await getDailyRecord();
             await getFeedbackList();
+            await getMonthTestResult();
             setTimeout(() => {
                 setIsLoading(false); // 로딩 끝    
                 // console.log(dailyRecord);
@@ -267,6 +286,17 @@ const Analysis = ({ userdata }) => {
         }
 
     };
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+    const filteredMonthData = caseProgress
+        ? caseProgress.filter(item => {
+            if (!item.last_updated) return false;
+            const itemMonth = new Date(item.last_updated).getMonth() + 1;
+            return itemMonth === selectedMonth;
+        })
+        : [];
+
+
+
 
     return (
         <main className="max-w-6xl mx-auto px-5">
@@ -472,10 +502,10 @@ const Analysis = ({ userdata }) => {
 
                             {selectedStudent.score && (
                                 <div className="bg-white shadow-md rounded-lg p-6 mt-6 mb-6">
-                                    <h3 className="text-xl font-bold mb-4">레벨테스트 결과</h3>
+                                    <h2 className="text-2xl font-semibold mb-6 text-gray-800">{selectedMonth}월 진단테스트 결과</h2>
 
                                     <div className="flex mb-4 gap-2">
-                                        {selectedStudent.department == "작업치료학과" ? (
+                                        {userdata.user.major == "작업치료학과" ? (
                                             <div>
                                                 <button
                                                     className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer mr-3 ${activeTab === 'anatomy2' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
@@ -508,24 +538,27 @@ const Analysis = ({ userdata }) => {
 
                                     {activeTab === 'anatomy' && (
                                         <div>
-                                            {caseProgress && Object.entries(caseProgress).map(([case_name, data]) => (
-                                                <LevelItem
-                                                    key={case_name}
-                                                    label={case_name}
-                                                    score={`${data.level} (${data.correct_answers}/${data.total_questions})`}
-                                                    width={`${data.accuracy * 100}%`}
-                                                    level={data.level === '상' ? 'high' : data.level === '중' ? 'mid' : 'low'}
-                                                />
-                                            ))}
-
+                                            {filteredMonthData.length > 0 ? (
+                                                filteredMonthData.map((item, index) => (
+                                                    <LevelItem
+                                                        key={index}
+                                                        label={item.case}
+                                                        score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
+                                                        width={`${item.accuracy * 100}%`}
+                                                        level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
+                                                    />
+                                                ))
+                                            ) : (
+                                                <div className="text-center text-gray-500 py-8">데이터가 없습니다.</div>
+                                            )}
                                             <Legend />
                                             <FocusArea
                                                 title="집중 학습 필요 영역:"
                                                 areas={
-                                                    caseProgress ?
-                                                        Object.entries(caseProgress)
-                                                            .filter(([_, data]) => data.level === '하')
-                                                            .map(([case_name]) => case_name)
+                                                    filteredMonthData.length > 0
+                                                        ? filteredMonthData
+                                                            .filter(item => item.level === '하')
+                                                            .map(item => item.case)
                                                             .join(', ')
                                                         : ''
                                                 }
@@ -535,30 +568,29 @@ const Analysis = ({ userdata }) => {
 
                                     {activeTab === 'anatomy2' && (
                                         <div>
-                                            {caseProgress &&
-                                                Object.entries(caseProgress)
-                                                    .filter(([case_name]) => targetCases.includes(case_name)) // ✅ 필터 추가
-                                                    .map(([case_name, data]) => (
+                                            {filteredMonthData.filter(item => targetCases.includes(item.case)).length > 0 ? (
+                                                filteredMonthData
+                                                    .filter(item => targetCases.includes(item.case))
+                                                    .map((item, index) => (
                                                         <LevelItem
-                                                            key={case_name}
-                                                            label={case_name}
-                                                            score={`${data.level} (${data.correct_answers}/${data.total_questions})`}
-                                                            width={`${data.accuracy * 100}%`}
-                                                            level={data.level === '상' ? 'high' : data.level === '중' ? 'mid' : 'low'}
+                                                            key={index}
+                                                            label={item.case}
+                                                            score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
+                                                            width={`${item.accuracy * 100}%`}
+                                                            level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
                                                         />
-                                                    ))}
-
+                                                    ))
+                                            ) : (
+                                                <div className="text-center text-gray-500 py-8">데이터가 없습니다.</div>
+                                            )}
                                             <Legend />
                                             <FocusArea
                                                 title="집중 학습 필요 영역:"
                                                 areas={
-                                                    caseProgress
-                                                        ? Object.entries(caseProgress)
-                                                            .filter(
-                                                                ([case_name, data]) =>
-                                                                    data.level === '하' && targetCases.includes(case_name) // ✅ 여기에도 필터 추가
-                                                            )
-                                                            .map(([case_name]) => case_name)
+                                                    filteredMonthData.length > 0
+                                                        ? filteredMonthData
+                                                            .filter(item => item.level === '하' && targetCases.includes(item.case))
+                                                            .map(item => item.case)
                                                             .join(', ')
                                                         : ''
                                                 }
@@ -568,36 +600,36 @@ const Analysis = ({ userdata }) => {
 
                                     {activeTab === 'anatomy3' && (
                                         <div>
-                                            {caseProgress &&
-                                                Object.entries(caseProgress)
-                                                    .filter(([case_name]) => targetCases2.includes(case_name)) // ✅ 필터 추가
-                                                    .map(([case_name, data]) => (
+                                            {filteredMonthData.filter(item => targetCases2.includes(item.case)).length > 0 ? (
+                                                filteredMonthData
+                                                    .filter(item => targetCases2.includes(item.case))
+                                                    .map((item, index) => (
                                                         <LevelItem
-                                                            key={case_name}
-                                                            label={case_name}
-                                                            score={`${data.level} (${data.correct_answers}/${data.total_questions})`}
-                                                            width={`${data.accuracy * 100}%`}
-                                                            level={data.level === '상' ? 'high' : data.level === '중' ? 'mid' : 'low'}
+                                                            key={index}
+                                                            label={item.case}
+                                                            score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
+                                                            width={`${item.accuracy * 100}%`}
+                                                            level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
                                                         />
-                                                    ))}
-
+                                                    ))
+                                            ) : (
+                                                <div className="text-center text-gray-500 py-8">데이터가 없습니다.</div>
+                                            )}
                                             <Legend />
                                             <FocusArea
                                                 title="집중 학습 필요 영역:"
                                                 areas={
-                                                    caseProgress
-                                                        ? Object.entries(caseProgress)
-                                                            .filter(
-                                                                ([case_name, data]) =>
-                                                                    data.level === '하' && targetCases2.includes(case_name) // ✅ 여기에도 필터 추가
-                                                            )
-                                                            .map(([case_name]) => case_name)
+                                                    filteredMonthData.length > 0
+                                                        ? filteredMonthData
+                                                            .filter(item => item.level === '하' && targetCases2.includes(item.case))
+                                                            .map(item => item.case)
                                                             .join(', ')
                                                         : ''
                                                 }
                                             />
                                         </div>
                                     )}
+
                                 </div>
 
                             )}
