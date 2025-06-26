@@ -347,3 +347,35 @@ def save_feedback(db : Session, professor : str, student_id : int, feedback : st
 def get_feedback(db : Session, student_id : int):
     feedback = db.query(FeedBack).filter(FeedBack.student_id == student_id).all()
     return feedback
+
+def backup_user_total_records(db: Session):
+    records = db.query(UserTotalRecord).all()
+    for record in records:
+        backup = UserTotalRecordBackup(
+            user_id=record.user_id,
+            total_question=record.total_question,
+            total_correct=record.total_correct,
+            correct_rate=record.correct_rate,
+            attendance=record.attendance,
+            total_score=record.total_score
+        )
+        db.add(backup)
+    db.commit()
+    print(f"[{datetime.utcnow()}] 백업 완료. {len(records)}건 백업됨.")
+
+def scheduled_backup(db : Session):
+    db = db
+    try:
+        backup_user_total_records(db)
+    finally:
+        db.close()
+
+
+def get_last_total_record(db: Session, user_id: int):
+    record = (
+        db.query(UserTotalRecordBackup)
+        .filter(UserTotalRecordBackup.user_id == user_id)
+        .order_by(UserTotalRecordBackup.date.desc())  # date 내림차순 정렬
+        .first()
+    )
+    return record

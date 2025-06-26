@@ -21,6 +21,7 @@ class User(Base):
     user_daily = relationship("UserDaily", back_populates="user", cascade="all, delete-orphan")
     current_score = relationship("UserCurrentScore", back_populates="user", cascade="all, delete-orphan")
     feedback = relationship("FeedBack", back_populates="user", cascade="all, delete-orphan")
+    user_total_record_backup = relationship("UserTotalRecordBackup", back_populates="user", cascade="all, delete-orphan")
 
 class UserCaseScore(Base):
     __tablename__ = "user_case_scores"
@@ -87,3 +88,17 @@ class FeedBack(Base):
     date = Column(Date, default=func.now(), onupdate=func.now())
 
     user = relationship("User", back_populates="feedback")
+
+class UserTotalRecordBackup(Base):
+    __tablename__ = "user_total_record_backup"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("user_table.id", ondelete="CASCADE"), nullable=False)
+    total_question = Column(Integer, default=0)
+    total_correct = Column(Integer, default=0)
+    correct_rate = Column(Float, default=0.0)
+    attendance = Column(Integer, default = 0)
+    total_score= Column(Integer, default = 1000)
+    date = Column(Date, default=func.now(), onupdate=func.now())
+
+    user = relationship("User", back_populates="user_total_record_backup")

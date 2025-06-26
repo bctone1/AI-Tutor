@@ -5,10 +5,13 @@ from database.session import get_db
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
 from email.mime.text import MIMEText
+
+from database.session import SessionLocal
 from email.mime.multipart import MIMEMultipart
 import core.config as config
 from fastapi import Request
 import smtplib
+
 user_router = APIRouter()
 
 @user_router.post("/Debug")
@@ -288,3 +291,17 @@ async def get_user_case_progress_endpoint(request: UserIDRequest, db: Session = 
     except Exception as e:
         print(f"유형별 학습 현황 조회 오류: {str(e)}")
         raise HTTPException(status_code=500, detail="학습 현황 조회 중 오류가 발생했습니다.")
+
+
+
+
+@user_router.post('/getUserLastTotalRecord')
+async def get_user_case_progress_endpoint(request: UserIDRequest, db: Session = Depends(get_db)):
+    try:
+        user_id = request.user_id
+        record = get_last_total_record(db = db, user_id = user_id)
+        return record
+
+    except Exception as e:
+        print(f"백업 데이터 조회 오류: {str(e)}")
+        raise HTTPException(status_code=500, detail="조회 중 오류가 발생했습니다.")
