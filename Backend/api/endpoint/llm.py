@@ -160,4 +160,3 @@ async def get_ai_question_endpoint(request: GetAIQuestionRequest, db: Session = 
         "answer": question_obj["answer"],
         "description": question_obj["description"]
     })
-
