@@ -8,6 +8,9 @@ const Active = ({ userdata }) => {
     const [input, setInput] = useState('');
     const [currentID, setCurrentID] = useState('');
     const [active, setActive] = useState(true);
+    // const [status, setStatus] = useState(false);
+    let status = false;
+
     const messageEndRef = useRef(null);
     const [solvedProblemIds, setSolvedProblemIds] = useState([]);
 
@@ -55,6 +58,7 @@ const Active = ({ userdata }) => {
             // console.log(data);
             if (res.ok) {
                 const { question, choices, answer, description } = data;
+                
 
                 setChatLog(prev => [
                     ...prev,
@@ -88,6 +92,8 @@ const Active = ({ userdata }) => {
     };
 
     const handleSubmitAIAnswer = async (choiceNumber, answer, description) => {
+        
+
         setActive(true);
         setChatLog(prev => [
             ...prev,
@@ -112,6 +118,8 @@ const Active = ({ userdata }) => {
                 )
             }
         ]);
+
+        
         
     }
 
@@ -134,6 +142,8 @@ const Active = ({ userdata }) => {
     // }, []);
 
     const fetchInitialQuestion = async () => {
+        status = true;
+
         if (!active) {
             alert("이미 문제를 풀고 있습니다.");
             return;
@@ -157,6 +167,7 @@ const Active = ({ userdata }) => {
                 }
 
                 const { question, choices, id } = data;
+                
                 setCurrentID(id);
                 setSolvedProblemIds(prevIds => [...prevIds, id]);
 
@@ -192,6 +203,11 @@ const Active = ({ userdata }) => {
     };
 
     const handleSubmitAnswer = async (choiceNumber, id) => {
+        if (!status) {
+            alert("이미 문제를 풀었습니다.");
+            return;
+        }
+
         setActive(true);
         setChatLog(prev => [
             ...prev,
@@ -225,6 +241,8 @@ const Active = ({ userdata }) => {
                     )
                 }
             ]);
+
+            status = false;
         } catch (e) {
             console.error(e);
         }
