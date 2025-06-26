@@ -9,6 +9,7 @@ const Analysis = ({ userdata }) => {
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     const [selectedFeedback, setSelectedFeedback] = useState('');
     const [feedbackList, setFeedbackList] = useState([]);
+    const [lastweekTestResult, setLastweekTestResult] = useState(null);
 
     const [caseProgress, setCaseProgress] = useState(null);
     const [caseScoreProgress, setCaseScoreProgress] = useState(null);
@@ -145,7 +146,6 @@ const Analysis = ({ userdata }) => {
             });
             const data = await response.json();
             if (response.ok) {
-                console.log(data);
                 setStudents(data);
             } else {
                 console.error("지식베이스 오류");
@@ -157,26 +157,42 @@ const Analysis = ({ userdata }) => {
     useEffect(() => {
         if (!selectedStudent) return;
 
+        const getlastweekTestResult = async () => {
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getUserLastTotalRecord`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: selectedStudent.id
+                })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                console.log(data);
+                setLastweekTestResult(data);
+            } else {
+                throw new Error('유형별 학습 현황을 가져오는데 실패했습니다.');
+            }
+        }
+
         const getMonthTestResult = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getMonthTestResult`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        user_id: selectedStudent.id
-                    })
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    console.log(data.progress);
-                    setCaseProgress(data.progress);
-                } else {
-                    throw new Error('유형별 학습 현황을 가져오는데 실패했습니다.');
-                }
-            } catch (error) {
-                // console.error('유형별 학습 현황 조회 오류:', error);
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getMonthTestResult`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: selectedStudent.id
+                })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                setCaseProgress(data.progress);
+            } else {
+                throw new Error('유형별 학습 현황을 가져오는데 실패했습니다.');
             }
         };
 
@@ -188,7 +204,6 @@ const Analysis = ({ userdata }) => {
             });
             const data = await response.json();
             if (response.ok) {
-                console.log(data);
                 setFeedbackList(data);
             } else {
                 console.error("피드백 목록 조회 오류");
@@ -196,60 +211,51 @@ const Analysis = ({ userdata }) => {
         }
 
         const getUserCaseProgress = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getUserCaseProgress`, {//레벨테스트 결과
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: selectedStudent.id })
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getUserCaseProgress`, {//레벨테스트 결과
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: selectedStudent.id })
+            });
+            const data = await response.json();
+            if (data.success) {
+                console.log(data);
+                setDailyProgress({
+                    attendance: data.attendance,
+                    correct_rate: data.correct_rate,
+                    total_questions: data.total_question,
+                    total_score: data.total_score
                 });
-                const data = await response.json();
-                if (data.success) {
-                    console.log(data);
-                    setDailyProgress({
-                        attendance: data.attendance,
-                        correct_rate: data.correct_rate,
-                        total_questions: data.total_question,
-                        total_score: data.total_score
-                    });
-                    // setCaseProgress(data.progress);
-                }
-            } catch (error) {
-                // console.error('유형별 학습 현황 조회 오류:', error);
+                // setCaseProgress(data.progress);
             }
         };
 
         const getUserCaseScore = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getUserCaseScore`, {//학습결과
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: selectedStudent.id })
-                });
-                const data = await response.json();
-                if (data.success) {
-                    console.log(data);
-                    setCaseScoreProgress(data.progress);
-                }
-            } catch (error) {
-                console.error('유형별 학습 현황 조회 오류:', error);
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getUserCaseScore`, {//학습결과
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: selectedStudent.id })
+            });
+            const data = await response.json();
+            if (data.success) {
+                setCaseScoreProgress(data.progress);
             }
+
         };
 
         const getDailyRecord = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getDailyRecord`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user_id: selectedStudent.id })
-                });
-                const data = await response.json();
-                if (data) {
-                    console.log(data);
-                    setDailyRecord(data);
-                }
-            } catch (error) {
-                console.error('일일 학습 기록 조회 오류:', error);
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getDailyRecord`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: selectedStudent.id })
+            });
+            const data = await response.json();
+            if (data) {
+                setDailyRecord(data);
             }
+
         };
 
         const fetchAllData = async () => {
@@ -259,6 +265,7 @@ const Analysis = ({ userdata }) => {
             await getDailyRecord();
             await getFeedbackList();
             await getMonthTestResult();
+            await getlastweekTestResult();
             setTimeout(() => {
                 setIsLoading(false); // 로딩 끝    
                 // console.log(dailyRecord);
@@ -278,7 +285,6 @@ const Analysis = ({ userdata }) => {
         });
         const data = await res.json();
         if (res.ok) {
-            console.log(data);
             setFeedbackList(prev => [...prev, { date, content: feedback, professor: userdata.user.name }]);
             setIsFeedbackModalOpen(false);
         } else {
@@ -375,29 +381,41 @@ const Analysis = ({ userdata }) => {
                                     <div className="bg-white rounded-lg shadow p-6">
                                         <h3 className="text-gray-500">총 풀이 기출문제</h3>
                                         <p className="text-2xl font-bold">{dailyProgress.total_questions}문제</p>
-                                        <p className={`text-sm ${selectedStudent.studyTimeChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                            {selectedStudent.studyTimeChange >= 0 ? '▲' : '▼'} 전주 대비 {Math.abs(selectedStudent.studyTimeChange)}% {selectedStudent.studyTimeChange >= 0 ? '증가' : '감소'}
+                                        <p className={`text-sm ${calculatemethod(lastweekTestResult.total_question, dailyProgress.total_questions) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+
+                                            {calculatemethod(lastweekTestResult.total_question, dailyProgress.total_questions) >= 0 ? '▲' : '▼'}
+                                            전주 대비 {Math.abs(calculatemethod(lastweekTestResult.total_question, dailyProgress.total_questions))} 문제 
+                                            {calculatemethod(lastweekTestResult.total_questions, dailyProgress.total_questions) >= 0 ? '증가' : '감소'}
                                         </p>
                                     </div>
                                     <div className="bg-white rounded-lg shadow p-6">
                                         <h3 className="text-gray-500">평균 정답률</h3>
                                         <p className="text-2xl font-bold">{dailyProgress.correct_rate.toFixed(1)}%</p>
-                                        <p className={`text-sm ${selectedStudent.solvedProblemsChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                            {selectedStudent.solvedProblemsChange >= 0 ? '▲' : '▼'} 전주 대비 {Math.abs(selectedStudent.solvedProblemsChange)}% {selectedStudent.solvedProblemsChange >= 0 ? '증가' : '감소'}
+                                        <p className={`text-sm ${calculatemethod(lastweekTestResult.correct_rate*100, dailyProgress.correct_rate) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+
+                                            {calculatemethod(lastweekTestResult.correct_rate*100, dailyProgress.correct_rate) >= 0 ? '▲' : '▼'}
+                                            전주 대비 {Math.abs(calculatemethod(lastweekTestResult.correct_rate*100, dailyProgress.correct_rate).toFixed(1))}%
+                                            {calculatemethod(lastweekTestResult.correct_rate*100, dailyProgress.correct_rate) >= 0 ? '증가' : '감소'}
                                         </p>
                                     </div>
                                     <div className="bg-white rounded-lg shadow p-6">
                                         <h3 className="text-gray-500">연속 학습</h3>
                                         <p className="text-2xl font-bold">{dailyProgress.attendance}일</p>
-                                        <p className={`text-sm ${selectedStudent.accuracyChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                            {selectedStudent.accuracyChange >= 0 ? '▲' : '▼'} 전주 대비 {Math.abs(selectedStudent.accuracyChange)}% {selectedStudent.accuracyChange >= 0 ? '증가' : '감소'}
+                                        <p className={`text-sm ${calculatemethod(lastweekTestResult.attendance, dailyProgress.attendance) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+
+                                            {calculatemethod(lastweekTestResult.attendance, dailyProgress.attendance) >= 0 ? '▲' : '▼'}
+                                            전주 대비 {Math.abs(calculatemethod(lastweekTestResult.attendance, dailyProgress.attendance))} 시간
+                                            {calculatemethod(lastweekTestResult.attendance, dailyProgress.attendance) >= 0 ? '증가' : '감소'}
                                         </p>
                                     </div>
                                     <div className="bg-white rounded-lg shadow p-6">
                                         <h3 className="text-gray-500">점수</h3>
                                         <p className="text-2xl font-bold">{dailyProgress.total_score}점</p>
-                                        <p className={`text-sm ${selectedStudent.achievementChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                            {selectedStudent.achievementChange >= 0 ? '▲' : '▼'} 목표 대비 {Math.abs(selectedStudent.achievementChange)}% {selectedStudent.achievementChange >= 0 ? '초과' : '미달'}
+                                        <p className={`text-sm ${calculatemethod(lastweekTestResult.total_score, dailyProgress.total_score) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+
+                                            {calculatemethod(lastweekTestResult.total_score, dailyProgress.total_score) >= 0 ? '▲' : '▼'}
+                                            목표 대비 {Math.abs(calculatemethod(lastweekTestResult.total_score, dailyProgress.total_score))}점
+                                            {calculatemethod(lastweekTestResult.total_score, dailyProgress.total_score) >= 0 ? '초과' : '미달'}
                                         </p>
                                     </div>
                                 </div>
@@ -810,6 +828,13 @@ const Analysis = ({ userdata }) => {
         </main>
     );
 };
+
+const calculatemethod = (lastweek, currentweek) => {
+    
+    return (
+        currentweek - lastweek
+    )
+}
 
 const LevelItem = ({ label, score, width, level }) => {
     const levelColor =
