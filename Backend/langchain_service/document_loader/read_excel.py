@@ -1,6 +1,5 @@
 import pandas as pd
 
-
 def extract_questions_from_excel(file_location):
     try:
         df = pd.read_excel(file_location)

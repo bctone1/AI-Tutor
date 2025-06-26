@@ -3,14 +3,8 @@ from typing import List, Dict
 
 
 def extract_questions_from_pages(page_texts: List[str]) -> List[str]:
-    """
-    PDF 텍스트에서 숫자. 패턴을 기준으로 문제 단위로 분리하되,
-    숫자. 다음이 공백 또는 특수문자만 오는 경우는 무시.
-    문제 번호는 제거하여 반환하며, 최대 30문제까지만 추출.
-    """
     full_text = "\n".join(page_texts)
 
-    # 숫자. 패턴 찾기
     matches = list(re.finditer(r'(?<!\d)(\d{1,3})\.', full_text))
     if not matches:
         return []
@@ -21,19 +15,16 @@ def extract_questions_from_pages(page_texts: List[str]) -> List[str]:
         if num_end >= len(full_text):
             continue
 
-        # 다음 문자가 유효한지 확인
         if re.match(r'[\s]*[가-힣a-zA-Z0-9]', full_text[num_end:num_end + 3]):
             starts.append(m.start())
 
     starts.append(len(full_text))  # 마지막 경계
 
-    # 문제 텍스트 추출
     questions = [
         full_text[starts[i]:starts[i + 1]].strip()
-        for i in range(min(len(starts) - 1, 30))  # 최대 30개 문제까지만
+        for i in range(min(len(starts) - 1, 30))
     ]
 
-    # 앞 번호 제거: 처음 오는 "숫자." 패턴만 제거 (문제 본문에 있는 것은 유지)
     clean_questions = [
         re.sub(r'^\d{1,3}\.\s*', '', q).strip()
         for q in questions

@@ -18,7 +18,7 @@ class Exam(Base):
         'KnowledgeBase',
         back_populates='exam',
         cascade="all, delete-orphan",
-        passive_deletes=True  # ← 중요
+        passive_deletes=True
     )
 
 
