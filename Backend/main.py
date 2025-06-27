@@ -23,7 +23,7 @@ async def lifespan(app: FastAPI):
             job_wrapper,
             trigger='cron',
             day_of_week='fri',
-            hour=0,
+            hour=2,
             minute=0,
             timezone='Asia/Seoul'
         )
