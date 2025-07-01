@@ -385,7 +385,7 @@ const Analysis = ({ userdata }) => {
 
                                             {calculatemethod(lastweekTestResult.total_question, dailyProgress.total_questions) >= 0 ? '▲' : '▼'}
                                             전주 대비 {Math.abs(calculatemethod(lastweekTestResult.total_question, dailyProgress.total_questions))} 문제 
-                                            {calculatemethod(lastweekTestResult.total_questions, dailyProgress.total_questions) >= 0 ? '증가' : '감소'}
+                                            {calculatemethod(lastweekTestResult.total_questions, dailyProgress.total_questions) >= 0 ? '감소' : '증가'}
                                         </p>
                                     </div>
                                     <div className="bg-white rounded-lg shadow p-6">
