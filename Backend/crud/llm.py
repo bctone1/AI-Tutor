@@ -129,6 +129,7 @@ def get_id_by_subject(db : Session, question_id : int):
     id_list = [id_tuple[0] for id_tuple in ids]
     return id_list
 
+
 def get_id_by_case(db : Session, case : str):
     ids = db.query(LabelingData.question_id).filter(LabelingData.case == case).all()
     id_list = [id_tuple[0] for id_tuple in ids]
