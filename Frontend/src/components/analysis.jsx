@@ -292,6 +292,9 @@ const Analysis = ({ userdata }) => {
         }
 
     };
+
+
+
     const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
     const filteredMonthData = caseProgress
         ? caseProgress.filter(item => {
@@ -383,19 +386,19 @@ const Analysis = ({ userdata }) => {
                                         <p className="text-2xl font-bold">{dailyProgress.total_questions}문제</p>
                                         <p className={`text-sm ${calculatemethod(lastweekTestResult.total_question, dailyProgress.total_questions) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
 
-                                            {calculatemethod(lastweekTestResult.total_question, dailyProgress.total_questions) >= 0 ? '▲' : '▼'}
-                                            전주 대비 {Math.abs(calculatemethod(lastweekTestResult.total_question, dailyProgress.total_questions))} 문제 
+                                            {calculatemethod(lastweekTestResult.total_question, dailyProgress.total_questions) >= 0 ? '▲' : '▼'}전주 대비
+                                            {Math.abs(calculatemethod(lastweekTestResult.total_question, dailyProgress.total_questions))} 문제
                                             {calculatemethod(lastweekTestResult.total_questions, dailyProgress.total_questions) >= 0 ? '감소' : '증가'}
                                         </p>
                                     </div>
                                     <div className="bg-white rounded-lg shadow p-6">
                                         <h3 className="text-gray-500">평균 정답률</h3>
                                         <p className="text-2xl font-bold">{dailyProgress.correct_rate.toFixed(1)}%</p>
-                                        <p className={`text-sm ${calculatemethod(lastweekTestResult.correct_rate*100, dailyProgress.correct_rate) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                        <p className={`text-sm ${calculatemethod(lastweekTestResult.correct_rate * 100, dailyProgress.correct_rate) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
 
-                                            {calculatemethod(lastweekTestResult.correct_rate*100, dailyProgress.correct_rate) >= 0 ? '▲' : '▼'}
-                                            전주 대비 {Math.abs(calculatemethod(lastweekTestResult.correct_rate*100, dailyProgress.correct_rate).toFixed(1))}%
-                                            {calculatemethod(lastweekTestResult.correct_rate*100, dailyProgress.correct_rate) >= 0 ? '증가' : '감소'}
+                                            {calculatemethod(lastweekTestResult.correct_rate * 100, dailyProgress.correct_rate) >= 0 ? '▲' : '▼'}전주 대비
+                                            {Math.abs(calculatemethod(lastweekTestResult.correct_rate * 100, dailyProgress.correct_rate).toFixed(1))}%
+                                            {calculatemethod(lastweekTestResult.correct_rate * 100, dailyProgress.correct_rate) >= 0 ? '증가' : '감소'}
                                         </p>
                                     </div>
                                     <div className="bg-white rounded-lg shadow p-6">
@@ -403,8 +406,8 @@ const Analysis = ({ userdata }) => {
                                         <p className="text-2xl font-bold">{dailyProgress.attendance}일</p>
                                         <p className={`text-sm ${calculatemethod(lastweekTestResult.attendance, dailyProgress.attendance) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
 
-                                            {calculatemethod(lastweekTestResult.attendance, dailyProgress.attendance) >= 0 ? '▲' : '▼'}
-                                            전주 대비 {Math.abs(calculatemethod(lastweekTestResult.attendance, dailyProgress.attendance))} 시간
+                                            {calculatemethod(lastweekTestResult.attendance, dailyProgress.attendance) >= 0 ? '▲' : '▼'}전주 대비
+                                            {Math.abs(calculatemethod(lastweekTestResult.attendance, dailyProgress.attendance))} 시간
                                             {calculatemethod(lastweekTestResult.attendance, dailyProgress.attendance) >= 0 ? '증가' : '감소'}
                                         </p>
                                     </div>
@@ -413,9 +416,9 @@ const Analysis = ({ userdata }) => {
                                         <p className="text-2xl font-bold">{dailyProgress.total_score}점</p>
                                         <p className={`text-sm ${calculatemethod(lastweekTestResult.total_score, dailyProgress.total_score) >= 0 ? 'text-green-500' : 'text-red-500'}`}>
 
-                                            {calculatemethod(lastweekTestResult.total_score, dailyProgress.total_score) >= 0 ? '▲' : '▼'}
-                                            목표 대비 {Math.abs(calculatemethod(lastweekTestResult.total_score, dailyProgress.total_score))}점
-                                            {calculatemethod(lastweekTestResult.total_score, dailyProgress.total_score) >= 0 ? '초과' : '미달'}
+                                            {calculatemethod(lastweekTestResult.total_score, dailyProgress.total_score) >= 0 ? '▲' : '▼'}전주 대비
+                                            {Math.abs(calculatemethod(lastweekTestResult.total_score, dailyProgress.total_score))}점
+                                            {calculatemethod(lastweekTestResult.total_score, dailyProgress.total_score) >= 0 ? '증가' : '감소'}
                                         </p>
                                     </div>
                                 </div>
@@ -830,7 +833,7 @@ const Analysis = ({ userdata }) => {
 };
 
 const calculatemethod = (lastweek, currentweek) => {
-    
+
     return (
         currentweek - lastweek
     )

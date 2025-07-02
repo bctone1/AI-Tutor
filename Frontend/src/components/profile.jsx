@@ -130,6 +130,15 @@ const Profile = ({ userdata, setView }) => {
         "근육계의 기능"
     ]
 
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+    const filteredMonthData = caseProgress
+        ? caseProgress.filter(item => {
+            if (!item.last_updated) return false;
+            const itemMonth = new Date(item.last_updated).getMonth() + 1;
+            return itemMonth === selectedMonth;
+        })
+        : [];
+
 
 
     return (
@@ -284,7 +293,7 @@ const Profile = ({ userdata, setView }) => {
 
                 {userdata.user.testscore ? (
                     <div className="bg-white shadow-md rounded-lg p-6 mt-6 mb-6">
-                        <h2 className="text-2xl font-semibold mb-6 text-gray-800">레벨테스트 결과</h2>
+                        <h2 className="text-2xl font-semibold mb-6 text-gray-800">{selectedMonth}월 진단테스트 결과</h2>
 
                         <div className="flex mb-4 gap-2">
                             {userdata.user.major == "작업치료학과" ? (
@@ -320,22 +329,25 @@ const Profile = ({ userdata, setView }) => {
 
                         {activeTab === 'anatomy' && (
                             <div>
-                                {caseProgress && caseProgress.map((item, index) => (
-                                    <LevelItem
-                                        key={index}
-                                        label={item.case}
-                                        score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
-                                        width={`${item.accuracy * 100}%`}
-                                        level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
-                                    />
-                                ))}
-
+                                {filteredMonthData.length > 0 ? (
+                                    filteredMonthData.map((item, index) => (
+                                        <LevelItem
+                                            key={index}
+                                            label={item.case}
+                                            score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
+                                            width={`${item.accuracy * 100}%`}
+                                            level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
+                                        />
+                                    ))
+                                ) : (
+                                    <div className="text-center text-gray-500 py-8">데이터가 없습니다.</div>
+                                )}
                                 <Legend />
                                 <FocusArea
                                     title="집중 학습 필요 영역:"
                                     areas={
-                                        caseProgress
-                                            ? caseProgress
+                                        filteredMonthData.length > 0
+                                            ? filteredMonthData
                                                 .filter(item => item.level === '하')
                                                 .map(item => item.case)
                                                 .join(', ')
@@ -347,8 +359,8 @@ const Profile = ({ userdata, setView }) => {
 
                         {activeTab === 'anatomy2' && (
                             <div>
-                                {caseProgress &&
-                                    caseProgress
+                                {filteredMonthData.filter(item => targetCases.includes(item.case)).length > 0 ? (
+                                    filteredMonthData
                                         .filter(item => targetCases.includes(item.case))
                                         .map((item, index) => (
                                             <LevelItem
@@ -358,14 +370,16 @@ const Profile = ({ userdata, setView }) => {
                                                 width={`${item.accuracy * 100}%`}
                                                 level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
                                             />
-                                        ))}
-
+                                        ))
+                                ) : (
+                                    <div className="text-center text-gray-500 py-8">데이터가 없습니다.</div>
+                                )}
                                 <Legend />
                                 <FocusArea
                                     title="집중 학습 필요 영역:"
                                     areas={
-                                        caseProgress
-                                            ? caseProgress
+                                        filteredMonthData.length > 0
+                                            ? filteredMonthData
                                                 .filter(item => item.level === '하' && targetCases.includes(item.case))
                                                 .map(item => item.case)
                                                 .join(', ')
@@ -377,8 +391,8 @@ const Profile = ({ userdata, setView }) => {
 
                         {activeTab === 'anatomy3' && (
                             <div>
-                                {caseProgress &&
-                                    caseProgress
+                                {filteredMonthData.filter(item => targetCases2.includes(item.case)).length > 0 ? (
+                                    filteredMonthData
                                         .filter(item => targetCases2.includes(item.case))
                                         .map((item, index) => (
                                             <LevelItem
@@ -388,14 +402,16 @@ const Profile = ({ userdata, setView }) => {
                                                 width={`${item.accuracy * 100}%`}
                                                 level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
                                             />
-                                        ))}
-
+                                        ))
+                                ) : (
+                                    <div className="text-center text-gray-500 py-8">데이터가 없습니다.</div>
+                                )}
                                 <Legend />
                                 <FocusArea
                                     title="집중 학습 필요 영역:"
                                     areas={
-                                        caseProgress
-                                            ? caseProgress
+                                        filteredMonthData.length > 0
+                                            ? filteredMonthData
                                                 .filter(item => item.level === '하' && targetCases2.includes(item.case))
                                                 .map(item => item.case)
                                                 .join(', ')
