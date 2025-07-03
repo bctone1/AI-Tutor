@@ -12,23 +12,7 @@ import MonthTest from '@/components/monthTest';
 export default function Userpage() {
   const [view, setView] = useState();
   const { data: session, status } = useSession();
-
-  // 💾 localStorage에서 view 복원
-  // useEffect(() => {
-  //   const savedView = localStorage.getItem("currentView");
-  //   if (savedView) {
-  //     setView(savedView);
-  //   }
-  // }, []);
-
-  // // 🔁 view가 바뀔 때 localStorage에도 저장
-  // useEffect(() => {
-  //   if (view) {
-  //     localStorage.setItem("currentView", view);
-  //   }
-  // }, [view]);
-
-  // 🧠 세션에 따라 초기값 설정 (한 번만)
+  
   useEffect(() => {
     if (status !== "loading" && !view) {
       if (!session?.user?.grade) {

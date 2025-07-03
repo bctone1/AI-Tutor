@@ -1,8 +1,5 @@
 "use client";
-
 import React, { useState, useEffect } from 'react';
-
-
 const MonthTest = ({ setView, userdata }) => {
 
     const [activeTab, setActiveTab] = useState(

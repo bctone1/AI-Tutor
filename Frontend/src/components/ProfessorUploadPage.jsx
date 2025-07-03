@@ -77,8 +77,6 @@ const UploadPage = ({ userdata }) => {
     const handleFileChange = async (event) => {
         const selectedFile = event.target.files[0];
         if (!selectedFile) return;
-        // console.log(selectedFile);
-        // console.log(userdata);
         const formData = new FormData();
         formData.append("file", selectedFile);
         formData.append("userData", JSON.stringify(userdata));

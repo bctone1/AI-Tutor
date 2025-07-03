@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Tutor - 개인 맞춤형 학습 도우미</title>
     <style>
-        /* CSS Variables */
         :root {
             --primary: #2563eb;
             --primary-light: #3b82f6;
@@ -22,7 +21,6 @@
             --gray-900: #111827;
         }
 
-        /* Reset and Base Styles */
         * {
             margin: 0;
             padding: 0;
@@ -42,7 +40,6 @@
             padding: 0 1rem;
         }
 
-        /* Header */
         header {
             background-color: white;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -70,27 +67,6 @@
             margin-left: 0.5rem;
         }
 
-        .footer-logo {
-            color: white;
-            margin-bottom: 0.5rem;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--gray-800);
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-
         .btn {
             display: inline-block;
             padding: 0.5rem 1.5rem;
@@ -106,16 +82,6 @@
             background-color: var(--primary-dark);
         }
 
-        .btn-light {
-            background-color: white;
-            color: var(--primary);
-        }
-
-        .btn-light:hover {
-            background-color: var(--gray-100);
-        }
-
-        /* Hero Section */
         .hero {
             padding: 4rem 0;
             display: flex;
@@ -145,27 +111,12 @@
             color: var(--gray-800);
         }
 
-        /* Sections */
-        .features {
-            padding: 4rem 0;
-            background-color: white;
-        }
-
-        .tech-section {
-            padding: 4rem 0;
-            background-color: var(--gray-100);
-        }
-
-        .user-types-section {
-            padding: 4rem 0;
-            background-color: white;
-        }
-
         .section-title {
             text-align: center;
             font-size: 2rem;
             margin-bottom: 3rem;
             position: relative;
+            font-weight: 700;
         }
 
         .section-title::after {
@@ -189,7 +140,199 @@
             margin: 0 auto 2rem auto;
         }
 
-        /* Feature Cards */
+        /* 플랫폼 개요 섹션 */
+        .platform-overview {
+            padding: 4rem 0;
+            background-color: white;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .overview-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .overview-content p {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #374151;
+            margin-bottom: 1.5rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .highlight-box h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        /* 학습 과정 섹션 */
+        .learning-process {
+            padding: 4rem 0;
+            background-color: white;
+        }
+
+        .process-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .process-step {
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .process-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.75rem auto;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .process-icon.step1 {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+        }
+
+        .process-icon.step2 {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .process-icon.step3 {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .process-icon.step4 {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+        .process-step h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+        }
+
+        .process-step p {
+            font-size: 0.85rem;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+
+        .arrow {
+            color: #9ca3af;
+            font-size: 1.5rem;
+            flex: 0;
+        }
+
+        /* 기대효과 섹션 */
+        .benefits-section {
+            padding: 4rem 0;
+            background-color: white;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        .benefit-card {
+            background-color: var(--gray-100);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+        }
+
+        .benefit-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem auto;
+            font-size: 1.25rem;
+        }
+
+        .benefit-icon.efficiency {
+            background-color: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .benefit-icon.achievement {
+            background-color: #d1fae5;
+            color: #059669;
+        }
+
+        .benefit-icon.automation {
+            background-color: #fef3c7;
+            color: #d97706;
+        }
+
+        .benefit-icon.motivation {
+            background-color: #fce7f3;
+            color: #be185d;
+        }
+
+        .benefit-card h4 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--gray-900);
+        }
+
+        .benefit-card .stat {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit-card p {
+            font-size: 0.875rem;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        /* 주요 기능 섹션 */
+        .features {
+            padding: 4rem 0;
+            background-color: white;
+        }
+
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -226,80 +369,12 @@
             margin-bottom: 0.75rem;
         }
 
-        /* Tech Cards */
-        .tech-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .tech-card {
+        /* 사용자 유형별 기능 섹션 */
+        .user-types-section {
+            padding: 4rem 0;
             background-color: white;
-            border-radius: 0.75rem;
-            padding: 2rem;
-            transition: transform 0.2s, box-shadow 0.2s;
-            min-height: 300px;
-            display: flex;
-            flex-direction: column;
         }
 
-        .tech-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
-        }
-
-        .tech-icon {
-            background-color: var(--warning);
-            color: white;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-            font-size: 1.75rem;
-        }
-
-        .tech-card h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--gray-900);
-        }
-
-        .tech-card p {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 1.25rem;
-            color: #6b7280;
-            flex-grow: 1;
-        }
-
-        .tech-list {
-            list-style-type: none;
-            padding-left: 0;
-            margin: 0;
-        }
-
-        .tech-list li {
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 0.5rem;
-            color: #6b7280;
-            display: flex;
-            align-items: flex-start;
-        }
-
-        .tech-list li:before {
-            content: "•";
-            color: var(--primary);
-            margin-right: 0.5rem;
-        }
-
-        /* User Type Cards */
         .user-types-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -362,13 +437,95 @@
         }
 
         .feature-list {
-            list-style-type: none;
-            padding-left: 0;
-            margin: 0;
-            flex-grow: 1;
+            list-style: none;
+            padding: 0;
         }
 
         .feature-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: flex-start;
+            font-size: 0.9rem;
+            color: #374151;
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            color: var(--success);
+            margin-right: 0.75rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* 기술적 핵심 섹션 */
+        .tech-section {
+            padding: 4rem 0;
+            background-color: var(--gray-100);
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tech-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+        }
+
+        .tech-icon {
+            background-color: var(--warning);
+            color: white;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+        }
+
+        .tech-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+
+        .tech-card p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+            color: #6b7280;
+            flex-grow: 1;
+        }
+
+        .tech-list {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .tech-list li {
             font-size: 0.9rem;
             line-height: 1.5;
             margin-bottom: 0.5rem;
@@ -377,104 +534,36 @@
             align-items: flex-start;
         }
 
-        .feature-list li:before {
-            content: "✓";
-            color: var(--success);
+        .tech-list li:before {
+            content: "•";
+            color: var(--primary);
             margin-right: 0.5rem;
-            font-weight: bold;
         }
 
-        /* RAG Process Visualization */
-        .rag-process-visualization {
-            margin-top: 3rem;
-            background-color: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        /* 실제 화면 미리보기 */
+        .screen-tab {
+            transition: all 0.3s ease;
         }
 
-        .rag-process-visualization h4 {
-            text-align: center;
-            margin-bottom: 2rem;
-            color: #374151;
-            font-size: 1.25rem;
+        .screen-tab:hover {
+            background-color: #e2e8f0 !important;
+            color: #374151 !important;
         }
 
-        .process-steps {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
+        .screen-tab.active {
+            background-color: #4f46e5 !important;
+            color: white !important;
         }
 
-        .process-step {
-            text-align: center;
-            flex: 1;
-            min-width: 120px;
+        .screen-content {
+            display: none;
         }
 
-        .step-circle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 0.5rem auto;
-            font-weight: bold;
+        .screen-content.active {
+            display: block;
         }
 
-        .step-1 {
-            background-color: #dbeafe;
-            color: #1d4ed8;
-        }
-
-        .step-2 {
-            background-color: #fef3c7;
-            color: #d97706;
-        }
-
-        .step-3 {
-            background-color: #d1fae5;
-            color: #059669;
-        }
-
-        .step-4 {
-            background-color: #e0e7ff;
-            color: #4f46e5;
-        }
-
-        .step-5 {
-            background-color: #f3e8ff;
-            color: #7c3aed;
-        }
-
-        .process-step p {
-            font-size: 0.875rem;
-            font-weight: 600;
-        }
-
-        .arrow {
-            color: #9ca3af;
-            font-size: 1.5rem;
-        }
-
-        .process-summary {
-            margin-top: 2rem;
-            padding: 1rem;
-            background-color: #f3f4f6;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .process-summary p {
-            font-size: 0.875rem;
-            color: #374151;
-            margin: 0;
-        }
-
-        /* Dashboard Styles */
+        /* 새로운 대시보드 스타일 */
         .new-dashboard-preview {
             max-width: 1000px;
             margin: 0 auto;
@@ -491,10 +580,6 @@
 
         .dashboard-grid.two-col {
             grid-template-columns: 1fr 2fr;
-        }
-
-        .dashboard-grid.three-col {
-            grid-template-columns: 2fr 1fr 1fr;
         }
 
         .new-dashboard-card {
@@ -595,7 +680,7 @@
             font-size: 12px;
         }
 
-        /* Chat Styles */
+        /* 채팅 스타일 */
         .chat-preview {
             max-width: 900px;
             margin: 0 auto;
@@ -648,21 +733,9 @@
             font-size: 0.875rem;
         }
 
-        .ai-sender {
-            color: #4f46e5;
-        }
-
         .chat-text {
             font-size: 0.875rem;
             line-height: 1.5;
-        }
-
-        .question-options {
-            margin-top: 8px;
-        }
-
-        .question-options div {
-            margin-bottom: 4px;
         }
 
         .chat-input {
@@ -680,445 +753,7 @@
             font-size: 0.875rem;
         }
 
-        /* Professor Management Panel */
-        .quality-cycle-box {
-            max-width: 900px;
-            margin: 0 auto 2rem auto;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 12px;
-            padding: 2rem;
-            color: white;
-            text-align: center;
-        }
-
-        .quality-cycle-box h4 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .quality-cycle-box p {
-            font-size: 1rem;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        .arrow-text {
-            color: #ffd700;
-        }
-
-        .professor-management-panel {
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .panel-header {
-            background-color: #3f51b5;
-            color: white;
-            padding: 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .panel-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-        }
-
-        .panel-nav {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 1rem;
-            font-size: 0.875rem;
-        }
-
-        .nav-menu span {
-            cursor: pointer;
-        }
-
-        .nav-menu .active {
-            background-color: rgba(255, 255, 255, 0.2);
-            padding: 0.25rem 0.75rem;
-            border-radius: 4px;
-        }
-
-        .logout-btn {
-            background-color: #ef4444;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            border: none;
-            color: white;
-            font-size: 0.875rem;
-            cursor: pointer;
-        }
-
-        .panel-content {
-            padding: 1.5rem;
-        }
-
-        .content-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .content-header h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #374151;
-            margin: 0;
-        }
-
-        .search-box {
-            position: relative;
-            width: 300px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 0.5rem 0.75rem 0.5rem 2.5rem;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 0.875rem;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #9ca3af;
-        }
-
-        .management-table {
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .table-header {
-            display: grid;
-            grid-template-columns: 1fr 1fr 80px 60px 2fr 2fr 80px;
-            background-color: #f9fafb;
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid #e5e7eb;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #6b7280;
-            text-transform: uppercase;
-        }
-
-        .table-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr 80px 60px 2fr 2fr 80px;
-            padding: 1rem;
-            border-bottom: 1px solid #f3f4f6;
-            font-size: 0.875rem;
-            align-items: start;
-        }
-
-        .table-row div {
-            color: #374151;
-        }
-
-        .question-cell {
-            line-height: 1.4;
-        }
-
-        .explanation-status {
-            color: #6b7280;
-            font-style: italic;
-        }
-
-        .edit-btn {
-            background-color: #2563eb;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            border: none;
-            font-size: 0.75rem;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .quality-info {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background-color: #f0f9ff;
-            border-radius: 8px;
-            border-left: 4px solid #0ea5e9;
-        }
-
-        .quality-info p {
-            font-size: 0.875rem;
-            color: #0c4a6e;
-            margin: 0;
-        }
-
-        /* RAG Management Panel */
-        .rag-management-panel {
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .breadcrumb {
-            background-color: #f8f9fa;
-            padding: 12px 24px;
-            border-bottom: 1px solid #e9ecef;
-            font-size: 0.875rem;
-            color: #6c757d;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .breadcrumb a {
-            color: #6b7280;
-            text-decoration: none;
-        }
-
-        .rag-header {
-            padding: 24px 24px 0 24px;
-        }
-
-        .rag-header h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #374151;
-            margin-bottom: 24px;
-        }
-
-        .tabs-container {
-            border-bottom: 1px solid #d1d5db;
-            margin-bottom: 24px;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 8px;
-        }
-
-        .tab {
-            display: inline-block;
-            padding: 12px 20px;
-            font-weight: 600;
-            font-size: 0.875rem;
-            cursor: pointer;
-            color: #6b7280;
-        }
-
-        .tab.active {
-            color: #4f46e5;
-            border-bottom: 2px solid #4f46e5;
-            background-color: #f8fafc;
-        }
-
-        .tab-content {
-            padding: 0 24px 24px 24px;
-        }
-
-        .department-select {
-            margin-bottom: 24px;
-        }
-
-        .department-select label {
-            display: block;
-            color: #374151;
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .department-select select {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            background-color: white;
-        }
-
-        .upload-box {
-            border: 2px dashed #d1d5db;
-            background-color: #f9fafb;
-            border-radius: 8px;
-            padding: 48px 24px;
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .upload-icon {
-            width: 48px;
-            height: 48px;
-            margin: 0 auto 16px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid #9ca3af;
-            color: #9ca3af;
-            border-radius: 8px;
-        }
-
-        .upload-title {
-            font-size: 1.125rem;
-            color: #374151;
-            margin-bottom: 8px;
-        }
-
-        .upload-subtitle {
-            font-size: 0.875rem;
-            color: #6b7280;
-            margin-bottom: 20px;
-        }
-
-        .upload-btn {
-            padding: 8px 24px;
-            border-radius: 6px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.875rem;
-        }
-
-        .upload-btn.primary {
-            background-color: #4f46e5;
-            color: white;
-        }
-
-        .upload-btn.success {
-            background-color: #10b981;
-            color: white;
-        }
-
-        .upload-note {
-            font-size: 0.75rem;
-            color: #9ca3af;
-            margin-top: 16px;
-        }
-
-        .file-list {
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .file-list-header {
-            display: flex;
-            padding: 12px 20px;
-            background-color: #f9fafb;
-            border-bottom: 1px solid #e5e7eb;
-            font-weight: 600;
-            color: #374151;
-            font-size: 0.875rem;
-        }
-
-        .file-list-header>div {
-            flex: 1;
-        }
-
-        .file-list-header>div:last-child {
-            width: 160px;
-            text-align: center;
-        }
-
-        .file-row {
-            display: flex;
-            padding: 12px 20px;
-            border-bottom: 1px solid #f3f4f6;
-            align-items: center;
-            font-size: 0.875rem;
-        }
-
-        .file-row>div {
-            flex: 1;
-            color: #6b7280;
-        }
-
-        .file-row>div:last-child {
-            width: 160px;
-        }
-
-        .file-name {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #374151 !important;
-        }
-
-        .file-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            border-radius: 4px;
-            font-size: 12px;
-            color: #fff;
-        }
-
-        .file-icon.primary {
-            background: #4f46e5;
-        }
-
-        .file-icon.success {
-            background: #10b981;
-        }
-
-        .file-actions {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .download-btn {
-            color: #2563eb;
-            border: 1px solid #2563eb;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            background: white;
-            cursor: pointer;
-        }
-
-        .delete-btn {
-            color: #dc2626;
-            border: 1px solid #dc2626;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            background: white;
-            cursor: pointer;
-        }
-
-        .rag-info {
-            background-color: #f0f9ff;
-            padding: 1rem;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        .rag-info p {
-            font-size: 0.875rem;
-            color: #0c4a6e;
-            margin: 0;
-            text-align: center;
-        }
-
-        /* CTA Section */
+        /* CTA 및 Footer */
         .cta {
             padding: 4rem 0;
             background-color: var(--primary);
@@ -1138,7 +773,15 @@
             margin-right: auto;
         }
 
-        /* Footer */
+        .btn-light {
+            background-color: white;
+            color: var(--primary);
+        }
+
+        .btn-light:hover {
+            background-color: var(--gray-100);
+        }
+
         footer {
             background-color: var(--gray-900);
             color: white;
@@ -1151,14 +794,9 @@
             align-items: center;
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .hero {
                 flex-direction: column;
-            }
-
-            .nav-links {
-                display: none;
             }
 
             .footer-content {
@@ -1166,8 +804,7 @@
                 gap: 1rem;
             }
 
-            .dashboard-grid.two-col,
-            .dashboard-grid.three-col {
+            .dashboard-grid.two-col {
                 grid-template-columns: 1fr !important;
             }
 
@@ -1183,8 +820,8 @@
             }
 
             .tech-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
             }
 
             .tech-card {
@@ -1202,51 +839,22 @@
                 padding: 1.5rem;
             }
 
-            .process-steps {
-                flex-direction: column;
+            .overview-grid {
+                grid-template-columns: 1fr;
                 gap: 2rem;
+            }
+
+            .benefits-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .process-flow {
+                flex-direction: column;
             }
 
             .arrow {
                 transform: rotate(90deg);
-            }
-
-            .table-header,
-            .table-row {
-                grid-template-columns: 1fr;
-                gap: 0.5rem;
-            }
-
-            .panel-header {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: flex-start;
-            }
-
-            .panel-nav {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .content-header {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: flex-start;
-            }
-
-            .search-box {
-                width: 100%;
-            }
-
-            .file-list-header,
-            .file-row {
-                flex-direction: column;
-                gap: 0.5rem;
-                align-items: flex-start;
-            }
-
-            .file-actions {
-                justify-content: flex-start;
             }
         }
     </style>
@@ -1289,7 +897,392 @@
             </div>
         </section>
 
-        <!-- 2. 주요 기능 -->
+        <!-- 2. 플랫폼 개요 섹션 -->
+        <section class="platform-overview">
+            <div class="container">
+                <h2 class="section-title">AI 기반 맞춤형 학습 플랫폼</h2>
+                <div class="section-description">
+                    AI Tutor는 전문 지식이 필요한 모든 분야의 학습을 지원하는 확장 가능한 AI 학습 생태계입니다.
+                </div>
+
+                <div class="overview-grid">
+                    <div class="overview-content">
+                        <h3>🎯 개인 맞춤형 학습 여정</h3>
+                        <p>
+                            <strong>진단테스트</strong>로 현재 수준을 확인한 후, 부족한 부분을 파악하여
+                            학습하기 공간에서 <strong>집중적으로 기출문제</strong>를 풀고 더 연습이 필요한 영역은
+                            <strong>AI가 생성하는 문제</strong>로 반복 학습할 수 있습니다.
+                        </p>
+
+                        <h3>📊 실시간 학습 현황 분석</h3>
+                        <p>
+                            <strong>대시보드</strong>를 통해 본인이 잘하는 영역과 부족한 영역을 한눈에 확인하고,
+                            어떤 부분에 더 집중해야 하는지 명확하게 파악할 수 있습니다.
+                        </p>
+
+                        <h3>🔄 지속적인 실력 향상</h3>
+                        <p>
+                            진단 → 학습 → 분석 → 재학습의 <strong>순환 학습 시스템</strong>을 통해
+                            지속적으로 학습 능력을 향상시킬 수 있는 완전한 개인 맞춤형 학습 환경을 제공합니다.
+                        </p>
+                    </div>
+
+                    <div class="highlight-box">
+                        <h4>🎓 학습자 중심 맞춤형 시스템</h4>
+                        <p style="font-size: 1rem; margin: 0;">
+                            나만의 수준에 맞는 문제, 나만의 취약점 분석, 나만의 학습 속도로
+                            효과적으로 실력을 향상시킬 수 있는 AI 기반 개인 튜터입니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2.5. 학습하기 공간의 핵심 기술 구조 -->
+        <section class="tech-structure" style="padding: 4rem 0; background-color: #f9fafb;">
+            <div class="container">
+                <h2 class="section-title">학습하기 공간의 핵심 기술 구조</h2>
+                <div class="section-description">
+                    실제 화면으로 확인하는 RAG 시스템과 GPT API가 결합된 3단계 학습 메커니즘
+                </div>
+
+                <!-- 1. 기출문제 (RAG) -->
+                <div
+                    style="background-color: white; border-radius: 12px; padding: 2rem; margin-bottom: 3rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border-left: 6px solid #2563eb;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;">
+                        <div>
+                            <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                                <div
+                                    style="width: 60px; height: 60px; background-color: #dbeafe; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; font-size: 1.5rem; color: #1d4ed8;">
+                                    📚
+                                </div>
+                                <div>
+                                    <h3 style="font-size: 1.5rem; font-weight: 700; color: #374151; margin: 0;">1. 기출문제
+                                    </h3>
+                                    <p style="font-size: 1rem; color: #2563eb; margin: 0; font-weight: 600;">RAG 시스템 활용
+                                    </p>
+                                </div>
+                            </div>
+
+                            <p style="font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; color: #374151;">
+                                <strong>벡터 기반 유사도 검색</strong>을 통해 학생의 현재 수준과 학습 이력에 맞는 기출문제를 지능적으로 추천합니다.
+                            </p>
+
+                            <div
+                                style="background-color: #f8fafc; padding: 1.5rem; border-radius: 8px; border-left: 3px solid #2563eb;">
+                                <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: #1d4ed8;">🔍
+                                    RAG 기술 핵심</h4>
+                                <ul style="list-style: none; padding: 0; margin: 0;">
+                                    <li
+                                        style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.5rem; color: #374151; display: flex; align-items: flex-start;">
+                                        <span style="color: #2563eb; margin-right: 0.5rem; font-weight: bold;">•</span>
+                                        학과별 기출문제 데이터베이스 벡터화
+                                    </li>
+                                    <li
+                                        style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.5rem; color: #374151; display: flex; align-items: flex-start;">
+                                        <span style="color: #2563eb; margin-right: 0.5rem; font-weight: bold;">•</span>
+                                        개인 학습 이력 기반 맞춤 추천 알고리즘
+                                    </li>
+                                    <li
+                                        style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.5rem; color: #374151; display: flex; align-items: flex-start;">
+                                        <span style="color: #2563eb; margin-right: 0.5rem; font-weight: bold;">•</span>
+                                        실시간 유사도 계산으로 최적의 문제 선별
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- 기출문제 화면 모형 -->
+                        <div
+                            style="background-color: #f8fafc; border-radius: 8px; padding: 1.5rem; border: 2px solid #e5e7eb;">
+                            <div
+                                style="background-color: #2563eb; color: white; padding: 0.75rem 1rem; border-radius: 6px 6px 0 0; font-weight: 600; margin: -1.5rem -1.5rem 1rem -1.5rem;">
+                                기출문제 화면
+                            </div>
+                            <div
+                                style="background-color: white; padding: 1.5rem; border-radius: 6px; margin-bottom: 1rem; border: 1px solid #e5e7eb;">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #f3f4f6;">
+                                    <span style="font-size: 0.875rem; color: #6b7280;">과목: 해부생리학</span>
+                                    <span style="font-size: 0.875rem; color: #dc2626; font-weight: 600;">난이도: 상</span>
+                                </div>
+                                <p style="font-size: 0.9rem; line-height: 1.5; color: #374151; margin-bottom: 1rem;">
+                                    <strong>문제:</strong> 엉덩관절의 관절주머니 뒤쪽을 보강하고 있는 나선형의 인대는?
+                                </p>
+                                <div style="font-size: 0.85rem; color: #6b7280;">
+                                    ① 대퇴비구인대<br>
+                                    ② 장골대퇴인대<br>
+                                    ③ 좌골대퇴인대<br>
+                                    ④ 치골대퇴인대<br>
+                                    ⑤ 원인대
+                                </div>
+                            </div>
+                            <div style="font-size: 0.8rem; color: #059669; text-align: center; font-style: italic;">
+                                📊 RAG가 학습 이력을 분석하여 추천한 문제
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 해설 (RAG + GPT) -->
+                <div
+                    style="background-color: white; border-radius: 12px; padding: 2rem; margin-bottom: 3rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border-left: 6px solid #10b981;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;">
+                        <!-- 해설 화면 모형 -->
+                        <div
+                            style="background-color: #f0fdf4; border-radius: 8px; padding: 1.5rem; border: 2px solid #e5e7eb;">
+                            <div
+                                style="background-color: #10b981; color: white; padding: 0.75rem 1rem; border-radius: 6px 6px 0 0; font-weight: 600; margin: -1.5rem -1.5rem 1rem -1.5rem;">
+                                AI 맞춤 해설
+                            </div>
+                            <div
+                                style="background-color: white; padding: 1.5rem; border-radius: 6px; margin-bottom: 1rem; border: 1px solid #e5e7eb;">
+                                <div
+                                    style="background-color: #dcfce7; padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem; border-left: 3px solid #10b981;">
+                                    <p style="font-size: 0.85rem; color: #166534; margin: 0;"><strong>정답: ③
+                                            좌골대퇴인대</strong></p>
+                                </div>
+                                <p
+                                    style="font-size: 0.85rem; line-height: 1.5; color: #374151; margin-bottom: 0.75rem;">
+                                    <strong>🎯 개인 맞춤 해설:</strong><br>
+                                    좌골대퇴인대는 엉덩관절 뒤쪽을 나선형으로 보강하는 인대입니다.
+                                </p>
+                                <p style="font-size: 0.8rem; line-height: 1.4; color: #6b7280; margin-bottom: 0.75rem;">
+                                    관절주머니의 뒤쪽에서 좌골에서 시작하여 대퇴골로 나선형으로 감겨 연결됩니다.
+                                </p>
+                                <div
+                                    style="background-color: #f8fafc; padding: 0.75rem; border-radius: 4px; font-size: 0.75rem; color: #4f46e5;">
+                                    📚 참고자료: 해부학 교재 11장 - 관절계통
+                                </div>
+                            </div>
+                            <div style="font-size: 0.8rem; color: #059669; text-align: center; font-style: italic;">
+                                🤖 RAG + GPT가 교육자료를 기반으로 생성한 해설
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                                <div
+                                    style="width: 60px; height: 60px; background-color: #d1fae5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; font-size: 1.5rem; color: #059669;">
+                                    💡
+                                </div>
+                                <div>
+                                    <h3 style="font-size: 1.5rem; font-weight: 700; color: #374151; margin: 0;">2. 해설
+                                    </h3>
+                                    <p style="font-size: 1rem; color: #10b981; margin: 0; font-weight: 600;">RAG + GPT
+                                        API 융합</p>
+                                </div>
+                            </div>
+
+                            <p style="font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; color: #374151;">
+                                <strong>RAG로 관련 교육자료를 검색</strong>하고 <strong>GPT API로 개인화된 해설</strong>을 생성하여 정확하고 이해하기 쉬운
+                                설명을 제공합니다.
+                            </p>
+
+                            <div
+                                style="background-color: #f0fdf4; padding: 1.5rem; border-radius: 8px; border-left: 3px solid #10b981;">
+                                <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: #047857;">🧠
+                                    RAG + GPT 융합 기술</h4>
+                                <ul style="list-style: none; padding: 0; margin: 0;">
+                                    <li
+                                        style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.5rem; color: #374151; display: flex; align-items: flex-start;">
+                                        <span style="color: #10b981; margin-right: 0.5rem; font-weight: bold;">•</span>
+                                        교수님 업로드 참고자료에서 관련 내용 검색
+                                    </li>
+                                    <li
+                                        style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.5rem; color: #374151; display: flex; align-items: flex-start;">
+                                        <span style="color: #10b981; margin-right: 0.5rem; font-weight: bold;">•</span>
+                                        개인 수준에 맞춘 맞춤형 해설 생성
+                                    </li>
+                                    <li
+                                        style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.5rem; color: #374151; display: flex; align-items: flex-start;">
+                                        <span style="color: #10b981; margin-right: 0.5rem; font-weight: bold;">•</span>
+                                        교수님의 실시간 품질 검토 및 개선
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. AI기출문제 (RAG + GPT 문제생성) -->
+                <div
+                    style="background-color: white; border-radius: 12px; padding: 2rem; margin-bottom: 3rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border-left: 6px solid #f59e0b;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;">
+                        <div>
+                            <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                                <div
+                                    style="width: 60px; height: 60px; background-color: #fef3c7; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; font-size: 1.5rem; color: #d97706;">
+                                    🤖
+                                </div>
+                                <div>
+                                    <h3 style="font-size: 1.5rem; font-weight: 700; color: #374151; margin: 0;">3.
+                                        AI기출문제</h3>
+                                    <p style="font-size: 1rem; color: #f59e0b; margin: 0; font-weight: 600;">RAG + GPT
+                                        문제 생성</p>
+                                </div>
+                            </div>
+
+                            <p style="font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; color: #374151;">
+                                <strong>기존 기출문제 패턴을 학습</strong>하여 프롬프트 엔지니어링과 파라미터 조정을 통해 <strong>새로운 문제를 무한
+                                    생성</strong>합니다.
+                            </p>
+
+                            <div
+                                style="background-color: #fffbeb; padding: 1.5rem; border-radius: 8px; border-left: 3px solid #f59e0b;">
+                                <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem; color: #c2410c;">⚡ AI
+                                    문제 생성 기술</h4>
+                                <ul style="list-style: none; padding: 0; margin: 0;">
+                                    <li
+                                        style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.5rem; color: #374151; display: flex; align-items: flex-start;">
+                                        <span style="color: #f59e0b; margin-right: 0.5rem; font-weight: bold;">•</span>
+                                        기출문제 패턴 분석 및 AI 모델 학습
+                                    </li>
+                                    <li
+                                        style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.5rem; color: #374151; display: flex; align-items: flex-start;">
+                                        <span style="color: #f59e0b; margin-right: 0.5rem; font-weight: bold;">•</span>
+                                        프롬프트 엔지니어링으로 품질 최적화
+                                    </li>
+                                    <li
+                                        style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.5rem; color: #374151; display: flex; align-items: flex-start;">
+                                        <span style="color: #f59e0b; margin-right: 0.5rem; font-weight: bold;">•</span>
+                                        학과별 출제 경향 및 난이도 반영
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- AI기출문제 화면 모형 -->
+                        <div
+                            style="background-color: #fffbeb; border-radius: 8px; padding: 1.5rem; border: 2px solid #e5e7eb;">
+                            <div
+                                style="background-color: #f59e0b; color: white; padding: 0.75rem 1rem; border-radius: 6px 6px 0 0; font-weight: 600; margin: -1.5rem -1.5rem 1rem -1.5rem;">
+                                AI 생성 문제
+                            </div>
+                            <div
+                                style="background-color: white; padding: 1.5rem; border-radius: 6px; margin-bottom: 1rem; border: 1px solid #e5e7eb;">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #f3f4f6;">
+                                    <span style="font-size: 0.875rem; color: #6b7280;">AI 생성: 관절계통</span>
+                                    <span
+                                        style="background-color: #fef3c7; color: #c2410c; font-size: 0.75rem; padding: 0.25rem 0.5rem; border-radius: 12px; font-weight: 600;">🤖
+                                        NEW</span>
+                                </div>
+                                <p style="font-size: 0.9rem; line-height: 1.5; color: #374151; margin-bottom: 1rem;">
+                                    <strong>문제:</strong> 어깨관절의 관절주머니 앞쪽을 보강하는 인대 중 가장 중요한 것은?
+                                </p>
+                                <div style="font-size: 0.85rem; color: #6b7280;">
+                                    ① 오구상완인대<br>
+                                    ② 관절상완인대<br>
+                                    ③ 횡상완인대<br>
+                                    ④ 견봉쇄골인대<br>
+                                    ⑤ 오구견봉인대
+                                </div>
+                            </div>
+                            <div style="font-size: 0.8rem; color: #c2410c; text-align: center; font-style: italic;">
+                                🎯 기출문제 패턴을 학습하여 AI가 새로 생성한 문제
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 학습 과정 플로우 -->
+        <section class="learning-process" style="background-color: #f3f4f6;">
+            <div class="container">
+                <h2 class="section-title">학습자 중심 맞춤형 학습 과정</h2>
+                <div class="section-description">
+                    진단 → 집중 학습 → 현황 분석 → 지속 향상의 완벽한 개인 맞춤형 학습 사이클을 경험하세요.
+                </div>
+
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="process-icon step1">1</div>
+                        <h4>회원가입 & 로그인</h4>
+                        <p>간편한 회원가입 후 개인 학습 공간에 접속</p>
+                    </div>
+
+                    <div class="arrow">→</div>
+
+                    <div class="process-step">
+                        <div class="process-icon step2">2</div>
+                        <h4>진단테스트</h4>
+                        <p>현재 수준 체크 및 부족한 영역 정확히 파악</p>
+                    </div>
+
+                    <div class="arrow">→</div>
+
+                    <div class="process-step">
+                        <div class="process-icon step3">3</div>
+                        <h4>집중 학습하기</h4>
+                        <p>부족한 부분 기출문제 + AI 생성문제로 반복 학습</p>
+                    </div>
+
+                    <div class="arrow">→</div>
+
+                    <div class="process-step">
+                        <div class="process-icon step4">4</div>
+                        <h4>대시보드 분석</h4>
+                        <p>잘하는 영역·부족한 영역 한눈에 확인</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. 주요 기대효과 -->
+        <section class="benefits-section">
+            <div class="container">
+                <h2 class="section-title">주요 기대효과</h2>
+                <div class="section-description">
+                    AI Tutor의 체계적인 학습 시스템이 가져올 혁신적인 교육 성과를 확인해보세요.
+                </div>
+
+                <div class="benefits-grid">
+                    <div class="benefit-card">
+                        <div class="benefit-icon efficiency">📈</div>
+                        <h4>학습 효율성 극대화</h4>
+                        <div class="stat">스마트 학습</div>
+                        <p>
+                            <strong>개인 맞춤형 학습 경로</strong><br>
+                            진단테스트 기반 취약점 분석으로 꼭 필요한 문제만 집중 학습하여 효율성 극대화
+                        </p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon achievement">🎓</div>
+                        <h4>학업 성취도 향상</h4>
+                        <div class="stat">실력 강화</div>
+                        <p>
+                            <strong>체계적인 실력 향상</strong><br>
+                            교수 검증 해설과 무한 AI 문제 생성으로 실전 대비력과 문제 해결 능력 향상
+                        </p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon automation">👨‍🏫</div>
+                        <h4>교수자 업무 효율화</h4>
+                        <div class="stat">업무 자동화</div>
+                        <p>
+                            <strong>지능형 교육 관리</strong><br>
+                            자동화된 문제 관리와 실시간 학생 현황 분석으로 더 효과적인 교육 지도 실현
+                        </p>
+                    </div>
+
+                    <div class="benefit-card">
+                        <div class="benefit-icon motivation">🏆</div>
+                        <h4>지속적 학습 동기</h4>
+                        <div class="stat">동기 부여</div>
+                        <p>
+                            <strong>성취감 기반 학습</strong><br>
+                            실시간 성과 시각화와 개인별 맞춤 피드백으로 지속적인 학습 의욕 향상
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. 주요 기능 -->
         <section id="features" class="features">
             <div class="container">
                 <h2 class="section-title">주요 기능</h2>
@@ -1319,8 +1312,8 @@
                                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                             </svg>
                         </div>
-                        <h3>맞춤형 문제 추천</h3>
-                        <p>진단 결과를 기반으로 학생 수준에 적합한 문제를 선별하여 효과적인 반복 학습을 지원합니다.</p>
+                        <h3>맞춤형 학습하기 (기출문제 + AI 생성문제)</h3>
+                        <p>교수님이 업로드한 기출문제와 AI가 생성한 새로운 문제를 함께 제공하여 풍부한 학습 기회를 제공합니다.</p>
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon">
@@ -1382,171 +1375,7 @@
             </div>
         </section>
 
-        <!-- 3. 핵심 기술 및 시스템 구조 -->
-        <section class="tech-section">
-            <div class="container">
-                <h2 class="section-title">핵심 기술 및 시스템 구조</h2>
-                <div class="section-description">
-                    데이터, AI 기술, 사용자 인터페이스가 유기적으로 결합된 3계층 맞춤형 학습 플랫폼입니다.
-                </div>
-
-                <div class="tech-grid">
-                    <div class="tech-card">
-                        <div class="tech-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                            </svg>
-                        </div>
-                        <h3>하이브리드 데이터 시스템<br>(RAG + RDBMS)</h3>
-                        <p>RAG와 관계형 데이터베이스를 결합하여 효율적인 문제 관리와 정확한 정답 제공을 동시에 구현합니다.</p>
-                        <ul class="tech-list">
-                            <li>Vector DB를 통한 고속 문제 검색</li>
-                            <li>관계형 DB로 정답 데이터 정확성 보장</li>
-                            <li>기출문제 데이터 표준화 및 구조화</li>
-                            <li>교육 자료 품질 검증 시스템</li>
-                        </ul>
-                    </div>
-                    <div class="tech-card">
-                        <div class="tech-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                                <path d="M10 7.5L14 10l-4 2.5v-5z"></path>
-                            </svg>
-                        </div>
-                        <h3>LLM 연동 AI 엔진<br>(ChatGPT API)</h3>
-                        <p>ChatGPT API와 RAG 기술을 활용하여 개인별 수준에 맞춘 맞춤형 해설을 실시간으로 생성합니다.</p>
-                        <ul class="tech-list">
-                            <li>OpenAI ChatGPT API 통합 활용</li>
-                            <li>벡터 데이터베이스 기반 유사도 검색</li>
-                            <li>컨텍스트 기반 개인화 해설 생성</li>
-                            <li>높은 유사도 순서 기반 문제 추천</li>
-                        </ul>
-                    </div>
-                    <div class="tech-card">
-                        <div class="tech-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M3 3v18h18"></path>
-                                <path d="M7 12l4-4 4 4 6-6"></path>
-                            </svg>
-                        </div>
-                        <h3>3계층 시스템<br>아키텍처</h3>
-                        <p>확장 가능한 마이크로서비스 구조로 설계되어 각 기능이 독립적으로 동작하며, 시스템 확장성과 안정성을 보장합니다.</p>
-                        <ul class="tech-list">
-                            <li>데이터 저장/관리 계층 (Vector DB + RDBMS)</li>
-                            <li>AI 처리 계층 (RAG + LLM 연동)</li>
-                            <li>사용자 인터페이스 계층 (웹 기반 UI)</li>
-                            <li>GPU 서버를 통한 고성능 AI 모델 추론</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. RAG 기반 해설 품질 향상 프로세스 -->
-        <section class="features">
-            <div class="container">
-                <h2 class="section-title">RAG 기반 해설 품질 향상 프로세스</h2>
-                <div class="section-description">
-                    교육 자료를 RAG 시스템에 업로드하여 LLM이 정확하고 품질 높은 해설을 생성하는 5단계 시스템입니다.
-                </div>
-
-                <div class="user-types-grid">
-                    <div class="user-type-card">
-                        <div class="user-type-icon admin-icon">
-                            <span style="font-size: 1.5rem;">1</span>
-                        </div>
-                        <h3>교육 자료 업로드</h3>
-                        <p>표준 교재, 참고서, 강의 노트 등 신뢰할 수 있는 교육 자료를 RAG 데이터베이스에 업로드합니다.</p>
-                        <ul class="feature-list">
-                            <li>텍스트 파일, PDF, Word 문서 지원</li>
-                            <li>다양한 형태의 교육 자료 처리</li>
-                            <li>자동 문서 분석 및 분류</li>
-                        </ul>
-                    </div>
-
-                    <div class="user-type-card">
-                        <div class="user-type-icon professor-icon">
-                            <span style="font-size: 1.5rem;">2</span>
-                        </div>
-                        <h3>벡터 데이터베이스 구축</h3>
-                        <p>업로드된 교육 자료를 벡터화하여 RAG 시스템에 저장하고 의미론적 검색이 가능하도록 최적화합니다.</p>
-                        <ul class="feature-list">
-                            <li>고차원 벡터 임베딩 생성</li>
-                            <li>의미론적 유사도 기반 인덱싱</li>
-                            <li>실시간 검색 최적화</li>
-                        </ul>
-                    </div>
-
-                    <div class="user-type-card">
-                        <div class="user-type-icon student-icon">
-                            <span style="font-size: 1.5rem;">3</span>
-                        </div>
-                        <h3>컨텍스트 기반 해설 생성</h3>
-                        <p>문제가 주어지면 RAG 시스템이 관련 교육 자료를 검색하고, 이를 컨텍스트로 활용하여 정확한 해설을 생성합니다.</p>
-                        <ul class="feature-list">
-                            <li>관련 자료 실시간 검색</li>
-                            <li>컨텍스트 기반 해설 생성</li>
-                            <li>교육적으로 유용한 설명 제공</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- RAG 프로세스 시각화 -->
-                <div class="rag-process-visualization">
-                    <h4>RAG 기반 해설 생성 5단계 프로세스</h4>
-                    <div class="process-steps">
-                        <div class="process-step">
-                            <div class="step-circle step-1">
-                                <span>1</span>
-                            </div>
-                            <p>교육자료<br>업로드</p>
-                        </div>
-                        <div class="arrow">→</div>
-                        <div class="process-step">
-                            <div class="step-circle step-2">
-                                <span>2</span>
-                            </div>
-                            <p>벡터DB<br>구축</p>
-                        </div>
-                        <div class="arrow">→</div>
-                        <div class="process-step">
-                            <div class="step-circle step-3">
-                                <span>3</span>
-                            </div>
-                            <p>AI 해설<br>생성</p>
-                        </div>
-                        <div class="arrow">→</div>
-                        <div class="process-step">
-                            <div class="step-circle step-4">
-                                <span>4</span>
-                            </div>
-                            <p>교수님<br>검토/수정</p>
-                        </div>
-                        <div class="arrow">→</div>
-                        <div class="process-step">
-                            <div class="step-circle step-5">
-                                <span>5</span>
-                            </div>
-                            <p>지속적<br>품질개선</p>
-                        </div>
-                    </div>
-                    <div class="process-summary">
-                        <p>
-                            <strong>핵심:</strong> 더 많은 교육 자료 업로드 + 교수님 검토 → AI 해설 품질 지속적 향상
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 5. 사용자별 시스템 및 기능 -->
+        <!-- 6. 사용자별 시스템 및 기능 -->
         <section class="user-types-section">
             <div class="container">
                 <h2 class="section-title">사용자별 시스템 및 기능</h2>
@@ -1622,443 +1451,759 @@
             </div>
         </section>
 
-        <!-- 6. 학생 맞춤 학습 대시보드 -->
-        <section class="features">
-            <div class="container">
-                <h2 class="section-title">학생 맞춤 학습 대시보드</h2>
-                <div class="section-description">
-                    AI 튜터가 학습자의 개인별 학습 데이터를 분석하여 맞춤형 학습 관리와 진도 추천을 제공합니다.
-                </div>
-                <div class="new-dashboard-preview">
-                    <!-- 첫 번째 행: 사용자 정보와 종합 레벨 -->
-                    <div class="dashboard-grid two-col">
-                        <div class="new-dashboard-card user-info">
-                            <h2>BCTONE님, 안녕하세요!</h2>
-                            <p>작업치료학과 2학년</p>
-                        </div>
-                        <div class="new-dashboard-card level-display">
-                            <div class="level-text">
-                                <h3>종합 레벨: 하</h3>
-                            </div>
-                            <button class="continue-learning-btn">
-                                오늘의 학습 계속하기
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- 두 번째 행: 유형별 학습 현황과 집중 학습 추천 -->
-                    <div class="dashboard-grid two-col">
-                        <div class="new-dashboard-card progress-section">
-                            <div class="new-card-header">유형별 학습 현황</div>
-                            <div class="progress-item">
-                                <div class="progress-header">
-                                    <span>심혈관계, 면역계</span>
-                                    <span>하</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill red" style="width: 10%"></div>
-                                </div>
-                            </div>
-                            <div class="progress-item">
-                                <div class="progress-header">
-                                    <span>호흡계, 음성, 말하기 관련 기관</span>
-                                    <span>하</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill red" style="width: 20%"></div>
-                                </div>
-                            </div>
-                            <div class="progress-item">
-                                <div class="progress-header">
-                                    <span>소화계, 삼킴관련 기관</span>
-                                    <span>하</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill red" style="width: 20%"></div>
-                                </div>
-                            </div>
-                            <div class="progress-item">
-                                <div class="progress-header">
-                                    <span>인체의 체계</span>
-                                    <span>하</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill red" style="width: 10%"></div>
-                                </div>
-                            </div>
-                            <div class="progress-item">
-                                <div class="progress-header">
-                                    <span>신경계</span>
-                                    <span>중</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill yellow" style="width: 50%"></div>
-                                </div>
-                            </div>
-                            <div class="progress-item">
-                                <div class="progress-header">
-                                    <span>피부, 눈, 귀 등 감각계</span>
-                                    <span>상</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill green" style="width: 70%"></div>
-                                </div>
-                            </div>
-                            <div class="progress-item">
-                                <div class="progress-header">
-                                    <span>내분비계, 비뇨계, 생식계</span>
-                                    <span>중</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill yellow" style="width: 50%"></div>
-                                </div>
-                            </div>
-                            <div class="progress-item">
-                                <div class="progress-header">
-                                    <span>혈액순환, 면역기능</span>
-                                    <span>중</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill yellow" style="width: 50%"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="new-dashboard-card">
-                            <div class="new-card-header">집중 학습 추천</div>
-                            <div class="recommendation-item">심혈관계, 면역계</div>
-                            <div class="recommendation-item">호흡계, 음성, 말하기 관련 기관</div>
-                            <div class="recommendation-item">소화계, 삼킴관련 기관</div>
-                            <div class="recommendation-item">인체의 체계</div>
-                            <div class="recommendation-item">호흡, 음성, 말하기 기능</div>
-                            <div class="recommendation-item">내분비, 배설, 생식기능</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 7. AI 튜터 대화형 학습 -->
-        <section class="features">
-            <div class="container">
-                <h2 class="section-title">AI 튜터 대화형 학습</h2>
-                <div class="section-description">
-                    AI 튜터와 자연스러운 대화를 통해 문제를 풀고 맞춤형 해설을 받을 수 있습니다.
-                </div>
-
-                <div class="chat-preview">
-                    <div class="chat-header">
-                        <div>AI Tutor - 학습 대화</div>
-                    </div>
-
-                    <div class="chat-content">
-                        <div class="chat-message ai">
-                            <div class="chat-sender ai-sender">AI 튜터</div>
-                            <div class="chat-text">
-                                안녕하세요! 저는 여러분의 AI 튜터입니다. 😊<br><br>
-                                지금부터 기출문제를 함께 풀어보며 학습할 거예요. 각 문항에 대해 정답을 채팅창에 입력하시면, 해설과 함께 피드백을 드릴게요.
-                            </div>
-                        </div>
-
-                        <div class="chat-message ai">
-                            <div class="chat-sender ai-sender">AI 튜터</div>
-                            <div class="chat-text">
-                                <p><strong>문제 1:</strong> 다음 중 중추신경계에 포함되지 않는 것은?</p>
-
-                                <div class="question-options">
-                                    <div>① 대뇌</div>
-                                    <div>② 소뇌</div>
-                                    <div>③ 척수신경</div>
-                                    <div>④ 뇌간</div>
-                                    <div>⑤ 척수</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="chat-message user">
-                            <div class="chat-sender">나</div>
-                            <div class="chat-text">3</div>
-                        </div>
-
-                        <div class="chat-message ai">
-                            <div class="chat-sender ai-sender">AI 튜터</div>
-                            <div class="chat-text">
-                                <p>정답입니다! ③ 척수신경은 중추신경계에 포함되지 않습니다.</p>
-                                <p><strong>해설:</strong> 중추신경계(CNS)는 뇌와 척수로 구성됩니다. 대뇌, 소뇌, 뇌간은 모두 뇌의 일부이며, 척수와 함께 중추신경계를
-                                    형성합니다. 반면, 척수신경은 말초신경계(PNS)에 속합니다.</p>
-                                <p>다음 문제로 넘어가시려면 "다음 문제"라고 입력해주세요.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="chat-input">
-                        <input type="text" placeholder="정답 번호 또는 추가 질문을 입력하세요..." />
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 8. 교수자 해설 품질 관리 -->
+        <!-- 7. 핵심 기술 및 시스템 구조 -->
         <section class="tech-section">
             <div class="container">
-                <h2 class="section-title">교수자 해설 품질 관리</h2>
+                <h2 class="section-title">핵심 기술 및 시스템 구조</h2>
                 <div class="section-description">
-                    학생들이 받는 AI 해설의 품질을 높이기 위해 교수자가 직접 검토하고 개선하는 관리 시스템입니다.
+                    데이터, AI 기술, 사용자 인터페이스가 유기적으로 결합된 4계층 맞춤형 학습 플랫폼입니다.
                 </div>
 
-                <!-- 연결 설명 박스 -->
-                <div class="quality-cycle-box">
-                    <h4>🔄 AI 해설 품질 향상 사이클</h4>
-                    <p>
-                        <strong>1단계:</strong> 학생이 AI 튜터와 문제를 풀고 해설을 받습니다
-                        <span class="arrow-text">→</span>
-                        <strong>2단계:</strong> 교수자가 AI 해설을 검토하고 더 나은 설명으로 개선합니다
-                        <span class="arrow-text">→</span>
-                        <strong>3단계:</strong> 개선된 해설이 다음 학생들에게 제공됩니다
-                    </p>
-                </div>
-
-                <div class="professor-management-panel">
-                    <!-- Header -->
-                    <div class="panel-header">
-                        <div class="panel-title">AI Tutor - 교수자 모드</div>
-                        <nav class="panel-nav">
-                            <div class="nav-menu">
-                                <span>전체 현황</span>
-                                <span>기출데이터</span>
-                                <span class="active">정답/해설</span>
-                                <span>개인별 분석</span>
-                            </div>
-                            <button class="logout-btn">
-                                로그아웃
-                            </button>
-                        </nav>
+                <div class="tech-grid">
+                    <div class="tech-card">
+                        <div class="tech-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                        </div>
+                        <h3>하이브리드 데이터 시스템<br>(RAG + RDBMS)</h3>
+                        <p>RAG와 관계형 데이터베이스를 결합하여 효율적인 문제 관리와 정확한 정답 제공을 동시에 구현합니다.</p>
+                        <ul class="tech-list">
+                            <li>Vector DB를 통한 고속 문제 검색</li>
+                            <li>관계형 DB로 정답 데이터 정확성 보장</li>
+                            <li>기출문제 데이터 표준화 및 구조화</li>
+                            <li>교육 자료 품질 검증 시스템</li>
+                        </ul>
                     </div>
-
-                    <!-- Content -->
-                    <div class="panel-content">
-                        <div class="content-header">
-                            <h3>문제 관리</h3>
-                            <div class="search-box">
-                                <input type="text" placeholder="과목 또는 문제 검색..." value="인대는?">
-                                <div class="search-icon">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-                                        <circle cx="11" cy="11" r="8" />
-                                        <path d="M21 21l-4.35-4.35" />
-                                    </svg>
-                                </div>
-                            </div>
+                    <div class="tech-card">
+                        <div class="tech-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                <path d="M10 7.5L14 10l-4 2.5v-5z"></path>
+                            </svg>
                         </div>
-
-                        <!-- Table -->
-                        <div class="management-table">
-                            <!-- Table Header -->
-                            <div class="table-header">
-                                <div>과목</div>
-                                <div>주제</div>
-                                <div>난이도</div>
-                                <div>정답</div>
-                                <div>문제</div>
-                                <div>해설</div>
-                                <div>관리</div>
-                            </div>
-
-                            <!-- Table Row -->
-                            <div class="table-row">
-                                <div>물리치료학기초_해부생리학</div>
-                                <div>관절계통</div>
-                                <div>상</div>
-                                <div>4</div>
-                                <div class="question-cell">
-                                    엉덩관절의 관절주머니 뒤쪽을 보강하고 있는 나선형의 인대는?<br>
-                                    ① 절구가로인대<br>
-                                    ② 엉덩넙다리인대<br>
-                                    ③ 두덩넙다리인대<br>
-                                    ④ 궁둥업다리인대<br>
-                                    ⑤ 넙다리뼈머리인대
-                                </div>
-                                <div class="explanation-status">해설 미작성</div>
-                                <div>
-                                    <button class="edit-btn">
-                                        수정
-                                    </button>
-                                </div>
-                            </div>
+                        <h3>LLM 연동 AI 엔진<br>(ChatGPT API)</h3>
+                        <p>ChatGPT API와 RAG 기술을 활용하여 개인별 수준에 맞춘 맞춤형 해설을 실시간으로 생성합니다.</p>
+                        <ul class="tech-list">
+                            <li>OpenAI ChatGPT API 통합 활용</li>
+                            <li>벡터 데이터베이스 기반 유사도 검색</li>
+                            <li>컨텍스트 기반 개인화 해설 생성</li>
+                            <li>높은 유사도 순서 기반 문제 추천</li>
+                        </ul>
+                    </div>
+                    <div class="tech-card">
+                        <div class="tech-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 16v-4"></path>
+                                <path d="M12 8h.01"></path>
+                            </svg>
                         </div>
-
-                        <!-- 하단 설명 -->
-                        <div class="quality-info">
-                            <p>
-                                <strong>💡 품질 관리 프로세스:</strong> AI가 생성한 해설이 부족하거나 부정확한 경우, 교수자가 직접 수정하여 학생들에게 더 나은 학습
-                                경험을 제공할 수 있습니다.
-                            </p>
+                        <h3>AI 문제 생성 엔진<br>(GPT 파인튜닝)</h3>
+                        <p>기존 기출문제를 학습한 AI 모델이 학생 수준에 맞는 새로운 문제를 무한 생성하여 학습 다양성을 제공합니다.</p>
+                        <ul class="tech-list">
+                            <li>기존 기출문제 데이터셋 학습</li>
+                            <li>파라미터 조정을 통한 난이도별 문제 생성</li>
+                            <li>프롬프트 엔지니어링으로 문제 품질 최적화</li>
+                            <li>실시간 문제 생성 및 검증 시스템</li>
+                        </ul>
+                    </div>
+                    <div class="tech-card">
+                        <div class="tech-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M3 3v18h18"></path>
+                                <path d="M7 12l4-4 4 4 6-6"></path>
+                            </svg>
                         </div>
+                        <h3>4계층 시스템<br>아키텍처</h3>
+                        <p>확장 가능한 마이크로서비스 구조로 설계되어 각 기능이 독립적으로 동작하며, 시스템 확장성과 안정성을 보장합니다.</p>
+                        <ul class="tech-list">
+                            <li>데이터 저장/관리 계층 (Vector DB + RDBMS)</li>
+                            <li>AI 처리 계층 (RAG + LLM + 문제생성)</li>
+                            <li>비즈니스 로직 계층 (학습 관리 시스템)</li>
+                            <li>사용자 인터페이스 계층 (웹 기반 UI)</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 9. RAG 지식베이스 관리 시스템 -->
-        <section class="tech-section">
+        <!-- 8. AI 기출문제 생성 프로세스 -->
+        <section class="features">
             <div class="container">
-                <h2 class="section-title">RAG 지식베이스 관리 시스템</h2>
+                <h2 class="section-title">AI 기출문제 생성 프로세스</h2>
                 <div class="section-description">
-                    문제 데이터와 교육 자료를 RAG 시스템에 업로드하여</br> 
-                    AI 해설 품질을 향상시키는 통합 관리 시스템입니다.
-
-                    <p style="color: red; font-size: 15px; margin-top:20px;">*아래 문제 업로드, 참고 데이터 업로드 중 하나를 선택해주세요</p>
+                    학과별 기출문제를 분석하여 AI가 학습하고, 기존 문제 패턴에 맞는 새로운 문제를 생성하는 5단계 지능형 시스템입니다.
                 </div>
-                
 
-                <div class="rag-management-panel">
-                    <!-- Breadcrumb -->
-                    <div class="breadcrumb">
-                        <a href="#">홈</a>
-                        <span>></span>
-                        <a href="#">지식베이스 관리</a>
-                        <span>></span>
-                        <span>RAG 데이터 업로드</span>
+                <div class="user-types-grid"
+                    style="grid-template-columns: repeat(3, 1fr); max-width: 1000px; margin: 0 auto;">
+                    <div class="user-type-card">
+                        <div class="user-type-icon admin-icon">
+                            <span style="font-size: 1.5rem;">1</span>
+                        </div>
+                        <h3>학과별 기출문제 수집 및 전처리</h3>
+                        <p>각 학과의 기출문제를 수집하고 AI 학습에 적합한 형태로 정제하여 고품질 데이터셋을 구축합니다.</p>
+                        <ul class="feature-list">
+                            <li>학과별 기출문제 분류 및 태깅</li>
+                            <li>문제 유형별 구조 분석</li>
+                            <li>데이터 품질 검증 및 정제</li>
+                        </ul>
                     </div>
 
-                    <!-- Header -->
-                    <div class="rag-header">
-                        <h3>RAG 지식베이스 통합 관리</h3>
-
-                        <!-- Tabs -->
-                        <div class="tabs-container">
-                            <div class="tabs">
-                                <div id="tab-problems" class="tab active">
-                                    문제 업로드
-                                </div>
-                                <div id="tab-reference" class="tab">
-                                    참고 데이터 업로드
-                                </div>
-                            </div>
+                    <div class="user-type-card">
+                        <div class="user-type-icon professor-icon">
+                            <span style="font-size: 1.5rem;">2</span>
                         </div>
+                        <h3>기출문제 패턴 분석 및 AI 학습</h3>
+                        <p>수집된 학과별 기출문제를 분석하여 문제 패턴을 파악하고, AI 모델이 이를 학습하도록 훈련시킵니다.</p>
+                        <ul class="feature-list">
+                            <li>학과별 문제 패턴 및 구조 분석</li>
+                            <li>출제 경향 및 문제 스타일 학습</li>
+                            <li>전문 분야 지식 모델링</li>
+                        </ul>
                     </div>
 
-                    <!-- 문제 업로드 탭 내용 -->
-                    <div id="content-problems" class="tab-content">
-                        <!-- Upload Box -->
-                        <div class="upload-box">
-                            <div class="upload-icon">
-                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 19V6M5 12l7-7 7 7" />
-                                </svg>
-                            </div>
-                            <p class="upload-title">문제 파일을 여기에 끌어다 놓거나 선택하세요</p>
-                            <p class="upload-subtitle">Excel(.xlsx), CSV(.csv) 또는 Word(.docx) 파일을 업로드할 수 있습니다.</p>
-                            <button class="upload-btn primary">
-                                파일 선택
-                            </button>
-                            <p class="upload-note">권장 형식: 번호, 문제, 선택지, 정답, 해설, 난이도, 유형</p>
+                    <div class="user-type-card">
+                        <div class="user-type-icon student-icon">
+                            <span style="font-size: 1.5rem;">3</span>
                         </div>
+                        <h3>프롬프트 및 파라미터 최적화</h3>
+                        <p>기존 기출문제에 맞는 새로운 문제를 생성하기 위해 프롬프트와 생성 파라미터를 세밀하게 조정합니다.</p>
+                        <ul class="feature-list">
+                            <li>학과별 맞춤 프롬프트 템플릿 개발</li>
+                            <li>문제 생성 파라미터 조정</li>
+                            <li>기출문제 스타일 일치성 최적화</li>
+                        </ul>
+                    </div>
+                </div>
 
-                        <!-- File List -->
-                        <div class="file-list">
-                            <!-- Header -->
-                            <div class="file-list-header">
-                                <div>파일명</div>
-                                <div>관련학과</div>
-                                <div>크기</div>
-                                <div>작업</div>
+                <!-- AI 문제 생성 프로세스 시각화 -->
+                <div
+                    style="margin-top: 3rem; background-color: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                    <h4 style="text-align: center; margin-bottom: 2rem; color: #374151; font-size: 1.25rem;">AI 기출문제 생성
+                        5단계 프로세스</h4>
+                    <div
+                        style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                        <div style="text-align: center; flex: 1; min-width: 120px;">
+                            <div
+                                style="width: 60px; height: 60px; background-color: #dbeafe; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem auto; color: #1d4ed8;">
+                                <span style="font-weight: bold;">1</span>
                             </div>
-
-                            <!-- File Row -->
-                            <div class="file-row">
-                                <div class="file-name">
-                                    <span class="file-icon primary">📄</span>
-                                    해부학_문제_01.docx
-                                </div>
-                                <div>작업치료학과</div>
-                                <div>2.4MB</div>
-                                <div class="file-actions">
-                                    <button class="delete-btn">삭제</button>
-                                </div>
+                            <p style="font-size: 0.875rem; font-weight: 600;">학과별 기출문제<br>수집 & 전처리</p>
+                        </div>
+                        <div style="color: #9ca3af; font-size: 1.5rem;">→</div>
+                        <div style="text-align: center; flex: 1; min-width: 120px;">
+                            <div
+                                style="width: 60px; height: 60px; background-color: #fef3c7; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem auto; color: #d97706;">
+                                <span style="font-weight: bold;">2</span>
                             </div>
+                            <p style="font-size: 0.875rem; font-weight: 600;">패턴 분석<br>& AI 학습</p>
+                        </div>
+                        <div style="color: #9ca3af; font-size: 1.5rem;">→</div>
+                        <div style="text-align: center; flex: 1; min-width: 120px;">
+                            <div
+                                style="width: 60px; height: 60px; background-color: #d1fae5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem auto; color: #059669;">
+                                <span style="font-weight: bold;">3</span>
+                            </div>
+                            <p style="font-size: 0.875rem; font-weight: 600;">프롬프트<br>최적화</p>
+                        </div>
+                        <div style="color: #9ca3af; font-size: 1.5rem;">→</div>
+                        <div style="text-align: center; flex: 1; min-width: 120px;">
+                            <div
+                                style="width: 60px; height: 60px; background-color: #e0e7ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem auto; color: #4f46e5;">
+                                <span style="font-weight: bold;">4</span>
+                            </div>
+                            <p style="font-size: 0.875rem; font-weight: 600;">새 문제 생성<br>& 검증</p>
+                        </div>
+                        <div style="color: #9ca3af; font-size: 1.5rem;">→</div>
+                        <div style="text-align: center; flex: 1; min-width: 120px;">
+                            <div
+                                style="width: 60px; height: 60px; background-color: #f3e8ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem auto; color: #7c3aed;">
+                                <span style="font-weight: bold;">5</span>
+                            </div>
+                            <p style="font-size: 0.875rem; font-weight: 600;">학과별<br>문제 제공</p>
                         </div>
                     </div>
-
-                    <!-- 참고 데이터 업로드 탭 내용 -->
-                    <div id="content-reference" class="tab-content" style="display: none;">
-                        <!-- 학과 선택 -->
-                        <div class="department-select">
-                            <label>학과 선택</label>
-                            <select>
-                                <option value="">학과를 선택하세요</option>
-                                <option value="물리치료학과">물리치료학과</option>
-                                <option value="작업치료학과">작업치료학과</option>
-                            </select>
-                        </div>
-
-                        <!-- Upload Box -->
-                        <div class="upload-box">
-                            <div class="upload-icon">
-                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M12 19V6M5 12l7-7 7 7" />
-                                </svg>
-                            </div>
-                            <p class="upload-title">교육 자료를 여기에 끌어다 놓거나 선택하세요</p>
-                            <p class="upload-subtitle">PDF(.pdf) 또는 TXT(.txt) 파일을 업로드할 수 있습니다.</p>
-                            <button class="upload-btn success">
-                                파일 선택
-                            </button>
-                            <p class="upload-note">교과서, 참고서, 강의 노트 등의 교육 자료를 업로드하세요</p>
-                        </div>
-
-                        <!-- Reference File List -->
-                        <div class="file-list">
-                            <!-- Header -->
-                            <div class="file-list-header">
-                                <div style="width: 60px;">ID</div>
-                                <div>파일명</div>
-                                <div>학과</div>
-                                <div>파일 크기</div>
-                                <div>작업</div>
-                            </div>
-
-                            <!-- Reference File Rows -->
-                            <div class="file-row">
-                                <div style="width: 60px;">1</div>
-                                <div class="file-name">
-                                    <span class="file-icon success">📚</span>
-                                    6장.txt
-                                </div>
-                                <div>물리치료학과</div>
-                                <div>42.7 KB</div>
-                                <div class="file-actions">
-                                    <button class="download-btn">다운로드</button>
-                                    <button class="delete-btn">삭제</button>
-                                </div>
-                            </div>
-
-                            <div class="file-row">
-                                <div style="width: 60px;">2</div>
-                                <div class="file-name">
-                                    <span class="file-icon success">📚</span>
-                                    11장.txt
-                                </div>
-                                <div>물리치료학과</div>
-                                <div>42.7 KB</div>
-                                <div class="file-actions">
-                                    <button class="download-btn">다운로드</button>
-                                    <button class="delete-btn">삭제</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 하단 설명 -->
-                    <div class="rag-info">
-                        <p>
-                            <strong>💡 RAG 시스템:</strong> 문제 데이터와 교육 자료를 함께 업로드하여 AI가 더 정확하고 풍부한 해설을 생성할 수 있도록 지원합니다.
+                    <div
+                        style="margin-top: 2rem; padding: 1rem; background-color: #f3f4f6; border-radius: 8px; text-align: center;">
+                        <p style="font-size: 0.875rem; color: #374151; margin: 0;">
+                            <strong>핵심:</strong> 학과별 기출문제 패턴 학습 + 프롬프트 최적화 → 기존 기출문제와 유사한 새로운 문제 생성
                         </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 10. CTA -->
+        <!-- 9. RAG 기반 해설 품질 향상 프로세스 -->
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">RAG 기반 해설 품질 향상 프로세스</h2>
+                <div class="section-description">
+                    교육 자료를 RAG 시스템에 업로드하여 LLM이 정확하고 품질 높은 해설을 생성하는 5단계 시스템입니다.
+                </div>
+
+                <div class="user-types-grid"
+                    style="grid-template-columns: repeat(3, 1fr); max-width: 1000px; margin: 0 auto;">
+                    <div class="user-type-card">
+                        <div class="user-type-icon admin-icon">
+                            <span style="font-size: 1.5rem;">1</span>
+                        </div>
+                        <h3>교육 자료 업로드</h3>
+                        <p>표준 교재, 참고서, 강의 노트 등 신뢰할 수 있는 교육 자료를 RAG 데이터베이스에 업로드합니다.</p>
+                        <ul class="feature-list">
+                            <li>텍스트 파일, PDF, Word 문서 지원</li>
+                            <li>다양한 형태의 교육 자료 처리</li>
+                            <li>자동 문서 분석 및 분류</li>
+                        </ul>
+                    </div>
+
+                    <div class="user-type-card">
+                        <div class="user-type-icon professor-icon">
+                            <span style="font-size: 1.5rem;">2</span>
+                        </div>
+                        <h3>벡터 데이터베이스 구축</h3>
+                        <p>업로드된 교육 자료를 벡터화하여 RAG 시스템에 저장하고 의미론적 검색이 가능하도록 최적화합니다.</p>
+                        <ul class="feature-list">
+                            <li>고차원 벡터 임베딩 생성</li>
+                            <li>의미론적 유사도 기반 인덱싱</li>
+                            <li>실시간 검색 최적화</li>
+                        </ul>
+                    </div>
+
+                    <div class="user-type-card">
+                        <div class="user-type-icon student-icon">
+                            <span style="font-size: 1.5rem;">3</span>
+                        </div>
+                        <h3>컨텍스트 기반 해설 생성</h3>
+                        <p>문제가 주어지면 RAG 시스템이 관련 교육 자료를 검색하고, 이를 컨텍스트로 활용하여 정확한 해설을 생성합니다.</p>
+                        <ul class="feature-list">
+                            <li>관련 자료 실시간 검색</li>
+                            <li>컨텍스트 기반 해설 생성</li>
+                            <li>교육적으로 유용한 설명 제공</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- RAG 프로세스 시각화 -->
+                <div
+                    style="margin-top: 3rem; background-color: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+                    <h4 style="text-align: center; margin-bottom: 2rem; color: #374151; font-size: 1.25rem;">RAG 기반 해설
+                        생성 5단계 프로세스</h4>
+                    <div
+                        style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                        <div style="text-align: center; flex: 1; min-width: 120px;">
+                            <div
+                                style="width: 60px; height: 60px; background-color: #dbeafe; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem auto; color: #1d4ed8;">
+                                <span style="font-weight: bold;">1</span>
+                            </div>
+                            <p style="font-size: 0.875rem; font-weight: 600;">교육자료<br>업로드</p>
+                        </div>
+                        <div style="color: #9ca3af; font-size: 1.5rem;">→</div>
+                        <div style="text-align: center; flex: 1; min-width: 120px;">
+                            <div
+                                style="width: 60px; height: 60px; background-color: #fef3c7; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem auto; color: #d97706;">
+                                <span style="font-weight: bold;">2</span>
+                            </div>
+                            <p style="font-size: 0.875rem; font-weight: 600;">벡터DB<br>구축</p>
+                        </div>
+                        <div style="color: #9ca3af; font-size: 1.5rem;">→</div>
+                        <div style="text-align: center; flex: 1; min-width: 120px;">
+                            <div
+                                style="width: 60px; height: 60px; background-color: #d1fae5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem auto; color: #059669;">
+                                <span style="font-weight: bold;">3</span>
+                            </div>
+                            <p style="font-size: 0.875rem; font-weight: 600;">AI 해설<br>생성</p>
+                        </div>
+                        <div style="color: #9ca3af; font-size: 1.5rem;">→</div>
+                        <div style="text-align: center; flex: 1; min-width: 120px;">
+                            <div
+                                style="width: 60px; height: 60px; background-color: #e0e7ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem auto; color: #4f46e5;">
+                                <span style="font-weight: bold;">4</span>
+                            </div>
+                            <p style="font-size: 0.875rem; font-weight: 600;">교수님<br>검토/수정</p>
+                        </div>
+                        <div style="color: #9ca3af; font-size: 1.5rem;">→</div>
+                        <div style="text-align: center; flex: 1; min-width: 120px;">
+                            <div
+                                style="width: 60px; height: 60px; background-color: #f3e8ff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem auto; color: #7c3aed;">
+                                <span style="font-weight: bold;">5</span>
+                            </div>
+                            <p style="font-size: 0.875rem; font-weight: 600;">지속적<br>품질개선</p>
+                        </div>
+                    </div>
+                    <div
+                        style="margin-top: 2rem; padding: 1rem; background-color: #f3f4f6; border-radius: 8px; text-align: center;">
+                        <p style="font-size: 0.875rem; color: #374151; margin: 0;">
+                            <strong>핵심:</strong> 더 많은 교육 자료 업로드 + 교수님 검토 → AI 해설 품질 지속적 향상
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. 실제 화면 예시 슬라이더 -->
+        <section class="features" style="background-color: #f9fafb;">
+            <div class="container">
+                <h2 class="section-title">실제 화면 미리보기</h2>
+                <div class="section-description">
+                    AI Tutor의 핵심 기능들을 실제 화면으로 확인해보세요. 각 탭을 클릭하여 다른 화면을 살펴볼 수 있습니다.
+                </div>
+
+                <!-- 슬라이더 컨테이너 -->
+                <div
+                    style="max-width: 1200px; margin: 0 auto; background-color: white; border-radius: 12px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); overflow: hidden;">
+                    <!-- 탭 네비게이션 -->
+                    <div style="display: flex; background-color: #f8fafc; border-bottom: 2px solid #e5e7eb;">
+                        <button class="screen-tab active" data-screen="dashboard"
+                            style="flex: 1; padding: 1rem 1.5rem; border: none; background: #4f46e5; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                            📊 학생 대시보드
+                        </button>
+                        <button class="screen-tab" data-screen="chat"
+                            style="flex: 1; padding: 1rem 1.5rem; border: none; background: #f8fafc; color: #6b7280; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                            💬 AI 튜터 채팅
+                        </button>
+                        <button class="screen-tab" data-screen="professor"
+                            style="flex: 1; padding: 1rem 1.5rem; border: none; background: #f8fafc; color: #6b7280; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                            👨‍🏫 교수자 관리
+                        </button>
+                        <button class="screen-tab" data-screen="rag"
+                            style="flex: 1; padding: 1rem 1.5rem; border: none; background: #f8fafc; color: #6b7280; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                            📚 RAG 시스템
+                        </button>
+                    </div>
+
+                    <!-- 화면 컨텐츠 -->
+                    <div id="screen-container" style="min-height: 600px; position: relative; overflow: hidden;">
+
+                        <!-- 1. 학생 대시보드 -->
+                        <div id="screen-dashboard" class="screen-content active" style="padding: 2rem; display: block;">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                                <div>
+                                    <h3
+                                        style="font-size: 1.5rem; font-weight: 700; color: #374151; margin-bottom: 0.5rem;">
+                                        학생 맞춤 학습 대시보드</h3>
+                                    <p style="color: #6b7280; margin: 0;">AI가 분석한 개인별 학습 현황과 맞춤 추천을 확인하세요</p>
+                                </div>
+                            </div>
+
+                            <div class="new-dashboard-preview"
+                                style="background-color: #f3f4f6; border-radius: 8px; padding: 24px;">
+                                <!-- 첫 번째 행: 사용자 정보와 종합 레벨 -->
+                                <div class="dashboard-grid two-col">
+                                    <div class="new-dashboard-card user-info">
+                                        <h2>BCTONE님, 안녕하세요!</h2>
+                                        <p>작업치료학과 2학년</p>
+                                    </div>
+                                    <div class="new-dashboard-card level-display">
+                                        <div class="level-text">
+                                            <h3>종합 레벨: 하</h3>
+                                        </div>
+                                        <button class="continue-learning-btn">
+                                            오늘의 학습 계속하기
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- 두 번째 행: 유형별 학습 현황과 집중 학습 추천 -->
+                                <div class="dashboard-grid two-col">
+                                    <div class="new-dashboard-card progress-section">
+                                        <div class="new-card-header">유형별 학습 현황</div>
+                                        <div class="progress-item">
+                                            <div class="progress-header">
+                                                <span>심혈관계, 면역계</span>
+                                                <span>하</span>
+                                            </div>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill red" style="width: 10%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="progress-item">
+                                            <div class="progress-header">
+                                                <span>호흡계, 음성, 말하기 관련 기관</span>
+                                                <span>하</span>
+                                            </div>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill red" style="width: 20%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="progress-item">
+                                            <div class="progress-header">
+                                                <span>신경계</span>
+                                                <span>중</span>
+                                            </div>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill yellow" style="width: 50%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="progress-item">
+                                            <div class="progress-header">
+                                                <span>피부, 눈, 귀 등 감각계</span>
+                                                <span>상</span>
+                                            </div>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill green" style="width: 70%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="new-dashboard-card">
+                                        <div class="new-card-header">집중 학습 추천</div>
+                                        <div class="recommendation-item">심혈관계, 면역계</div>
+                                        <div class="recommendation-item">호흡계, 음성, 말하기 관련 기관</div>
+                                        <div class="recommendation-item">소화계, 삼킴관련 기관</div>
+                                        <div class="recommendation-item">인체의 체계</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. AI 튜터 채팅 -->
+                        <div id="screen-chat" class="screen-content" style="padding: 2rem; display: none;">
+                            <div style="margin-bottom: 2rem;">
+                                <h3 style="font-size: 1.5rem; font-weight: 700; color: #374151; margin-bottom: 0.5rem;">
+                                    AI 튜터 대화형 학습</h3>
+                                <p style="color: #6b7280; margin: 0;">AI 튜터와 자연스러운 대화를 통해 문제를 풀고 맞춤형 해설을 받아보세요</p>
+                            </div>
+
+                            <div class="chat-preview">
+                                <div class="chat-header">
+                                    <div>AI Tutor - 학습 대화</div>
+                                </div>
+
+                                <div class="chat-content">
+                                    <div class="chat-message ai">
+                                        <div class="chat-sender" style="color: #4f46e5;">AI 튜터</div>
+                                        <div class="chat-text">
+                                            안녕하세요! 저는 여러분의 AI 튜터입니다. 😊<br><br>
+                                            지금부터 기출문제를 함께 풀어보며 학습할 거예요. 각 문항에 대해 정답을 채팅창에 입력하시면, 해설과 함께 피드백을 드릴게요.
+                                        </div>
+                                    </div>
+
+                                    <div class="chat-message ai">
+                                        <div class="chat-sender" style="color: #4f46e5;">AI 튜터</div>
+                                        <div class="chat-text">
+                                            <p><strong>문제 1:</strong> 다음 중 중추신경계에 포함되지 않는 것은?</p>
+
+                                            <div style="margin-top: 8px;">
+                                                <div style="margin-bottom: 4px;">① 대뇌</div>
+                                                <div style="margin-bottom: 4px;">② 소뇌</div>
+                                                <div style="margin-bottom: 4px;">③ 척수신경</div>
+                                                <div style="margin-bottom: 4px;">④ 뇌간</div>
+                                                <div style="margin-bottom: 4px;">⑤ 척수</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="chat-message user">
+                                        <div class="chat-sender">나</div>
+                                        <div class="chat-text">3</div>
+                                    </div>
+
+                                    <div class="chat-message ai">
+                                        <div class="chat-sender" style="color: #4f46e5;">AI 튜터</div>
+                                        <div class="chat-text">
+                                            <p>정답입니다! ③ 척수신경은 중추신경계에 포함되지 않습니다.</p>
+                                            <p><strong>해설:</strong> 중추신경계(CNS)는 뇌와 척수로 구성됩니다. 대뇌, 소뇌, 뇌간은 모두 뇌의 일부이며,
+                                                척수와 함께 중추신경계를 형성합니다. 반면, 척수신경은 말초신경계(PNS)에 속합니다.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="chat-input">
+                                    <input type="text" placeholder="정답 번호 또는 추가 질문을 입력하세요..." />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. 교수자 관리 -->
+                        <div id="screen-professor" class="screen-content" style="padding: 2rem; display: none;">
+                            <div style="margin-bottom: 2rem;">
+                                <h3 style="font-size: 1.5rem; font-weight: 700; color: #374151; margin-bottom: 0.5rem;">
+                                    교수자 해설 품질 관리</h3>
+                                <p style="color: #6b7280; margin: 0;">AI가 생성한 해설을 검토하고 개선하여 학습 품질을 높이는 시스템입니다</p>
+                            </div>
+
+                            <div
+                                style="background-color: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); overflow: hidden;">
+                                <!-- Header -->
+                                <div
+                                    style="background-color: #3f51b5; color: white; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+                                    <div style="font-size: 1.125rem; font-weight: 700;">AI Tutor - 교수자 모드</div>
+                                    <nav style="display: flex; align-items: center; gap: 1rem;">
+                                        <div style="display: flex; gap: 0.75rem; font-size: 0.75rem;">
+                                            <span>전체 현황</span>
+                                            <span
+                                                style="background-color: rgba(255,255,255,0.2); padding: 0.25rem 0.5rem; border-radius: 4px;">정답/해설</span>
+                                            <span>개인별 분석</span>
+                                        </div>
+                                        <button
+                                            style="background-color: #ef4444; padding: 0.5rem 1rem; border-radius: 4px; border: none; color: white; font-size: 0.75rem; cursor: pointer;">
+                                            로그아웃
+                                        </button>
+                                    </nav>
+                                </div>
+
+                                <!-- Content -->
+                                <div style="padding: 1.5rem;">
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                                        <h4 style="font-size: 1.25rem; font-weight: 700; color: #374151; margin: 0;">문제
+                                            관리</h4>
+                                        <div style="position: relative; width: 250px;">
+                                            <input
+                                                style="width: 100%; padding: 0.5rem 0.75rem 0.5rem 2rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.75rem;"
+                                                type="text" placeholder="과목 또는 문제 검색..." value="인대는?">
+                                        </div>
+                                    </div>
+
+                                    <!-- Table -->
+                                    <div style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                                        <!-- Table Header -->
+                                        <div
+                                            style="display: grid; grid-template-columns: 1fr 1fr 60px 1fr 1fr 60px; background-color: #f9fafb; padding: 0.75rem; border-bottom: 1px solid #e5e7eb; font-size: 0.65rem; font-weight: 600; color: #6b7280; text-transform: uppercase;">
+                                            <div>과목</div>
+                                            <div>주제</div>
+                                            <div>난이도</div>
+                                            <div>문제</div>
+                                            <div>해설</div>
+                                            <div>관리</div>
+                                        </div>
+
+                                        <!-- Table Row -->
+                                        <div
+                                            style="display: grid; grid-template-columns: 1fr 1fr 60px 1fr 1fr 60px; padding: 0.75rem; border-bottom: 1px solid #f3f4f6; font-size: 0.75rem; align-items: start;">
+                                            <div style="color: #374151;">물리치료학기초_해부생리학</div>
+                                            <div style="color: #374151;">관절계통</div>
+                                            <div style="color: #374151;">상</div>
+                                            <div style="color: #374151; line-height: 1.3;">
+                                                엉덩관절의 관절주머니 뒤쪽을 보강하고 있는 나선형의 인대는?
+                                            </div>
+                                            <div style="color: #6b7280; font-style: italic;">해설 미작성</div>
+                                            <div>
+                                                <button
+                                                    style="background-color: #2563eb; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; border: none; font-size: 0.65rem; cursor: pointer;">
+                                                    수정
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 하단 설명 -->
+                                    <div
+                                        style="margin-top: 1rem; padding: 0.75rem; background-color: #f0f9ff; border-radius: 6px; border-left: 3px solid #0ea5e9;">
+                                        <p style="font-size: 0.75rem; color: #0c4a6e; margin: 0;">
+                                            <strong>💡 품질 관리:</strong> AI 해설을 검토하고 수정하여 더 나은 학습 경험을 제공합니다.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. RAG 시스템 -->
+                        <div id="screen-rag" class="screen-content" style="padding: 2rem; display: none;">
+                            <div style="margin-bottom: 2rem;">
+                                <h3 style="font-size: 1.5rem; font-weight: 700; color: #374151; margin-bottom: 0.5rem;">
+                                    RAG 지식베이스 관리</h3>
+                                <p style="color: #6b7280; margin: 0;">문제 데이터와 교육 자료를 업로드하여 AI 해설 품질을 향상시키세요</p>
+                            </div>
+
+                            <div
+                                style="background-color: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); overflow: hidden;">
+                                <!-- Breadcrumb -->
+                                <div
+                                    style="background-color: #f8f9fa; padding: 0.75rem 1.5rem; border-bottom: 1px solid #e9ecef; font-size: 0.75rem; color: #6c757d;">
+                                    홈 > 지식베이스 관리 > RAG 데이터 업로드
+                                </div>
+
+                                <!-- Header -->
+                                <div style="padding: 1.5rem 1.5rem 0 1.5rem;">
+                                    <h4
+                                        style="font-size: 1.25rem; font-weight: 700; color: #374151; margin-bottom: 1.5rem;">
+                                        RAG 지식베이스 통합 관리</h4>
+
+                                    <!-- Tabs -->
+                                    <div style="border-bottom: 1px solid #d1d5db; margin-bottom: 1.5rem;">
+                                        <div style="display: flex; gap: 0.5rem;">
+                                            <div id="rag-tab-problems" class="rag-tab active"
+                                                style="display: inline-block; padding: 0.75rem 1rem; font-weight: 600; color: #4f46e5; border-bottom: 2px solid #4f46e5; font-size: 0.75rem; background-color: #f8fafc; cursor: pointer;">
+                                                문제 업로드
+                                            </div>
+                                            <div id="rag-tab-reference" class="rag-tab"
+                                                style="display: inline-block; padding: 0.75rem 1rem; font-weight: 600; color: #6b7280; font-size: 0.75rem; cursor: pointer;">
+                                                참고 데이터 업로드
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Content -->
+                                <div style="padding: 0 1.5rem 1.5rem 1.5rem;">
+                                    <!-- 문제 업로드 탭 내용 -->
+                                    <div id="rag-content-problems" class="rag-content active" style="display: block;">
+                                        <!-- Upload Box -->
+                                        <div
+                                            style="border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px; padding: 2rem 1rem; text-align: center; margin-bottom: 1.5rem;">
+                                            <div
+                                                style="width: 32px; height: 32px; margin: 0 auto 0.75rem auto; display: flex; align-items: center; justify-content: center; border: 2px solid #9ca3af; color: #9ca3af; border-radius: 6px;">
+                                                <svg width="16" height="16" fill="none" stroke="currentColor"
+                                                    stroke-width="2">
+                                                    <path d="M12 19V6M5 12l7-7 7 7" />
+                                                </svg>
+                                            </div>
+                                            <p style="font-size: 0.875rem; color: #374151; margin-bottom: 0.5rem;">문제
+                                                파일을 업로드하세요</p>
+                                            <p style="font-size: 0.75rem; color: #6b7280; margin-bottom: 1rem;">Excel,
+                                                CSV, Word 파일 지원</p>
+                                            <button
+                                                style="background-color: #4f46e5; color: white; padding: 0.5rem 1rem; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; font-size: 0.75rem;">
+                                                파일 선택
+                                            </button>
+                                        </div>
+
+                                        <!-- File List -->
+                                        <div style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                                            <!-- Header -->
+                                            <div
+                                                style="display: flex; padding: 0.75rem 1rem; background-color: #f9fafb; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #374151; font-size: 0.75rem;">
+                                                <div style="flex: 2;">파일명</div>
+                                                <div style="flex: 1;">학과</div>
+                                                <div style="flex: 1;">크기</div>
+                                                <div style="width: 80px; text-align: center;">작업</div>
+                                            </div>
+
+                                            <!-- File Row -->
+                                            <div
+                                                style="display: flex; padding: 0.75rem 1rem; border-bottom: 1px solid #f3f4f6; align-items: center; font-size: 0.75rem;">
+                                                <div style="flex: 2; display: flex; align-items: center; gap: 0.5rem;">
+                                                    <span
+                                                        style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; background: #4f46e5; color: #fff; border-radius: 3px; font-size: 10px;">📄</span>
+                                                    해부학_문제_01.docx
+                                                </div>
+                                                <div style="flex: 1; color: #6b7280;">작업치료학과</div>
+                                                <div style="flex: 1; color: #6b7280;">2.4MB</div>
+                                                <div style="width: 80px; display: flex; justify-content: center;">
+                                                    <button
+                                                        style="color: #dc2626; border: 1px solid #dc2626; padding: 0.25rem 0.5rem; border-radius: 3px; font-size: 0.65rem; background: white; cursor: pointer;">삭제</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 참고 데이터 업로드 탭 내용 -->
+                                    <div id="rag-content-reference" class="rag-content" style="display: none;">
+                                        <!-- 학과 선택 -->
+                                        <div style="margin-bottom: 1.5rem;">
+                                            <label
+                                                style="display: block; color: #374151; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.5rem;">학과
+                                                선택</label>
+                                            <select
+                                                style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.75rem; background-color: white;">
+                                                <option value="">학과를 선택하세요</option>
+                                                <option value="물리치료학과">물리치료학과</option>
+                                                <option value="작업치료학과">작업치료학과</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Upload Box -->
+                                        <div
+                                            style="border: 2px dashed #d1d5db; background-color: #f9fafb; border-radius: 8px; padding: 2rem 1rem; text-align: center; margin-bottom: 1.5rem;">
+                                            <div
+                                                style="width: 32px; height: 32px; margin: 0 auto 0.75rem auto; display: flex; align-items: center; justify-content: center; border: 2px solid #9ca3af; color: #9ca3af; border-radius: 6px;">
+                                                <svg width="16" height="16" fill="none" stroke="currentColor"
+                                                    stroke-width="2">
+                                                    <path d="M12 19V6M5 12l7-7 7 7" />
+                                                </svg>
+                                            </div>
+                                            <p style="font-size: 0.875rem; color: #374151; margin-bottom: 0.5rem;">교육
+                                                자료를 업로드하세요</p>
+                                            <p style="font-size: 0.75rem; color: #6b7280; margin-bottom: 1rem;">PDF, TXT
+                                                파일 지원</p>
+                                            <button
+                                                style="background-color: #10b981; color: white; padding: 0.5rem 1rem; border-radius: 6px; border: none; font-weight: 600; cursor: pointer; font-size: 0.75rem;">
+                                                파일 선택
+                                            </button>
+                                        </div>
+
+                                        <!-- Reference File List -->
+                                        <div style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden;">
+                                            <!-- Header -->
+                                            <div
+                                                style="display: flex; padding: 0.75rem 1rem; background-color: #f9fafb; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #374151; font-size: 0.75rem;">
+                                                <div style="width: 40px;">ID</div>
+                                                <div style="flex: 2;">파일명</div>
+                                                <div style="flex: 1;">학과</div>
+                                                <div style="flex: 1;">크기</div>
+                                                <div style="width: 120px; text-align: center;">작업</div>
+                                            </div>
+
+                                            <!-- Reference File Rows -->
+                                            <div
+                                                style="display: flex; padding: 0.75rem 1rem; border-bottom: 1px solid #f3f4f6; align-items: center; font-size: 0.75rem;">
+                                                <div style="width: 40px; color: #6b7280;">1</div>
+                                                <div style="flex: 2; display: flex; align-items: center; gap: 0.5rem;">
+                                                    <span
+                                                        style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; background: #10b981; color: #fff; border-radius: 3px; font-size: 10px;">📚</span>
+                                                    6장.txt
+                                                </div>
+                                                <div style="flex: 1; color: #6b7280;">물리치료학과</div>
+                                                <div style="flex: 1; color: #6b7280;">42.7 KB</div>
+                                                <div
+                                                    style="width: 120px; display: flex; justify-content: center; gap: 0.25rem;">
+                                                    <button
+                                                        style="color: #2563eb; border: 1px solid #2563eb; padding: 0.25rem 0.5rem; border-radius: 3px; font-size: 0.65rem; background: white; cursor: pointer;">다운로드</button>
+                                                    <button
+                                                        style="color: #dc2626; border: 1px solid #dc2626; padding: 0.25rem 0.5rem; border-radius: 3px; font-size: 0.65rem; background: white; cursor: pointer;">삭제</button>
+                                                </div>
+                                            </div>
+
+                                            <div
+                                                style="display: flex; padding: 0.75rem 1rem; border-bottom: 1px solid #f3f4f6; align-items: center; font-size: 0.75rem;">
+                                                <div style="width: 40px; color: #6b7280;">2</div>
+                                                <div style="flex: 2; display: flex; align-items: center; gap: 0.5rem;">
+                                                    <span
+                                                        style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; background: #10b981; color: #fff; border-radius: 3px; font-size: 10px;">📚</span>
+                                                    11장.txt
+                                                </div>
+                                                <div style="flex: 1; color: #6b7280;">물리치료학과</div>
+                                                <div style="flex: 1; color: #6b7280;">42.7 KB</div>
+                                                <div
+                                                    style="width: 120px; display: flex; justify-content: center; gap: 0.25rem;">
+                                                    <button
+                                                        style="color: #2563eb; border: 1px solid #2563eb; padding: 0.25rem 0.5rem; border-radius: 3px; font-size: 0.65rem; background: white; cursor: pointer;">다운로드</button>
+                                                    <button
+                                                        style="color: #dc2626; border: 1px solid #dc2626; padding: 0.25rem 0.5rem; border-radius: 3px; font-size: 0.65rem; background: white; cursor: pointer;">삭제</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 하단 설명 -->
+                                    <div
+                                        style="margin-top: 1rem; padding: 0.75rem; background-color: #f0f9ff; border-radius: 6px;">
+                                        <p style="font-size: 0.75rem; color: #0c4a6e; margin: 0; text-align: center;">
+                                            <strong>💡 RAG 시스템:</strong> 문제와 교육 자료를 함께 업로드하여 AI 해설 품질을 향상시킵니다.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 14. CTA -->
         <section class="cta">
             <div class="container">
                 <h2>지금 바로 AI Tutor를 경험해보세요</h2>
@@ -2076,7 +2221,7 @@
         <div class="container">
             <div class="footer-content">
                 <div>
-                    <div class="logo footer-logo">
+                    <div class="logo" style="color: white; margin-bottom: 0.5rem;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
@@ -2090,7 +2235,7 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+
 </body>
 
 </html>
