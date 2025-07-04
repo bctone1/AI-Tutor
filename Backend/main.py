@@ -22,7 +22,7 @@ async def lifespan(app: FastAPI):
         scheduler.add_job(
             job_wrapper,
             trigger='cron',
-            day_of_week='fri',
+            day_of_week='sat',
             hour=2,
             minute=0,
             timezone='Asia/Seoul'
