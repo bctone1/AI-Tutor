@@ -36,6 +36,7 @@ class UserCaseScore(Base):
     accuracy = Column(Float, default=0.0)
     level = Column(String(50), default="하")
     last_updated = Column(Date, default=func.now(), onupdate=func.now())
+    round = Column(Integer)
 
     user = relationship("User", back_populates="case_scores")
 
