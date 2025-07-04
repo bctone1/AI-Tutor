@@ -13,7 +13,7 @@ from database.session import get_db
 from fastapi import Depends
 from schema.exam import *
 import json
-from fastapi import Form
+from fastapi import Form, Request
 exam_router = APIRouter()
 
 
@@ -185,10 +185,16 @@ async def get_test_endpoint(request : GetTestQuestionRequest, db: Session = Depe
     return formatted_questions
 
 @exam_router.post('/submitTest')
-async def submit_test_endpoint(request: SubmitTestRequest, db: Session = Depends(get_db)):
-    answers = request.answers
-    user_id = request.userdata.user.id
-    rounds = request.Round
+async def submit_test_endpoint(request: Request, db: Session = Depends(get_db)):
+    try:
+        data = await request.json()
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid JSON format")
+    answers = data.get("answers")
+    userdata = data.get("userdata", {})
+    user = userdata.get("user", {})
+    user_id = user.get("id")
+    rounds = data.get("Round")
 
     print(f"ROUND : {rounds}")
 
