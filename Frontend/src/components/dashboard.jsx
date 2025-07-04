@@ -9,11 +9,6 @@ const dashboard = ({ userdata, setView }) => {
     useEffect(() => {
 
         const getFeedbackList = async () => {
-            // setFeedbackList([
-            //     { date: '2025-05-01', feedback: '~~유형의 학습이 부족하니 집중적으로 학습이 요망됩니다.', professor: 'A교수' },
-            //     { date: '2025-06-01', feedback: '저번달 대비 ~~유형의 학습이 부족함으로 학습이 필요합니다.', professor: 'B교수' }
-            // ]);
-            // return;
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getFeedbackList`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

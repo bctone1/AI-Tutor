@@ -8,12 +8,9 @@ const Active = ({ userdata }) => {
     const [input, setInput] = useState('');
     const [currentID, setCurrentID] = useState('');
     const [active, setActive] = useState(true);
-    // const [status, setStatus] = useState(false);
     let status = false;
-
     const messageEndRef = useRef(null);
     const [solvedProblemIds, setSolvedProblemIds] = useState([]);
-
 
     const scrollToBottom = () => {
         messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -421,9 +418,9 @@ const Active = ({ userdata }) => {
 
                         <button
                             onClick={handleFetchAIQuestion}
-                            className="px-3 py-2 text-sm rounded-md bg-indigo-100 text-indigo-800 hover:bg-indigo-200 shadow text-center"
+                            className="px-3 py-2 text-sm rounded-md bg-green-100 text-green-800 hover:bg-green-200 shadow text-center"
                         >
-                            AI기출문제
+                            AI생성문제
                         </button>
                     </div>
 
