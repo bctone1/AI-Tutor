@@ -17,7 +17,7 @@ from fastapi import Form
 exam_router = APIRouter()
 
 
-@exam_router.post("/uploadquestion")
+@exam_router.post("/Debug")
 async def upload_file(file: UploadFile = File(...), userData: str = Form(...), db: Session = Depends(get_db)):
     file_location = os.path.join(EXAM_DATA, file.filename)
     unique_file_location, unique_name = get_unique_filename(file_location)
@@ -183,12 +183,12 @@ async def get_test_endpoint(request : GetTestQuestionRequest, db: Session = Depe
         for i, choice in enumerate(choices, start=1):
             print(f"   {i}) {choice}")
     return formatted_questions
-'''
+
 @exam_router.post('/submitTest')
 async def submit_test_endpoint(request: SubmitTestRequest, db: Session = Depends(get_db)):
     answers = request.answers
     user_id = request.userdata.user.id
-    rounds = request.round
+    rounds = request.Round
 
     print(f"ROUND : {rounds}")
 
@@ -224,7 +224,7 @@ async def submit_test_endpoint(request: SubmitTestRequest, db: Session = Depends
         "norm_score" : normalized_score,
         "case_results": case_results
     }
-'''
+
 @exam_router.post('/getUserCaseProgress')
 async def get_user_case_progress_endpoint(request: dict, db: Session = Depends(get_db)):
     try:
