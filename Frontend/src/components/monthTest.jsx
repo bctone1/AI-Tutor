@@ -653,7 +653,7 @@ const MonthTest = ({ setView, userdata, setRound }) => {
                             )}
                         </div>
 
-                    ) : getMonthStatus(selectedMonth) === 'current' ? (
+                    ) : getMonthStatus(selectedMonth) === 'doneCurrent' ? (
                         <div className="bg-gradient-to-br from-blue-100 to-white shadow-xl rounded-2xl p-10 md:w-1/2 w-full text-center border border-blue-200">
                             <p className="mb-6 text-gray-700 text-xl font-semibold">
                                 아직 결과가 없습니다.

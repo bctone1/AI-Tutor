@@ -10,10 +10,11 @@ const LevelTest = ({ setView, userdata, Round }) => {
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [answers, setAnswers] = useState({});
 
-    const [remainingTime, setRemainingTime] = useState(1800);
+    const [remainingTime, setRemainingTime] = useState(15);
     const fiveMinuteWarnedRef = useRef(false);
     const submittedRef = useRef(false);
     // console.log(userdata);
+    // console.log(Round);
 
 
     useEffect(() => {
@@ -25,19 +26,19 @@ const LevelTest = ({ setView, userdata, Round }) => {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ answers, userdata, round: Round }),
+                    body: JSON.stringify({ answers, userdata, Round }),
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    // 스코어 업데이트 후 세션 초기화
+                    console.log(data);
                     await signIn("credentials3", {
                         redirect: false,
                         email: userdata.user.email,
                         testscore: data.score
                     });
-
+                    setView("monthtest");
                     // console.log("답변 및 userdata:", answers, userdata);
                     // setTimeout(() => {
                     //     setView("dashboard");
@@ -157,7 +158,7 @@ const LevelTest = ({ setView, userdata, Round }) => {
                             email: userdata.user.email,
                             testscore: data.score
                         });
-                        setView("profile");
+                        setView("monthtest");
 
                     } else {
                         console.error("제출 실패:", data);
