@@ -17,7 +17,7 @@ from fastapi import Form
 exam_router = APIRouter()
 
 
-@exam_router.post("/Debug")
+@exam_router.post("/uploadquestion")
 async def upload_file(file: UploadFile = File(...), userData: str = Form(...), db: Session = Depends(get_db)):
     file_location = os.path.join(EXAM_DATA, file.filename)
     unique_file_location, unique_name = get_unique_filename(file_location)
