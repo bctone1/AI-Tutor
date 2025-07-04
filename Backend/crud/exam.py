@@ -207,7 +207,7 @@ def classify_level_by_case(case_result: Dict) -> str:
     else:  # 50% 미만
         return "하"
 
-def save_user_case_scores(db: Session, user_id: int, case_results: Dict[str, Dict]):
+def save_user_case_scores(db: Session, user_id: int, case_results: Dict[str, Dict], rounds : int):
     for case, result in case_results.items():
         level = classify_level_by_case(result)
         new_case_score = UserCaseScore(
@@ -218,7 +218,8 @@ def save_user_case_scores(db: Session, user_id: int, case_results: Dict[str, Dic
             total_score=result['total_score'],
             accuracy=result['accuracy'],
             level=level,
-            last_updated=datetime.utcnow()
+            last_updated=datetime.utcnow(),
+            round = rounds
         )
         db.add(new_case_score)
     
@@ -237,7 +238,8 @@ def get_user_case_progress(db: Session, user_id: int) -> List[Dict]:
             'total_score': score.total_score,
             'accuracy': score.accuracy,
             'level': score.level,
-            'last_updated': score.last_updated.isoformat() if score.last_updated else None
+            'last_updated': score.last_updated.isoformat() if score.last_updated else None,
+            'round' : score.round
         })
 
     return progress_list

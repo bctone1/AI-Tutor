@@ -80,7 +80,7 @@ async def upload_file(file: UploadFile = File(...), userData: str = Form(...), d
             try:
                 qnum = int(number)
             except ValueError:
-                qnum = number  # 'A1', '1-a' 같은 경우
+                qnum = number
             update_knowledgebase(db=db, exam_id=exam_data.id, question_number=qnum, question=content)
 
         return exam_data
@@ -183,11 +183,14 @@ async def get_test_endpoint(request : GetTestQuestionRequest, db: Session = Depe
         for i, choice in enumerate(choices, start=1):
             print(f"   {i}) {choice}")
     return formatted_questions
-
+'''
 @exam_router.post('/submitTest')
 async def submit_test_endpoint(request: SubmitTestRequest, db: Session = Depends(get_db)):
     answers = request.answers
     user_id = request.userdata.user.id
+    rounds = request.round
+
+    print(f"ROUND : {rounds}")
 
     print("\n===== 사용자가 제출한 답안 =====")
     for qid, ans in answers.items():
@@ -202,7 +205,7 @@ async def submit_test_endpoint(request: SubmitTestRequest, db: Session = Depends
     total_score_by_case, num_cases_by_case, case_results = grading_test_by_case(db, answers)
     
     # 유형별 점수 저장
-    save_user_case_scores(db, user_id, case_results)
+    save_user_case_scores(db, user_id, case_results, rounds)
 
     print(f"LEVEL : {level} | SCORE : {score} | NORMALIZED_SCORE : {normalized_score}")
     print(f"유형별 결과: {case_results}")
@@ -221,7 +224,7 @@ async def submit_test_endpoint(request: SubmitTestRequest, db: Session = Depends
         "norm_score" : normalized_score,
         "case_results": case_results
     }
-
+'''
 @exam_router.post('/getUserCaseProgress')
 async def get_user_case_progress_endpoint(request: dict, db: Session = Depends(get_db)):
     try:

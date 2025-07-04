@@ -14,7 +14,7 @@ import smtplib
 
 user_router = APIRouter()
 
-@user_router.post("/Debug")
+@user_router.post("/submitTest")
 async def debug_request(request: Request):
     headers = dict(request.headers)
 

@@ -14,6 +14,7 @@ class UserData(BaseModel):
 class SubmitTestRequest(BaseModel):
     answers: Dict[str, int]
     userdata: UserData
+    round : int
 
 
 class GetExplantationRequest(BaseModel):
