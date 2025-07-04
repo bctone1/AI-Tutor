@@ -147,7 +147,8 @@ const LevelTest = ({ setView, userdata, Round }) => {
                         headers: {
                             "Content-Type": "application/json",
                         },
-                        body: JSON.stringify({ answers: updatedAnswers, userdata }),
+                        body: JSON.stringify({ answers, userdata, Round }),
+                        // body: JSON.stringify({ answers: updatedAnswers, userdata, Round }),
                     });
                     const data = await response.json();
                     if (response.ok) {
