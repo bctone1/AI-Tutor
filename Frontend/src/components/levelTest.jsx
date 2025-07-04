@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 
 
-const LevelTest = ({ setView, userdata }) => {
+const LevelTest = ({ setView, userdata, Round }) => {
     const [testQuestions, setTestQuestions] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -25,7 +25,7 @@ const LevelTest = ({ setView, userdata }) => {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ answers, userdata }),
+                    body: JSON.stringify({ answers, userdata, round: Round }),
                 });
 
                 const data = await response.json();

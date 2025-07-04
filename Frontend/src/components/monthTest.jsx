@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-const MonthTest = ({ setView, userdata }) => {
+const MonthTest = ({ setView, userdata, setRound }) => {
 
     const [activeTab, setActiveTab] = useState(
         userdata?.user?.major === '작업치료학과' ? 'anatomy2' :
@@ -8,8 +8,8 @@ const MonthTest = ({ setView, userdata }) => {
     );
 
     const [caseProgress, setCaseProgress] = useState(null);
-    
-    
+
+
     useEffect(() => {
         const getMonthTestResult = async () => {
             try {
@@ -223,7 +223,7 @@ const MonthTest = ({ setView, userdata }) => {
                 return (
                     <div
                         className="text-center cursor-pointer"
-                        onClick={() => setView('leveltest')}
+                    // onClick={() => setView('leveltest')}
                     >
                         <div className="text-lg font-semibold text-blue-700 mb-2">
                             {months[monthId - 1].name}
@@ -274,9 +274,20 @@ const MonthTest = ({ setView, userdata }) => {
         ? caseProgress.filter(item => {
             if (!item.last_updated) return false;
             const itemMonth = new Date(item.last_updated).getMonth() + 1;
-            return itemMonth === selectedMonth;
+            return itemMonth === selectedMonth && item.round === 1;
         })
         : [];
+
+    const filteredMonthDataRound2 = caseProgress
+        ? caseProgress.filter(item => {
+            if (!item.last_updated) return false;
+            const itemMonth = new Date(item.last_updated).getMonth() + 1;
+            return itemMonth === selectedMonth && item.round === 2;
+        })
+        : [];
+
+
+
 
     return (
         <div className="min-h-screen bg-gray-50 py-8">
@@ -370,137 +381,303 @@ const MonthTest = ({ setView, userdata }) => {
                     ))}
                 </div>
 
+                <div className="flex justify-between gap-4 mt-6 mb-6">
 
+                    {filteredMonthData.length > 0 ? (
+                        <div className="bg-white shadow-md rounded-lg p-6 w-1/2">
+                            <h2 className="text-2xl font-semibold mb-6 text-gray-800">{selectedMonth}월 1회차 진단테스트 결과</h2>
+                            <div className="flex mb-4 gap-2">
+                                {userdata.user.major == "작업치료학과" ? (
+                                    <div>
+                                        <button
+                                            className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer mr-3 ${activeTab === 'anatomy2' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
+                                                }`}
+                                            onClick={() => handleTabClick('anatomy2')}
+                                        >
+                                            해부학 (9개 유형)
+                                        </button>
+                                        <button
+                                            className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer ${activeTab === 'anatomy3' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
+                                                }`}
+                                            onClick={() => handleTabClick('anatomy3')}
+                                        >
+                                            생리학 (7개 유형)
+                                        </button>
+                                    </div>
 
+                                ) : (
+                                    <button
+                                        className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer ${activeTab === 'anatomy' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
+                                            }`}
+                                        onClick={() => handleTabClick('anatomy')}
+                                    >
+                                        해부생리 (10개 유형)
+                                    </button>
 
-                <div className="bg-white shadow-md rounded-lg p-6 mt-6 mb-6">
-                    <h2 className="text-2xl font-semibold mb-6 text-gray-800">{selectedMonth}월 진단테스트 결과</h2>
-
-                    <div className="flex mb-4 gap-2">
-                        {userdata.user.major == "작업치료학과" ? (
-                            <div>
-                                <button
-                                    className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer mr-3 ${activeTab === 'anatomy2' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
-                                        }`}
-                                    onClick={() => handleTabClick('anatomy2')}
-                                >
-                                    해부학 (9개 유형)
-                                </button>
-                                <button
-                                    className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer ${activeTab === 'anatomy3' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
-                                        }`}
-                                    onClick={() => handleTabClick('anatomy3')}
-                                >
-                                    생리학 (7개 유형)
-                                </button>
+                                )}
                             </div>
 
-                        ) : (
-                            <button
-                                className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer ${activeTab === 'anatomy' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
-                                    }`}
-                                onClick={() => handleTabClick('anatomy')}
-                            >
-                                해부생리 (10개 유형)
-                            </button>
-
-                        )}
-
-                    </div>
-
-                    {activeTab === 'anatomy' && (
-                        <div>
-                            {filteredMonthData.length > 0 ? (
-                                filteredMonthData.map((item, index) => (
-                                    <LevelItem
-                                        key={index}
-                                        label={item.case}
-                                        score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
-                                        width={`${item.accuracy * 100}%`}
-                                        level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
+                            {activeTab === 'anatomy' && (
+                                <div>
+                                    {filteredMonthData.length > 0 && (
+                                        filteredMonthData.map((item, index) => (
+                                            <LevelItem
+                                                key={index}
+                                                label={item.case}
+                                                score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
+                                                width={`${item.accuracy * 100}%`}
+                                                level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
+                                            />
+                                        ))
+                                    )}
+                                    <Legend />
+                                    <FocusArea
+                                        title="집중 학습 필요 영역:"
+                                        areas={
+                                            filteredMonthData.length > 0
+                                                ? filteredMonthData
+                                                    .filter(item => item.level === '하')
+                                                    .map(item => item.case)
+                                                    .join(', ')
+                                                : ''
+                                        }
                                     />
-                                ))
-                            ) : (
-                                <div className="text-center text-gray-500 py-8">데이터가 없습니다.</div>
+                                </div>
                             )}
-                            <Legend />
-                            <FocusArea
-                                title="집중 학습 필요 영역:"
-                                areas={
-                                    filteredMonthData.length > 0
-                                        ? filteredMonthData
-                                            .filter(item => item.level === '하')
-                                            .map(item => item.case)
-                                            .join(', ')
-                                        : ''
-                                }
-                            />
+
+                            {activeTab === 'anatomy2' && (
+                                <div>
+                                    {filteredMonthData.filter(item => targetCases.includes(item.case)).length > 0 && (
+                                        filteredMonthData
+                                            .filter(item => targetCases.includes(item.case))
+                                            .map((item, index) => (
+                                                <LevelItem
+                                                    key={index}
+                                                    label={item.case}
+                                                    score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
+                                                    width={`${item.accuracy * 100}%`}
+                                                    level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
+                                                />
+                                            ))
+                                    )}
+                                    <Legend />
+                                    <FocusArea
+                                        title="집중 학습 필요 영역:"
+                                        areas={
+                                            filteredMonthData.length > 0
+                                                ? filteredMonthData
+                                                    .filter(item => item.level === '하' && targetCases.includes(item.case))
+                                                    .map(item => item.case)
+                                                    .join(', ')
+                                                : ''
+                                        }
+                                    />
+                                </div>
+                            )}
+
+                            {activeTab === 'anatomy3' && (
+                                <div>
+                                    {filteredMonthData.filter(item => targetCases2.includes(item.case)).length > 0 && (
+                                        filteredMonthData
+                                            .filter(item => targetCases2.includes(item.case))
+                                            .map((item, index) => (
+                                                <LevelItem
+                                                    key={index}
+                                                    label={item.case}
+                                                    score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
+                                                    width={`${item.accuracy * 100}%`}
+                                                    level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
+                                                />
+                                            ))
+                                    )}
+                                    <Legend />
+                                    <FocusArea
+                                        title="집중 학습 필요 영역:"
+                                        areas={
+                                            filteredMonthData.length > 0
+                                                ? filteredMonthData
+                                                    .filter(item => item.level === '하' && targetCases2.includes(item.case))
+                                                    .map(item => item.case)
+                                                    .join(', ')
+                                                : ''
+                                        }
+                                    />
+                                </div>
+                            )}
+                        </div>
+
+                    ) : getMonthStatus(selectedMonth) === 'current' ? (
+                        <div className="bg-gradient-to-br from-blue-100 to-white shadow-xl rounded-2xl p-10 md:w-1/2 w-full text-center border border-blue-200">
+                            <p className="mb-6 text-gray-700 text-xl font-semibold">
+                                아직 결과가 없습니다.
+                            </p>
+                            <button
+                                onClick={() => {
+                                    setView('leveltest');
+                                    setRound(1);
+                                }}
+                                className="bg-blue-600 hover:bg-blue-700 text-white text-base font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out"
+                            >
+                                1회차테스트 시작하기
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="bg-red-50 text-red-700 border border-red-200 rounded-xl p-6 text-center md:w-1/2 w-full shadow-sm">
+                            <p className="text-base font-medium">지금은 응시할 수 없습니다.</p>
                         </div>
                     )}
 
-                    {activeTab === 'anatomy2' && (
-                        <div>
-                            {filteredMonthData.filter(item => targetCases.includes(item.case)).length > 0 ? (
-                                filteredMonthData
-                                    .filter(item => targetCases.includes(item.case))
-                                    .map((item, index) => (
-                                        <LevelItem
-                                            key={index}
-                                            label={item.case}
-                                            score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
-                                            width={`${item.accuracy * 100}%`}
-                                            level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
-                                        />
-                                    ))
-                            ) : (
-                                <div className="text-center text-gray-500 py-8">데이터가 없습니다.</div>
+
+
+                    {/* 2회차 */}
+                    {filteredMonthDataRound2.length > 0 ? (
+                        <div className="bg-white shadow-md rounded-lg p-6 w-1/2">
+                            <h2 className="text-2xl font-semibold mb-6 text-gray-800">{selectedMonth}월 2회차 진단테스트 결과</h2>
+                            <div className="flex mb-4 gap-2">
+                                {userdata.user.major == "작업치료학과" ? (
+                                    <div>
+                                        <button
+                                            className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer mr-3 ${activeTab === 'anatomy2' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
+                                                }`}
+                                            onClick={() => handleTabClick('anatomy2')}
+                                        >
+                                            해부학 (9개 유형)
+                                        </button>
+                                        <button
+                                            className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer ${activeTab === 'anatomy3' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
+                                                }`}
+                                            onClick={() => handleTabClick('anatomy3')}
+                                        >
+                                            생리학 (7개 유형)
+                                        </button>
+                                    </div>
+
+                                ) : (
+                                    <button
+                                        className={`py-2 rounded-[5px] border px-4 font-medium cursor-pointer ${activeTab === 'anatomy' ? 'text-[#3f51b5] border-[#3f51b5] bg-[#e8eaf6]' : 'text-gray-500'
+                                            }`}
+                                        onClick={() => handleTabClick('anatomy')}
+                                    >
+                                        해부생리 (10개 유형)
+                                    </button>
+
+                                )}
+                            </div>
+
+                            {activeTab === 'anatomy' && (
+                                <div>
+                                    {filteredMonthDataRound2.length > 0 && (
+                                        filteredMonthDataRound2.map((item, index) => (
+                                            <LevelItem
+                                                key={index}
+                                                label={item.case}
+                                                score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
+                                                width={`${item.accuracy * 100}%`}
+                                                level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
+                                            />
+                                        ))
+                                    )}
+                                    <Legend />
+                                    <FocusArea
+                                        title="집중 학습 필요 영역:"
+                                        areas={
+                                            filteredMonthDataRound2.length > 0
+                                                ? filteredMonthDataRound2
+                                                    .filter(item => item.level === '하')
+                                                    .map(item => item.case)
+                                                    .join(', ')
+                                                : ''
+                                        }
+                                    />
+                                </div>
                             )}
-                            <Legend />
-                            <FocusArea
-                                title="집중 학습 필요 영역:"
-                                areas={
-                                    filteredMonthData.length > 0
-                                        ? filteredMonthData
-                                            .filter(item => item.level === '하' && targetCases.includes(item.case))
-                                            .map(item => item.case)
-                                            .join(', ')
-                                        : ''
-                                }
-                            />
+
+                            {activeTab === 'anatomy2' && (
+                                <div>
+                                    {filteredMonthDataRound2.filter(item => targetCases.includes(item.case)).length > 0 && (
+                                        filteredMonthDataRound2
+                                            .filter(item => targetCases.includes(item.case))
+                                            .map((item, index) => (
+                                                <LevelItem
+                                                    key={index}
+                                                    label={item.case}
+                                                    score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
+                                                    width={`${item.accuracy * 100}%`}
+                                                    level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
+                                                />
+                                            ))
+                                    )}
+                                    <Legend />
+                                    <FocusArea
+                                        title="집중 학습 필요 영역:"
+                                        areas={
+                                            filteredMonthDataRound2.length > 0
+                                                ? filteredMonthDataRound2
+                                                    .filter(item => item.level === '하' && targetCases.includes(item.case))
+                                                    .map(item => item.case)
+                                                    .join(', ')
+                                                : ''
+                                        }
+                                    />
+                                </div>
+                            )}
+
+                            {activeTab === 'anatomy3' && (
+                                <div>
+                                    {filteredMonthDataRound2.filter(item => targetCases2.includes(item.case)).length > 0 && (
+                                        filteredMonthDataRound2
+                                            .filter(item => targetCases2.includes(item.case))
+                                            .map((item, index) => (
+                                                <LevelItem
+                                                    key={index}
+                                                    label={item.case}
+                                                    score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
+                                                    width={`${item.accuracy * 100}%`}
+                                                    level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
+                                                />
+                                            ))
+                                    )}
+                                    <Legend />
+                                    <FocusArea
+                                        title="집중 학습 필요 영역:"
+                                        areas={
+                                            filteredMonthDataRound2.length > 0
+                                                ? filteredMonthDataRound2
+                                                    .filter(item => item.level === '하' && targetCases2.includes(item.case))
+                                                    .map(item => item.case)
+                                                    .join(', ')
+                                                : ''
+                                        }
+                                    />
+                                </div>
+                            )}
+                        </div>
+
+                    ) : getMonthStatus(selectedMonth) === 'current' ? (
+                        <div className="bg-gradient-to-br from-blue-100 to-white shadow-xl rounded-2xl p-10 md:w-1/2 w-full text-center border border-blue-200">
+                            <p className="mb-6 text-gray-700 text-xl font-semibold">
+                                아직 결과가 없습니다.
+                            </p>
+                            <button
+                                onClick={() => {
+                                    setView('leveltest');
+                                    setRound(2);
+                                }}
+                                className="bg-blue-600 hover:bg-blue-700 text-white text-base font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out"
+                            >
+                                2회차테스트 시작하기
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="bg-red-50 text-red-700 border border-red-200 rounded-xl p-6 text-center md:w-1/2 w-full shadow-sm">
+                            <p className="text-base font-medium">지금은 응시할 수 없습니다.</p>
                         </div>
                     )}
 
-                    {activeTab === 'anatomy3' && (
-                        <div>
-                            {filteredMonthData.filter(item => targetCases2.includes(item.case)).length > 0 ? (
-                                filteredMonthData
-                                    .filter(item => targetCases2.includes(item.case))
-                                    .map((item, index) => (
-                                        <LevelItem
-                                            key={index}
-                                            label={item.case}
-                                            score={`${item.level} (${item.correct_answers}/${item.total_questions})`}
-                                            width={`${item.accuracy * 100}%`}
-                                            level={item.level === '상' ? 'high' : item.level === '중' ? 'mid' : 'low'}
-                                        />
-                                    ))
-                            ) : (
-                                <div className="text-center text-gray-500 py-8">데이터가 없습니다.</div>
-                            )}
-                            <Legend />
-                            <FocusArea
-                                title="집중 학습 필요 영역:"
-                                areas={
-                                    filteredMonthData.length > 0
-                                        ? filteredMonthData
-                                            .filter(item => item.level === '하' && targetCases2.includes(item.case))
-                                            .map(item => item.case)
-                                            .join(', ')
-                                        : ''
-                                }
-                            />
-                        </div>
-                    )}
+
+
+
+
 
                 </div>
 

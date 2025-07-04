@@ -11,8 +11,9 @@ import MonthTest from '@/components/monthTest';
 
 export default function Userpage() {
   const [view, setView] = useState();
+  const [Round, setRound] = useState(1);
   const { data: session, status } = useSession();
-  
+
   useEffect(() => {
     if (status !== "loading" && !view) {
       if (!session?.user?.grade) {
@@ -30,11 +31,11 @@ export default function Userpage() {
       <Navigation view={view} setView={setView} userdata={session} />
 
       {view === 'monthtest' && (
-        <MonthTest setView={setView} userdata={session} />
+        <MonthTest setView={setView} userdata={session} setRound={setRound}/>
       )}
 
       {view === 'leveltest' && (
-        <LevelTest setView={setView} userdata={session} />
+        <LevelTest setView={setView} userdata={session} Round={Round} />
       )}
       {view === 'dashboard' && (
         <Dashboard setView={setView} userdata={session} />
