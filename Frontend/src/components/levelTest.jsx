@@ -10,7 +10,7 @@ const LevelTest = ({ setView, userdata, Round }) => {
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [answers, setAnswers] = useState({});
 
-    const [remainingTime, setRemainingTime] = useState(15);
+    const [remainingTime, setRemainingTime] = useState(1800);
     const fiveMinuteWarnedRef = useRef(false);
     const submittedRef = useRef(false);
     // console.log(userdata);
