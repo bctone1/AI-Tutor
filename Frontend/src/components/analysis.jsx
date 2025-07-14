@@ -9,7 +9,13 @@ const Analysis = ({ userdata }) => {
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     const [selectedFeedback, setSelectedFeedback] = useState('');
     const [feedbackList, setFeedbackList] = useState([]);
-    const [lastweekTestResult, setLastweekTestResult] = useState(null);
+    const [lastweekTestResult, setLastweekTestResult] = useState({
+        total_correct: 0,
+        total_question: 0,
+        total_score: 0,
+        correct_rate: 0,
+        attendance:0
+    });
 
     const [caseProgress, setCaseProgress] = useState(null);
     const [caseScoreProgress, setCaseScoreProgress] = useState(null);
@@ -170,11 +176,25 @@ const Analysis = ({ userdata }) => {
             });
             const data = await response.json();
             if (response.ok) {
-                console.log(data);
-                setLastweekTestResult(data);
+                if (data?.total_question) {
+                    // 정상 데이터일 경우
+                    console.log(data);
+                    setLastweekTestResult(data);
+                } else {
+                    // 데이터가 없을 경우 초기값 세팅
+                    setLastweekTestResult({
+                        total_correct: 0,
+                        total_question: 0,
+                        total_score: 0,
+                        correct_rate: 0,
+                        attendance:0
+                    });
+                }
             } else {
                 throw new Error('유형별 학습 현황을 가져오는데 실패했습니다.');
             }
+
+
         }
 
         const getMonthTestResult = async () => {
@@ -408,7 +428,7 @@ const Analysis = ({ userdata }) => {
 
                                             {calculatemethod(lastweekTestResult.attendance, dailyProgress.attendance) >= 0 ? '▲' : '▼'}전주 대비
                                             {Math.abs(calculatemethod(lastweekTestResult.attendance, dailyProgress.attendance))} 시간
-                                            {calculatemethod(lastweekTestResult.attendance, dailyProgress.attendance) >= 0 ? '증가' : '감소'}
+                                            {calculatemethod(lastweekTestResult.attendance, dailyProgress.attendance) > 0 ? '증가' : '감소'}
                                         </p>
                                     </div>
                                     <div className="bg-white rounded-lg shadow p-6">
