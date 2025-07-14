@@ -414,16 +414,24 @@ def get_question_by_id(db : Session, question_id):
     question = db.query(KnowledgeBase).filter(KnowledgeBase.id == question_id).first()
     return question.question
 
-def save_score_record(db : Session, user_id : int, is_correct : bool):
+def save_score_record(db: Session, user_id: int, is_correct: bool):
     user_record = db.query(UserTotalRecord).filter(UserTotalRecord.user_id == user_id).first()
 
-    if is_correct:
-        user_record.total_score += 3
+    if user_record is None:
+        # 새 레코드 생성 (점수는 조건에 따라 초기값 설정)
+        initial_score = 3 if is_correct else -3
+        user_record = UserTotalRecord(user_id=user_id, total_score=initial_score)
+        db.add(user_record)
+        db.commit()
+        db.refresh(user_record)
     else:
-        user_record.total_score -= 3
-    db.add(user_record)
-    db.commit()
-    db.refresh(user_record)
+        # 기존 레코드가 있는 경우 점수 수정
+        if is_correct:
+            user_record.total_score += 3
+        else:
+            user_record.total_score -= 3
+        db.commit()
+        db.refresh(user_record)
 
 def delete_exam(db : Session, exam_id : int):
      exam = db.query(Exam).filter(Exam.id == exam_id).first()
