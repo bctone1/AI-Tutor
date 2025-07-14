@@ -319,8 +319,20 @@ def update_current_score(db : Session, user_id : int, question_id : int, correct
         )
         .first()
     )
-    print(f"과목 : {question.case}")
-    print(f"사용자 데이터 : {user_status.id}")
+    if user_status is None:
+        user_status = UserCurrentScore(
+            user_id=user_id,
+            case=question.case,
+            total_questions=0,
+            correct_answers=0,
+            total_score=0,
+            accuracy=0.0,
+            level="하"
+        )
+        db.add(user_status)
+        db.commit()
+        db.refresh(user_status)
+
     user_status.total_questions += 1
     if correct_answer is True:
         user_status.correct_answers += 1
