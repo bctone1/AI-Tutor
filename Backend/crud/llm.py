@@ -147,8 +147,8 @@ def get_question_prompt(db: Session, subject: str):
     labeling_data = labeling_list.order_by(func.random()).first()
     if labeling_data is None:
         return None
-    questino_id = labeling_data.question_id
-    question_data = db.query(KnowledgeBase).filter(KnowledgeBase.id == questino_id).first()
+    question_id = labeling_data.question_id
+    question_data = db.query(KnowledgeBase).filter(KnowledgeBase.id == question_id).first()
     print(f"QUESTION : {question_data.question}")
 
 
